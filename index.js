@@ -9,14 +9,20 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(cookieParser());
 
-const reservations = require('./routes/requests/reservations');
-const login = require('./routes/requests/login');
-const loadHours = require('./routes/requests/loadHours');
-const register = require('./routes/requests/register');
+const reservations = require('./requests/reservations');
+const login = require('./requests/login');
+const loadHours = require('./requests/loadHours');
+const register = require('./requests/register');
 app.use('/requests/reservations', reservations);
 app.use('/requests/login', login);
 app.use('/requests/loadHours', loadHours);
 app.use('/requests/register', register);
+
+
+// Static folder
+app.use(express.static(__dirname + '/public/'));
+// SPA
+app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
 
 
 const port = process.env.port || 5000;
