@@ -13,7 +13,7 @@
               <i class="material-icons">phone_iphone</i>
               <p>
                 Les horaires d'appel au
-                <br>+253 21 35 27 10 :
+                <br />+253 21 35 27 10 :
               </p>
             </li>
             <li>Dimanche : 8h00-17h00</li>
@@ -42,7 +42,9 @@
           </p>
         </div>
         <div class="reserve" v-if="!toggle">
-          <p>Les consultations dure 30 minutes par patients afin de pouvoir recevoir le plus de patients possible. Nous vous recommandons fortement donc, d'arriver un quart d'heure en avance pour éviter les surprises. Si vous n'etes pas en place à l'heure, votre consultation sera occtroyé au patient suivant dans la liste.</p>
+          <p>Les consultations dure 30 minutes par patients afin de pouvoir recevoir le plus de patients possible.
+             Nous vous recommandons fortement donc, d'arriver un quart d'heure en avance pour éviter les surprises.
+              Si vous n'etes pas en place à l'heure, votre consultation sera occtroyé au patient suivant dans la liste.</p>
           <b-button class="bouton" v-on:click="toggle = !toggle">Réserver maintenant</b-button>
 
           <div>
@@ -55,9 +57,9 @@
                 aria-describedby="input-live-help input-live-feedback"
                 placeholder="Votre nom"
                 trim
-              >
-              <br>
-              <br>
+              />
+              <br />
+              <br />
               <input
                 id="input-live"
                 v-model="pass"
@@ -65,22 +67,22 @@
                 aria-describedby="input-live-help input-live-feedback"
                 placeholder="Votre mot de passe"
                 trim
-              >
-              <div slot="modal-footer" class="w-100">
-                <b-button class="continuer" @click="handleOk">Connexion</b-button>
+              />
+            <div slot="modal-footer" class="w-100" >
+                <b-button class="continuer" @click="handleOk">Connexion</b-button>  
               </div>
               <p
                 v-if="connexionErr"
                 class="rouge"
-              >Il y'a un problème avec l'identifiant ou le mot de passe. Vérifiez svp !</p>
+              >Il y'a un problème avec l'identifiant </p>
             </b-modal>
           </div>
         </div>
       </div>
 
-      <div class="firstForm" v-if="toggle && !move">
+      <div class="firstForm" v-if="toggle && !move"> 
         <b-button class="retour" v-on:click="toggle = !toggle">Retour</b-button>
-        <br>
+        <br />
         <div class="perso">
           <h5>
             <b>Entrez vos donnees</b>
@@ -88,14 +90,14 @@
           <form>
             <div class="column is-12">
               <div class="column is-12">
-                <br>
+                <br />
                 <input
                   name="prenom"
                   v-model="prenom"
                   v-validate="'required|alpha'"
                   type="text"
                   placeholder="Prénom"
-                >
+                />
                 <i v-show="errors.has('prenom')" class="fa fa-warning"></i>
                 <span
                   v-show="errors.has('prenom')"
@@ -109,7 +111,7 @@
                   v-validate="'required|alpha'"
                   type="text"
                   placeholder="Nom"
-                >
+                />
                 <i v-show="errors.has('nom')" class="fa fa-warning"></i>
                 <span v-show="errors.has('nom')" class="help is-danger">{{ errors.first('nom') }}</span>
               </div>
@@ -121,7 +123,7 @@
                   :counter="8"
                   type="text"
                   placeholder="Téléphone"
-                >
+                />
                 <i v-show="errors.has('telephone')" class="fa fa-warning"></i>
                 <span
                   v-show="errors.has('telephone')"
@@ -130,7 +132,7 @@
               </div>
 
               <div>
-                <input class="chek" type="checkbox" v-model="checked">
+                <input class="chek" type="checkbox" v-model="checked" />
                 <p class="chekmen">Je veux recevoir un email de confirmation</p>
               </div>
 
@@ -141,7 +143,7 @@
                   type="email"
                   v-validate="'email'"
                   placeholder="Email"
-                >
+                />
                 <i v-show="errors.has('email')" class="fa fa-warning"></i>
                 <span
                   v-show="errors.has('email')"
@@ -157,7 +159,7 @@
       <div class="tid" v-show="move && !trois">
         <b-button class="retour" v-on:click="move =!move">Retour</b-button>
         <div class="calendar">
-          <br>
+          <br />
           <p v-if="weekend" class="weekend">Les Week-end sont résérvés au urgences.</p>
           <p v-if="past" class="past">La date choissie est passée.</p>
           <v-app id="inspire">
@@ -171,7 +173,7 @@
       <div v-if="trois && !foor" class="time">
         <b-button class="retour droiteTime" v-on:click="trois =!trois">Retour</b-button>
 
-        <br>
+        <br />
 
         <div class="timeTitle">
           <h5>
@@ -182,8 +184,8 @@
             <li v-for="(hour, index) in dispoHours" :key="index">
               <b-button class="btnHour" @click="getButonVal">{{hour}}</b-button>
             </li>
-            <br>
-            <br>
+            <br />
+            <br />
             <li v-if="dispo">
               <b-spinner label="Spinning"></b-spinner>
               <b-spinner type="grow" label="Spinning"></b-spinner>
@@ -201,16 +203,16 @@
 
       <div v-if="foor" class="conf">
         <b-button class="retour" v-on:click="foor =!foor">Retour</b-button>
-        <br>
+        <br />
         <div class="last">
           <h5>
             <b>Voulez vous confirmer ce rendez-vous?</b>
           </h5>
           <p>
             Le patient
-            <b-button variant="light">{{prenom}} {{nom}}</b-button>  souhaite faire une résérvation pour la date suivante :
-            <br>
-            <b-button variant="light">{{picker}}</b-button>  à
+            <b-button variant="light">{{prenom}} {{nom}}</b-button>souhaite faire une résérvation pour la date suivante :
+            <br />
+            <b-button variant="light">{{picker}}</b-button>à
             <b-button variant="light">{{hour}}</b-button>
           </p>
         </div>
@@ -268,7 +270,6 @@ export default {
               this.$router.push({ name: "admin" });
             }
           }
-    
         })
         .catch(e => {
           this.connexionErr = true;
@@ -403,9 +404,9 @@ export default {
 #home {
   color: #133358;
 }
-.container{
-width: 90%;
-margin: 0 auto;
+.container {
+  width: 90%;
+  margin: 0 auto;
 }
 h3 {
   margin-top: -1rem;
@@ -648,7 +649,6 @@ input:focus {
   background-color: #5076a4;
 }
 @media only screen and (max-width: 320px) {
-  
   .firstList,
   .secondList {
     margin: 0 auto;
@@ -672,7 +672,8 @@ input:focus {
 }
 @media only screen and (max-width: 959px) and (min-width: 768px) {
   h3 {
-    margin-bottom: 2%;
+    margin-bottom: 3%;
+    margin-top: -4%;
   }
   .active {
     width: 100%;
@@ -716,21 +717,24 @@ input:focus {
     top: 5rem;
   }
 }
-@media only screen and (max-width: 1264px) and (min-width: 959px) {
+@media only screen and (max-width: 1264px) and (min-width: 960px) {
+ 
   h3 {
     margin-top: -2.5rem;
     margin-bottom: 2rem;
   }
   .lists {
-    width: 60%;
-    padding: 4%;
+    width: 63%;
+    height: 371px;
+    padding: 0;
+    padding-top: 4%;
     float: left;
     margin-left: 0;
     margin-bottom: 3%;
   }
   .map {
     position: relative;
-    left: 5rem;
+    left: 8rem;
     top: 1.5rem;
     float: left;
   }
@@ -754,10 +758,12 @@ input:focus {
     width: 50%;
   }
   .reserve {
-    width: 30%;
+    width: 33%;
     padding: 2%;
-    float: right;
-    margin-top: 0.5%;
+    float:right;
+    position: relative;
+    top: -34rem;
+    right: -3%;
   }
   .perso {
     margin-top: 4%;
@@ -794,14 +800,17 @@ input:focus {
     margin-top: 4rem;
   }
 }
-@media only screen and (min-width: 1264px) {
+
+@media only screen and (min-width: 1265px) {
+ 
   h3 {
-    margin-top: -3rem;
+    margin-top: -4rem;
     margin-bottom: 2rem;
   }
   .lists {
     width: 60%;
-    padding: 3%;
+    height: 400px;
+    padding-top: 4%;
     float: left;
     margin-bottom: 2%;
   }
@@ -820,14 +829,16 @@ input:focus {
     width: 50%;
   }
   .map {
-    left: 1rem;
+    text-align: right;
+    left: -11rem;
+    top: 2.5rem;
   }
   .reserve {
     width: 30%;
     padding: 2%;
     float: right;
-    margin-top: 1.3rem;
-    margin-right: 1%;
+    margin-top: -27em;
+    margin-right: 3%;
   }
   .firstForm {
     width: 70%;
@@ -876,6 +887,22 @@ input:focus {
   }
   .alert {
     margin-bottom: 1%;
+  }
+}
+@media only screen and (min-width: 1905px) {
+  .map{
+    top: -1rem;
+    left: -7rem;
+  }
+  .reserve{
+    margin-right: 3.5rem;
+  }
+  .chekmen{
+    margin-left: -51rem;
+  }
+
+  .continuer{
+    top: 5.5rem;
   }
 }
 </style>

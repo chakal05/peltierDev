@@ -3,7 +3,7 @@ const router = express.Router();
 const mongo = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017/';
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 
 // todo Protect password 
@@ -29,15 +29,8 @@ router.post('/', async function (req, res) {
   let userName = req.body.name;
   let userPass = req.body.pass;
   let query = await checkUser();
-  let search = await query.find({ name: userName }).toArray();
+  let search = await query.find({ nom: userName }).toArray();
 
-  /*
-  let salt = bcrypt.genSaltSync(12);
-  let hash = bcrypt.hashSync(userPass, salt);
-  console.log("user name is " + userName);
-  console.log("hashed pass is " + hash);
-  console.log("user entered pass is " + userPass);
-*/
 
   if (search.length > 0) {
     
@@ -57,20 +50,15 @@ router.post('/', async function (req, res) {
 
 
    } else {
-      console.log("Check is false");
       res.status(404).send();
     }
 
 
   } else {
-    console.log("user not found");
     res.status(404).send();
   }
   
-
 })
-
-
 
 
 module.exports = router;

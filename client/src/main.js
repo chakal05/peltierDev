@@ -11,11 +11,12 @@ import VeeValidate, {Validator} from 'vee-validate'
 import fr from 'vee-validate/dist/locale/fr';
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import VueAxios from 'vue-axios'
 import axios from 'axios'
 import underscore from 'vue-underscore'
 Vue.use(router)
 Vue.use(underscore)
-Vue.use(axios)
+Vue.use(VueAxios ,axios)
 Vue.use(Vuetify, {
   iconfont: 'mdi' // 'md' || 'mdi' || 'fa' || 'fa4'
 })
