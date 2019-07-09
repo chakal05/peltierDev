@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.jpg" alt="">
+   <h2>Hôpital Général Peltier</h2>
     <router-view></router-view>
   </div>
 </template>
@@ -28,4 +29,5 @@ img{
   margin: 15px;
   margin-bottom: 3%;
 }
+
 </style>

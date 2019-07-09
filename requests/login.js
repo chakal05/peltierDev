@@ -40,7 +40,6 @@ router.post('/', async function (req, res) {
    let check = bcrypt.compareSync(userPass, user.pass);
 
     if (check) {
-      console.log("check is true");
 
       
     res.send({

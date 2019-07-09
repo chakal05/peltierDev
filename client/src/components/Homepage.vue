@@ -1,7 +1,6 @@
 <template>
   <div id="home">
     <b-container class="container">
-      <h3>{{ msg }}</h3>
       <div class="active">
         <div class="alert" v-if="alertSuccessRegister">
           <div>Votre consultation a été enregistrée. Bienvenue</div>
@@ -231,7 +230,6 @@ import underscore from "vue-underscore";
 export default {
   name: "Home",
   data: () => ({
-    msg: "Hôpital Général Peltier",
     picker: new Date().toISOString().substr(0, 10),
     toggle: false,
     move: false,
@@ -397,6 +395,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 * {
   margin: 0;
   padding: 0;
@@ -649,6 +648,9 @@ input:focus {
   background-color: #5076a4;
 }
 @media only screen and (max-width: 320px) {
+  h3{
+    margin-top: 0.5rem;
+  }
   .firstList,
   .secondList {
     margin: 0 auto;
@@ -671,10 +673,7 @@ input:focus {
   }
 }
 @media only screen and (max-width: 959px) and (min-width: 768px) {
-  h3 {
-    margin-bottom: 3%;
-    margin-top: -4%;
-  }
+ 
   .active {
     width: 100%;
   }
@@ -698,6 +697,9 @@ input:focus {
   .continuer {
     margin-top: 4rem;
   }
+  .chekmen{
+   margin-left: -17rem;
+  }
   .reserve {
     margin-top: 6%;
     margin-bottom: 3%;
@@ -718,10 +720,9 @@ input:focus {
   }
 }
 @media only screen and (max-width: 1264px) and (min-width: 960px) {
- 
-  h3 {
-    margin-top: -2.5rem;
-    margin-bottom: 2rem;
+  
+  .active{
+    margin-top: 3%;
   }
   .lists {
     width: 63%;
@@ -730,7 +731,6 @@ input:focus {
     padding-top: 4%;
     float: left;
     margin-left: 0;
-    margin-bottom: 3%;
   }
   .map {
     position: relative;
@@ -762,7 +762,7 @@ input:focus {
     padding: 2%;
     float:right;
     position: relative;
-    top: -34rem;
+    top: -32.3rem;
     right: -3%;
   }
   .perso {
@@ -803,10 +803,7 @@ input:focus {
 
 @media only screen and (min-width: 1265px) {
  
-  h3 {
-    margin-top: -4rem;
-    margin-bottom: 2rem;
-  }
+ 
   .lists {
     width: 60%;
     height: 400px;
@@ -837,7 +834,7 @@ input:focus {
     width: 30%;
     padding: 2%;
     float: right;
-    margin-top: -27em;
+    margin-top: -26.5em;
     margin-right: 3%;
   }
   .firstForm {
@@ -890,6 +887,7 @@ input:focus {
   }
 }
 @media only screen and (min-width: 1905px) {
+
   .map{
     top: -1rem;
     left: -7rem;

@@ -1,7 +1,6 @@
 <template>
   <div id="admin">
     <b-container class="container">
-      <h3>{{msg}}</h3>
       <div class="top" v-if="!show">
         <h4>Entrez une date :</h4>
         <v-app id="inspire">
@@ -36,7 +35,6 @@ import getData from "@/requests/getData";
 export default {
   name: "admin",
   data: () => ({
-    msg: "Hôpital Général Peltier",
     picker: new Date().toISOString().substr(0, 10),
     show: false,
     empty: false,
@@ -73,10 +71,6 @@ export default {
 </script>
 
 <style scoped>
-h3 {
-  margin-bottom: 3%;
-  color: #133358;
-}
 h4 {
   color: #133358;
 }
@@ -186,10 +180,7 @@ li {
   }
 }
 @media only screen and (min-width: 1264px) {
-  h3 {
-    margin-top: -2.5%;
-    color: #133358;
-  }
+  
   h4 {
     margin-bottom: 1%;
     color: #133358;
@@ -234,7 +225,7 @@ li {
     margin-top: -0.5%;
   }
   .back {
-    margin-top: -2.5%;
+    margin-top: 0.5%;
   }
 }
 </style>
