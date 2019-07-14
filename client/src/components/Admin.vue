@@ -71,6 +71,11 @@ export default {
 </script>
 
 <style scoped>
+html , body{
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
 h4 {
   color: #133358;
 }
@@ -95,12 +100,12 @@ h4 {
 }
 .left {
   position: absolute;
-  top: 23rem;
+  top: 25rem;
   left: 0;
 }
 .right {
   position: absolute;
-  top: 23rem;
+  top: 25rem;
   right: 0;
 }
 #inspire a {
@@ -120,11 +125,11 @@ li {
   margin-bottom: 3%;
 }
 .table {
-  width: 90%;
   margin: 0 auto;
   margin-bottom: 3%;
 }
 .data {
+  width: 291px;
   margin: 0 auto;
 }
 .empty {
@@ -149,14 +154,14 @@ li {
     margin-bottom: 1rem;
   }
   .table {
-    width: 90%;
     margin: 0 auto;
     margin-bottom: 3%;
   }
-  .data {
-    width: 50%;
-    margin-left: -1.6rem;
+   .data {
+     width: 190px;
+    margin:0 auto;
   }
+ 
 }
 @media only screen and (min-width: 768px) {
   .top {
@@ -179,12 +184,13 @@ li {
     margin-top: -1%;
   }
 }
-@media only screen and (min-width: 1264px) {
+
+
+@media only screen and (min-width: 959px) {
   
   h4 {
-    margin-bottom: 1%;
+    margin-top: 1rem;
     color: #133358;
-    margin-top: -2%;
   }
   #input-1 {
     width: 70%;
@@ -228,5 +234,6 @@ li {
     margin-top: 0.5%;
   }
 }
+
 </style>
 

@@ -41,9 +41,11 @@
           </p>
         </div>
         <div class="reserve" v-if="!toggle">
-          <p>Les consultations dure 30 minutes par patients afin de pouvoir recevoir le plus de patients possible.
-             Nous vous recommandons fortement donc, d'arriver un quart d'heure en avance pour éviter les surprises.
-              Si vous n'etes pas en place à l'heure, votre consultation sera occtroyé au patient suivant dans la liste.</p>
+          <p>
+            Les consultations dure 30 minutes par patients afin de pouvoir recevoir le plus de patients possible.
+            Nous vous recommandons fortement donc, d'arriver un quart d'heure en avance pour éviter les surprises.
+            Si vous n'etes pas en place à l'heure, votre consultation sera occtroyé au patient suivant dans la liste.
+          </p>
           <b-button class="bouton" v-on:click="toggle = !toggle">Réserver maintenant</b-button>
 
           <div>
@@ -67,29 +69,23 @@
                 placeholder="Votre mot de passe"
                 trim
               />
-            <div slot="modal-footer" class="w-100" >
-                <b-button class="continuer" @click="handleOk">Connexion</b-button>  
+              <div slot="modal-footer" class="w-100">
+                <b-button class="continuer" @click="handleOk">Connexion</b-button>
               </div>
-              <p
-                v-if="connexionErr"
-                class="rouge"
-              >Il y'a un problème avec l'identifiant </p>
+              <p v-if="connexionErr" class="rouge">Il y'a un problème avec l'identifiant</p>
             </b-modal>
           </div>
         </div>
       </div>
 
-      <div class="firstForm" v-if="toggle && !move"> 
+      <div class="firstForm" v-if="toggle && !move">
         <b-button class="retour" v-on:click="toggle = !toggle">Retour</b-button>
         <br />
+        <br />
         <div class="perso">
-          <h5>
-            <b>Entrez vos donnees</b>
-          </h5>
           <form>
             <div class="column is-12">
               <div class="column is-12">
-                <br />
                 <input
                   name="prenom"
                   v-model="prenom"
@@ -129,26 +125,6 @@
                   class="help is-danger"
                 >{{ errors.first('telephone') }}</span>
               </div>
-
-              <div>
-                <input class="chek" type="checkbox" v-model="checked" />
-                <p class="chekmen">Je veux recevoir un email de confirmation</p>
-              </div>
-
-              <div v-if="checked">
-                <input
-                  name="email"
-                  v-model="email"
-                  type="email"
-                  v-validate="'email'"
-                  placeholder="Email"
-                />
-                <i v-show="errors.has('email')" class="fa fa-warning"></i>
-                <span
-                  v-show="errors.has('email')"
-                  class="help is-danger"
-                >{{ errors.first('email') }}</span>
-              </div>
             </div>
           </form>
         </div>
@@ -159,14 +135,14 @@
         <b-button class="retour" v-on:click="move =!move">Retour</b-button>
         <div class="calendar">
           <br />
+          <br />
           <p v-if="weekend" class="weekend">Les Week-end sont résérvés au urgences.</p>
           <p v-if="past" class="past">La date choissie est passée.</p>
           <v-app id="inspire">
             <v-date-picker v-model="picker" locale="fr-fr" full-width landscape></v-date-picker>
           </v-app>
+          <b-button class="continuer tidCo" v-on:click="sendData">Continuer</b-button>
         </div>
-
-        <b-button class="continuer tidCo" v-on:click="sendData">Continuer</b-button>
       </div>
 
       <div v-if="trois && !foor" class="time">
@@ -174,34 +150,28 @@
 
         <br />
 
-        <div class="timeTitle">
-          <h5>
-            <b>Choississez une heure de visite</b>
-          </h5>
+        <h5>
+          <b>Choississez une heure de visite</b>
+        </h5>
 
-          <ul>
-            <li v-for="(hour, index) in dispoHours" :key="index">
-              <b-button class="btnHour" @click="getButonVal">{{hour}}</b-button>
-            </li>
-            <br />
-            <br />
-            <li v-if="dispo">
-              <b-spinner label="Spinning"></b-spinner>
-              <b-spinner type="grow" label="Spinning"></b-spinner>
-              <b-spinner label="Spinning"></b-spinner>
-            </li>
-
-            <li v-if="fullBooked">
-              <div class="alert">
-                <div>{{picker}} est complet</div>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <ul>
+          <li v-for="(hour, index) in dispoHours" :key="index">
+            <b-button class="btnHour" @click="getButonVal">{{hour}}</b-button>
+          </li>
+          <li v-if="dispo">
+            <b-spinner label="Spinning"></b-spinner>
+            <b-spinner type="grow" label="Spinning"></b-spinner>
+            <b-spinner label="Spinning"></b-spinner>
+          </li>
+          <div class="full" v-if="fullBooked">
+            <div>{{picker}} est complet</div>
+          </div>
+        </ul>
       </div>
 
       <div v-if="foor" class="conf">
         <b-button class="retour" v-on:click="foor =!foor">Retour</b-button>
+        <br />
         <br />
         <div class="last">
           <h5>
@@ -240,7 +210,6 @@ export default {
     prenom: "",
     email: "",
     hour: "",
-    checked: false,
     dispoHours: [],
     name: "",
     pass: "",
@@ -395,7 +364,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 * {
   margin: 0;
   padding: 0;
@@ -412,7 +380,7 @@ h3 {
   margin-bottom: 4%;
 }
 .lists {
-  width: 100%;
+  width: 95%;
   margin: 0 auto;
   border-radius: 3px;
   padding: 3%;
@@ -509,7 +477,7 @@ li {
 .tid,
 .time,
 .conf {
-  width: 100%;
+  width: 90%;
   margin: 0 auto;
   margin-top: 1%;
 }
@@ -517,22 +485,14 @@ li {
   width: 90%;
   margin: 0 auto;
 }
-.chek {
-  height: 19px;
-  float: left;
-  margin-left: 2%;
-  width: 20px;
-}
-.chekmen {
-  width: 100%;
-  margin-left: -7rem;
-}
 .perso {
-  margin-top: 11%;
   border-radius: 2px;
   box-shadow: 1px 1px 1px 1px #8ea9c4;
-  padding-top: 5%;
-  padding: 3%;
+  margin: 5%;
+  height: 300px;
+  display: grid;
+  justify-items: center;
+  align-items: center;
 }
 form {
   padding: 2%;
@@ -552,7 +512,6 @@ form {
   border-color: #fff;
   background-color: #8ea9c4;
   float: left;
-  margin-bottom: 1rem;
 }
 .continuer {
   width: 100px;
@@ -561,9 +520,8 @@ form {
   border-color: #fff;
   background-color: #8ea9c4;
   float: right;
-  margin-top: 2rem;
-  margin-bottom: 3rem;
 }
+
 input {
   margin-bottom: 3%;
   width: 99%;
@@ -577,21 +535,20 @@ input {
 input:focus {
   outline: none;
 }
+
 .calendar {
-  height: 300px;
+  height: 400px;
 }
 #inspire {
   width: 100%;
   padding-top: 3%;
   background-color: #fff;
   height: 300px;
-  margin-bottom: 7%;
-  margin-top: 3%;
+  margin-top: 1rem;
 }
 .tidCo {
   position: relative;
-  top: 4.5rem;
-  right: 0;
+  top: 5rem;
 }
 .droiteTime {
   margin-top: -1rem;
@@ -599,16 +556,23 @@ input:focus {
 .time {
   margin-top: 7%;
 }
+
+.time h5 {
+  margin-top: 1.5rem;
+}
 .time ul {
   padding: 3%;
   height: auto;
   box-shadow: 1px 1px 1px 1px #8ea9c4;
-  margin-top: 3%;
+  margin-top: 1.5rem;
+  display: grid;
+  place-items: center;
 }
 .time li :hover {
   background-color: #fff;
   color: #4e7091;
 }
+
 .btnHour {
   background-color: #4e7091;
   width: 200px;
@@ -617,38 +581,48 @@ input:focus {
   font-weight: bold;
   padding: 1%;
 }
-.timeTitle {
-  margin-top: 1.1rem;
-}
-.conf {
-  margin-top: 2rem;
-  margin-bottom: -0.5rem;
-}
 .last {
   height: 200px;
-  margin-top: 2rem;
+  margin: 5%;
   box-shadow: 1px 1px 1px 1px #8ea9c4;
-  width: 100%;
-  padding-top: 9%;
+  display: grid;
+  justify-items: center;
+  align-items: center;
 }
+
 .last p {
-  padding: 3%;
+  padding: 3px;
   font-size: 15px;
   font-weight: 500;
+  margin-top: -3rem;
 }
-.alert {
+.full {
   background-color: #8ea9c4;
   color: #fff;
   width: 70%;
   border-radius: 1px;
   margin: 0 auto;
   padding: 1%;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.alert {
+  background-color: #8ea9c4;
+  color: #fff;
+  width: 70%;
+  border-radius: 1px;
+  margin: 0 auto;
+  padding: 3px;
+  margin: 0 auto;
+  margin-bottom: 3%;
 }
 #modal-center {
   background-color: #5076a4;
 }
 @media only screen and (max-width: 320px) {
-  h3{
+  h3 {
     margin-top: 0.5rem;
   }
   .firstList,
@@ -656,15 +630,13 @@ input:focus {
     margin: 0 auto;
   }
   .perso {
-    margin-top: 15%;
+    height: 200px;
+    margin: 5%;
   }
   .bouton,
   .whiteBtn {
     margin-left: -5.7%;
     margin-bottom: 5%;
-  }
-  .chekmen {
-    margin-left: -3rem;
   }
   .tidCo {
     position: relative;
@@ -672,8 +644,11 @@ input:focus {
     right: 0;
   }
 }
-@media only screen and (max-width: 959px) and (min-width: 768px) {
- 
+
+@media only screen and (min-width: 768px) {
+  .container{
+    width: 90%;
+  }
   .active {
     width: 100%;
   }
@@ -694,34 +669,34 @@ input:focus {
   #inspire {
     margin-top: 2%;
   }
-  .continuer {
-    margin-top: 4rem;
-  }
-  .chekmen{
-   margin-left: -17rem;
-  }
   .reserve {
     margin-top: 6%;
     margin-bottom: 3%;
   }
-  .perso {
-    margin-top: 8%;
-    margin-bottom: -3%;
-  }
-  .last {
-    margin-bottom: -3rem;
+  .last p {
+    margin-top: -6rem;
   }
   .time li {
     display: inline-block;
-    margin: 1%;
+    margin: 2px;
   }
-  .tidCo {
-    top: 5rem;
+  .map {
+    left: -0.9rem;
+  }
+
+  .full {
+    padding: 5px;
+  }
+  .alert {
+    width: 70%;
+    padding: 1%;
   }
 }
-@media only screen and (max-width: 1264px) and (min-width: 960px) {
-  
-  .active{
+@media only screen and (min-width: 959px) {
+  .container{
+    width: 90%;
+  }
+  .active {
     margin-top: 3%;
   }
   .lists {
@@ -734,8 +709,8 @@ input:focus {
   }
   .map {
     position: relative;
-    left: 8rem;
-    top: 1.5rem;
+    left: 9rem;
+    top: 2rem;
     float: left;
   }
   .map i {
@@ -760,23 +735,16 @@ input:focus {
   .reserve {
     width: 33%;
     padding: 2%;
-    float:right;
+    float: right;
     position: relative;
-    top: -32.3rem;
+    top: -28.5rem;
     right: -3%;
   }
-  .perso {
-    margin-top: 4%;
-    margin-bottom: -2.3rem;
+  .firstForm{
+    width: 70%;
   }
   .perso form {
     margin-top: -3%;
-  }
-  .retour {
-    margin-bottom: 0;
-  }
-  .chekmen {
-    margin-left: -25rem;
   }
   #inspire {
     margin-top: -1%;
@@ -786,121 +754,19 @@ input:focus {
     height: 20px;
     margin: 1%;
   }
-  .conf {
-    margin-bottom: 7rem;
-  }
-  .tidCo {
-    top: 3.7rem;
-  }
-  .last {
-    padding-top: 3%;
-    margin-bottom: -2.5rem;
-  }
-  .continuer {
-    margin-top: 4rem;
-  }
 }
-
-@media only screen and (min-width: 1265px) {
- 
- 
-  .lists {
-    width: 60%;
-    height: 400px;
-    padding-top: 4%;
-    float: left;
-    margin-bottom: 2%;
-  }
-  .firstList {
-    float: left;
-    width: 50%;
-    border: 1px solid;
-    border-left-color: #fff;
-    border-top-color: #fff;
-    border-bottom-color: #fff;
-    border-right-color: #8ea9c4;
-  }
-  .secondList {
-    margin: 0 auto;
-    float: right;
-    width: 50%;
-  }
-  .map {
-    text-align: right;
-    left: -11rem;
-    top: 2.5rem;
-  }
-  .reserve {
-    width: 30%;
-    padding: 2%;
-    float: right;
-    margin-top: -26.5em;
-    margin-right: 3%;
-  }
-  .firstForm {
-    width: 70%;
-  }
-  .perso {
-    margin: 0 auto;
-    margin-top: 2.5rem;
-    margin-bottom: -2rem;
-  }
-  .perso form {
-    margin-top: -3%;
-  }
-  .retour {
-    margin-bottom: 0;
-  }
-  .continuer {
-    margin-top: 3.5rem;
-  }
-  .chekmen {
-    margin-left: -27rem;
-  }
-  .tid,
-  .time,
-  .conf {
-    width: 70%;
-    margin: 0 auto;
-  }
-  #inspire {
-    margin-top: -1%;
-    margin-bottom: 3%;
-  }
-  .time li {
-    display: inline-block;
-    height: 20px;
-    margin: 1%;
-  }
-  .conf {
-    margin-bottom: 7rem;
-  }
-  .tidCo {
-    top: 3.7rem;
-  }
-  .last {
-    padding-top: 3%;
-    margin-bottom: -2.5rem;
-  }
-  .alert {
-    margin-bottom: 1%;
-  }
-}
-@media only screen and (min-width: 1905px) {
-
+@media only screen and (min-width: 1261px) {
   .map{
-    top: -1rem;
-    left: -7rem;
-  }
-  .reserve{
-    margin-right: 3.5rem;
-  }
-  .chekmen{
-    margin-left: -51rem;
-  }
-
-  .continuer{
-    top: 5.5rem;
+    left: 1rem;
+    top: 2rem;
   }
 }
+
+@media only screen and (min-width: 1905px) {
+  .map{
+    left: 6rem;
+    top: -1rem;
+  }
+}
+
 </style>

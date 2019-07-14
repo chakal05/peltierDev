@@ -30,4 +30,14 @@ img{
   margin-bottom: 3%;
 }
 
+h2{
+  margin: 1%;
+}
+
+@media screen and (min-width: 959px){
+  h2{
+    margin: -1%;
+  }
+}
+
 </style>
