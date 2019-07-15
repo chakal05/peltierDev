@@ -71,7 +71,7 @@ export default {
 </script>
 
 <style scoped>
-html , body{
+html , body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
@@ -125,12 +125,13 @@ li {
   margin-bottom: 3%;
 }
 .table {
+  width: 90;
   margin: 0 auto;
-  margin-bottom: 3%;
+  text-align: center;
 }
-.data {
-  width: 291px;
-  margin: 0 auto;
+.data { 
+  width: 300px;
+  margin:0 auto;
 }
 .empty {
   background-color: #8ea9c4;
@@ -153,15 +154,10 @@ li {
     margin-top: 1%;
     margin-bottom: 1rem;
   }
-  .table {
+  .data {
+    width: 295px;
     margin: 0 auto;
-    margin-bottom: 3%;
   }
-   .data {
-     width: 190px;
-    margin:0 auto;
-  }
- 
 }
 @media only screen and (min-width: 768px) {
   .top {
@@ -184,13 +180,12 @@ li {
     margin-top: -1%;
   }
 }
-
-
-@media only screen and (min-width: 959px) {
+@media only screen and (min-width: 1264px) {
   
   h4 {
-    margin-top: 1rem;
+    margin-bottom: 1%;
     color: #133358;
+    margin-top: -2%;
   }
   #input-1 {
     width: 70%;
@@ -234,6 +229,4 @@ li {
     margin-top: 0.5%;
   }
 }
-
 </style>
-

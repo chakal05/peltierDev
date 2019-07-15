@@ -32,6 +32,7 @@ img{
 
 h2{
   margin: 1%;
+  color: #133358;
 }
 
 @media screen and (min-width: 959px){
