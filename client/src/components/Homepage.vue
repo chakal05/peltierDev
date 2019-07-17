@@ -230,17 +230,16 @@ export default {
           name: this.name,
           pass: this.pass
         })
-        .then(response => {
-          if (response.data.user) {
-            localStorage.setItem("jwt", response.data.token);
-            if (localStorage.getItem("jwt") != null) {
-              this.$router.push({ name: "admin" });
-            }
-          }
-        })
-        .catch(e => {
+        .catch(error => {
           this.connexionErr = true;
         });
+
+      if (response.data.user) {
+        localStorage.setItem("jwt", response.data.token);
+        if (localStorage.getItem("jwt") != null) {
+          this.$router.push({ name: "admin" });
+        }
+      }
     },
     checkForm() {
       this.$validator.validateAll().then(result => {
@@ -303,24 +302,23 @@ export default {
             },
             (this.dispo = true)
           )
-          .then(response => {
-            // Format and display only available hours
-            var obj = response.data;
-            var found = this.$_.difference(timmar, obj);
-            found.forEach(element => {
-              this.dispoHours.push(element);
-            });
-            if (!this.dispoHours[0]) {
-              this.fullBooked = true;
-              this.dispo = false;
-            } else {
-              this.fullBooked = false;
-              this.dispo = false;
-            }
-          })
           .catch(e => {
             console.error(e);
           });
+
+        // Format and display only available hours
+        var obj = response.data;
+        var found = this.$_.difference(timmar, obj);
+        found.forEach(element => {
+          this.dispoHours.push(element);
+        });
+        if (!this.dispoHours[0]) {
+          this.fullBooked = true;
+          this.dispo = false;
+        } else {
+          this.fullBooked = false;
+          this.dispo = false;
+        }
       }
     },
     getButonVal: function(event) {
@@ -346,17 +344,16 @@ export default {
           date: this.picker,
           time: this.hour
         })
-        .then(response => {
-          if (response && response.status === 200) {
-            this.alertSuccessRegister = true;
-            setTimeout(() => {
-              this.$router.go();
-            }, 2000);
-          }
-        })
-        .catch(function(error) {
-          console.log(error);
+        .catch(e => {
+          console.error(e);
         });
+
+      if (response && response.status === 200) {
+        this.alertSuccessRegister = true;
+        setTimeout(() => {
+          this.$router.go();
+        }, 2000);
+      }
     }
   }
 };
@@ -646,7 +643,7 @@ input:focus {
 }
 
 @media only screen and (min-width: 768px) {
-  .container{
+  .container {
     width: 90%;
   }
   .active {
@@ -693,7 +690,7 @@ input:focus {
   }
 }
 @media only screen and (min-width: 959px) {
-  .container{
+  .container {
     width: 90%;
   }
   .active {
@@ -740,7 +737,7 @@ input:focus {
     top: -28.5rem;
     right: -3%;
   }
-  .firstForm{
+  .firstForm {
     width: 70%;
   }
   .perso form {
@@ -756,17 +753,16 @@ input:focus {
   }
 }
 @media only screen and (min-width: 1261px) {
-  .map{
+  .map {
     left: 1rem;
     top: 2rem;
   }
 }
 
 @media only screen and (min-width: 1905px) {
-  .map{
+  .map {
     left: 6rem;
     top: -1rem;
   }
 }
-
 </style>

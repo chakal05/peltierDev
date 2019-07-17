@@ -76,6 +76,10 @@ html , body {
   height: 100%;
   overflow-x: hidden;
 }
+.container{
+  width: 95%;
+  margin: 0 auto;
+}
 h4 {
   color: #133358;
 }
@@ -125,13 +129,12 @@ li {
   margin-bottom: 3%;
 }
 .table {
-  width: 90;
+  width: 100%;
   margin: 0 auto;
-  text-align: center;
 }
 .data { 
-  width: 300px;
-  margin:0 auto;
+  width: 90%;
+  margin-right: 1rem;
 }
 .empty {
   background-color: #8ea9c4;
@@ -143,9 +146,7 @@ li {
   font-size: 15px;
 }
 @media only screen and (max-width: 320px) {
-  .container {
-    max-width: 320px;
-  }
+  
   .btn {
     width: 130px;
     margin-top: 7%;
@@ -156,7 +157,7 @@ li {
   }
   .data {
     width: 295px;
-    margin: 0 auto;
+    margin-left: -2rem;
   }
 }
 @media only screen and (min-width: 768px) {
@@ -165,28 +166,20 @@ li {
     margin: 0 auto;
   }
   .table {
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
   }
   h3 {
     margin-top: -2%;
   }
-  h4 {
-    width: 70%;
-    margin: 0 auto;
-    margin-top: -1.5%;
-  }
+  
   .back {
     margin-top: -1%;
   }
 }
 @media only screen and (min-width: 1264px) {
   
-  h4 {
-    margin-bottom: 1%;
-    color: #133358;
-    margin-top: -2%;
-  }
+  
   #input-1 {
     width: 70%;
     margin: 0 auto;
@@ -202,15 +195,6 @@ li {
     width: 200px;
     height: 35px;
     border-radius: 2px;
-    border-color: #fff;
-    background-color: #8ea9c4;
-    color: #fff;
-  }
-  .btn:hover,
-  .btn:focus {
-    background-color: #fff;
-    color: #5076a4;
-    border-color: #8ea9c4;
   }
   .left {
     position: absolute;
