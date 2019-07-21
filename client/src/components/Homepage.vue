@@ -221,9 +221,6 @@ export default {
     past: false
   }),
   methods: {
-    mounted() {
-      this.$validator.localize("fr", this.dictionary);
-    },
     async handleOk() {
       let response = await getData
         .loginUser({
@@ -355,6 +352,9 @@ export default {
         }, 2000);
       }
     }
+  },
+  mounted() {
+    this.$validator.localize("fr", this.dictionary);
   }
 };
 </script>
