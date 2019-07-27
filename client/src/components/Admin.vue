@@ -197,8 +197,8 @@ li {
   }
 }
 @media only screen and (min-width: 959px) {
-  h4 {
-    margin-bottom: 1rem;
+  h4, .back {
+    margin-top: 1rem;
   }
 }
 @media only screen and (min-width: 1264px) {
