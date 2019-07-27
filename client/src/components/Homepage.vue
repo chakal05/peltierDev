@@ -83,6 +83,7 @@
         <br />
         <br />
         <div class="perso">
+          <h5>Entrez vos coordonnées personnelles</h5>
           <form>
             <div class="column is-12">
               <div class="column is-12">
@@ -114,7 +115,7 @@
                 <input
                   name="telephone"
                   v-model="telephone"
-                  v-validate="'required|numeric|min:8'"
+                  v-validate="'required|numeric|min:8|max:8'"
                   :counter="8"
                   type="text"
                   placeholder="Téléphone"
@@ -173,10 +174,9 @@
         <b-button class="retour" v-on:click="foor =!foor">Retour</b-button>
         <br />
         <br />
+
         <div class="last">
-          <h5>
-            <b>Voulez vous confirmer ce rendez-vous?</b>
-          </h5>
+          <h5>Voulez vous confirmer ce rendez-vous?</h5>
           <p>
             Le patient
             <b-button variant="light">{{prenom}} {{nom}}</b-button>souhaite faire une résérvation pour la date suivante :
@@ -185,6 +185,8 @@
             <b-button variant="light">{{hour}}</b-button>
           </p>
         </div>
+        <br />
+        <br />
         <b-button class="continuer" v-on:click="submitForm">ENVOYER</b-button>
       </div>
     </b-container>
@@ -227,16 +229,17 @@ export default {
           name: this.name,
           pass: this.pass
         })
+        .then(response => {
+          if (response.data.user) {
+            localStorage.setItem("jwt", response.data.token);
+            if (localStorage.getItem("jwt") != null) {
+              this.$router.push({ name: "admin" });
+            }
+          }
+        })
         .catch(error => {
           this.connexionErr = true;
         });
-
-      if (response.data.user) {
-        localStorage.setItem("jwt", response.data.token);
-        if (localStorage.getItem("jwt") != null) {
-          this.$router.push({ name: "admin" });
-        }
-      }
     },
     checkForm() {
       this.$validator.validateAll().then(result => {
@@ -360,7 +363,20 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style >
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 * {
   margin: 0;
   padding: 0;
@@ -388,7 +404,7 @@ h3 {
   font-weight: bold;
   color: #133358;
 }
-li {
+ul li {
   list-style: none;
 }
 .reserve {
@@ -434,7 +450,9 @@ li {
   padding: 2%;
 }
 .whiteBtn:hover {
-  border-color: #b8bbbb;
+  background-color: #fff;
+  border-color: #133358;
+  color: #133358;
   font-weight: bold;
 }
 .firstList {
@@ -474,7 +492,7 @@ li {
 .tid,
 .time,
 .conf {
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
   margin-top: 1%;
 }
@@ -485,14 +503,22 @@ li {
 .perso {
   border-radius: 2px;
   box-shadow: 1px 1px 1px 1px #8ea9c4;
-  margin: 5%;
-  height: 300px;
-  display: grid;
-  justify-items: center;
-  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  height: 50vh;
+  text-align: center;
+}
+
+.perso h5 {
+  width: 81%;
+  margin: auto;
+  padding-top: 3rem;
+  margin-bottom: 2rem;
 }
 form {
   padding: 2%;
+  width: 70%;
+  margin: auto;
 }
 .perso span {
   color: red;
@@ -519,37 +545,47 @@ form {
   float: right;
 }
 
+.retour:hover,
+.continuer:hover {
+  background-color: #5076a4;
+  color: #fff;
+}
+
 input {
-  margin-bottom: 3%;
   width: 99%;
+  margin-bottom: 1rem;
   height: 31px;
-  padding-left: 1%;
-  border: 0.3px solid gainsboro;
-  border-top-color: #fff;
-  border-right-color: #fff;
-  border-left-color: #fff;
+  text-align: center;
+  color: #133358;
 }
 input:focus {
   outline: none;
 }
 
-.calendar {
-  height: 400px;
+.application--wrap {
+  min-height: 10vh !important;
+  margin: 3rem auto;
+}
+
+.v-picker__title--landscape {
+  width: 99px !important;
+}
+
+.v-picker__body {
+  margin-left: 100px !important;
 }
 #inspire {
   width: 100%;
-  padding-top: 3%;
   background-color: #fff;
-  height: 300px;
-  margin-top: 1rem;
 }
+
 .tidCo {
-  position: relative;
-  top: 5rem;
+  margin-bottom: 2rem;
 }
 .droiteTime {
   margin-top: -1rem;
 }
+
 .time {
   margin-top: 7%;
 }
@@ -578,20 +614,24 @@ input:focus {
   font-weight: bold;
   padding: 1%;
 }
+
 .last {
-  height: 200px;
-  margin: 5%;
+  height: 40vh;
   box-shadow: 1px 1px 1px 1px #8ea9c4;
-  display: grid;
-  justify-items: center;
-  align-items: center;
+  margin-top: 2rem;
 }
 
+.last h5 {
+  width: 90%;
+  margin: auto;
+  font-weight: bold;
+  padding-top: 3rem;
+  margin-bottom: 2rem;
+}
 .last p {
   padding: 3px;
   font-size: 15px;
   font-weight: 500;
-  margin-top: -3rem;
 }
 .full {
   background-color: #8ea9c4;
@@ -615,33 +655,60 @@ input:focus {
   margin: 0 auto;
   margin-bottom: 3%;
 }
-#modal-center {
-  background-color: #5076a4;
-}
-@media only screen and (max-width: 320px) {
-  h3 {
-    margin-top: 0.5rem;
+
+@media screen and (max-width: 320px) {
+  .tidCo {
+    margin-bottom: 3rem;
   }
-  .firstList,
-  .secondList {
-    margin: 0 auto;
+  .application--wrap {
+    min-height: 40vh !important;
   }
   .perso {
-    height: 200px;
-    margin: 5%;
+    height: 43vh;
+    margin-top: 2%;
+    margin-bottom: 1rem;
+  }
+  .perso h5 {
+    padding-top: 1.3rem;
+    margin-bottom: 0.7rem;
+  }
+
+  input {
+    margin-bottom: 3%;
   }
   .bouton,
   .whiteBtn {
-    margin-left: -5.7%;
+    margin: auto;
+    width: 90%;
+    padding: 1%;
     margin-bottom: 5%;
   }
-  .tidCo {
-    position: relative;
-    top: 5.5rem;
-    right: 0;
+  .tid {
+    width: 95%;
+  }
+
+  .v-picker__body {
+    margin-left: 100px !important;
+  }
+
+  .conf {
+    width: 90%;
+  }
+  .last {
+    height: 35vh;
+  }
+
+  .last h5 {
+    width: 90%;
+    font-weight: bold;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .last p {
+    margin-bottom: 2rem;
   }
 }
-
 @media only screen and (min-width: 768px) {
   .container {
     width: 90%;
@@ -663,9 +730,32 @@ input:focus {
     float: right;
     width: 50%;
   }
-  #inspire {
-    margin-top: 2%;
+
+  .firstForm {
+    width: 70%;
+    margin: 2rem auto;
   }
+
+  .perso h5 {
+    padding-top: 8rem;
+    margin-bottom: 3rem;
+  }
+
+  .tid {
+    margin-top: 2rem;
+  }
+  .application--wrap {
+    min-height: 20vh !important;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+  .v-picker__title--landscape {
+    width: 170px !important;
+  }
+  .v-picker__body {
+    margin-left: 170px !important;
+  }
+
   .reserve {
     margin-top: 6%;
     margin-bottom: 3%;
@@ -679,6 +769,19 @@ input:focus {
   }
   .map {
     left: -0.9rem;
+  }
+
+  .last h5 {
+    width: 90%;
+    margin: auto;
+    font-weight: bold;
+    padding-top: 7rem;
+    margin-bottom: 7rem;
+  }
+  .last p {
+    padding: 3px;
+    font-size: 15px;
+    font-weight: 500;
   }
 
   .full {
@@ -740,11 +843,9 @@ input:focus {
   .firstForm {
     width: 70%;
   }
-  .perso form {
-    margin-top: -3%;
-  }
-  #inspire {
-    margin-top: -1%;
+  .perso h5 {
+    padding-top: 7rem;
+    margin-bottom: 3rem;
   }
   .time li {
     display: inline-block;
@@ -753,6 +854,12 @@ input:focus {
   }
 }
 @media only screen and (min-width: 1261px) {
+  .reserve {
+    top: -29.3rem;
+  }
+  .firstForm {
+    margin-top: -1rem;
+  }
   .map {
     left: 1rem;
     top: 2rem;
@@ -760,9 +867,35 @@ input:focus {
 }
 
 @media only screen and (min-width: 1905px) {
+  .firstList {
+    margin-top: -4rem;
+    height: 100%;
+  }
+  .secondList {
+    margin-top: -4rem;
+  }
+  .reserve {
+    top: -31.5rem;
+    right: 1rem;
+  }
   .map {
-    left: 6rem;
+    left: 8rem;
     top: -1rem;
+  }
+  .firstForm {
+    width: 50%;
+  }
+
+  .tid {
+    width: 80%;
+  }
+
+  .time {
+    margin-top: 3%;
+  }
+
+  .last p {
+    font-size: 21px;
   }
 }
 </style>

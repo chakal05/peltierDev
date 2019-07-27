@@ -8,3 +8,8 @@ export default {
     name : 'icke'
 }
 </script>
+<style scoped>
+h2{
+    margin-top: 5rem;
+}
+</style>

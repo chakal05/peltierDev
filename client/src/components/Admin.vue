@@ -9,28 +9,25 @@
               <v-date-picker class="tb" landscape full-width v-model="picker" locale="fr-fr"></v-date-picker>
             </v-flex>
           </v-layout>
-          <button class=" btn left">
-            <router-link tag="li" to="/">
-              Se déconnecter
-            </router-link>
+          <button class="square left">
+            <router-link tag="li" to="/">Se déconnecter</router-link>
           </button>
-          <b-button class="btn right" v-on:click="getInfo">Retrouver</b-button>
+          <b-button class="square right" v-on:click="getInfo">Retrouver</b-button>
         </v-app>
       </div>
 
-      <div class="table" v-if="show">
-        <b-button class="btn back" v-on:click="show = !show">Retour</b-button>
-
+      <div class="tableau" v-if="show">
+        <b-button class="square back" v-on:click="show = !show">Retour</b-button>
         <h4 class="second">Les résérvations pour cette date sont:</h4>
-        <br>
-        <b-table class="data" striped hover :items="items"></b-table>
+        <br />
+        <b-table class="data" bordered hover :items="items"></b-table>
         <div class="empty" v-if="empty">Aucune reservation n'a été rétrouvé pour ce jour</div>
       </div>
     </b-container>
   </div>
 </template>
 
-<script>
+<script scoped >
 import getData from "@/requests/getData";
 export default {
   name: "admin",
@@ -42,7 +39,7 @@ export default {
   }),
   methods: {
     async getInfo() {
-      if(!this.show){
+      if (!this.show) {
         this.empty = false;
         this.items = [];
       }
@@ -52,7 +49,7 @@ export default {
         })
         .then(response => {
           if (response.status === 200) {
-              this.empty = false;
+            this.empty = false;
             let data = response.data;
             data.forEach(element => {
               this.items.push(element);
@@ -64,26 +61,37 @@ export default {
             this.empty = true;
           }
         });
+
       this.show = true;
     }
   }
 };
 </script>
 
-<style scoped>
-html , body {
+<style  >
+html,
+body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
 }
-.container{
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.container {
   width: 95%;
   margin: 0 auto;
+  padding: 1%;
 }
 h4 {
   color: #133358;
+  margin-bottom: -1rem;
 }
-.btn {
+.square {
   width: 150px;
   height: 35px;
   border-radius: 2px;
@@ -91,36 +99,26 @@ h4 {
   background-color: #8ea9c4;
   color: #fff;
 }
-.btn:hover,
-.btn:focus {
+.square:hover,
+.square:focus {
   background-color: #fff;
   color: #5076a4;
-  border-color: #8ea9c4;
+  border: 1px solid #8ea9c4;
 }
-#inspire {
-  margin: 0 auto;
-  height: 200px;
-  background-color: #fff;
+
+.v-card {
+  margin-top: -0.2rem !important;
 }
+
 .left {
   position: absolute;
-  top: 25rem;
+  top: 23rem;
   left: 0;
 }
 .right {
   position: absolute;
-  top: 25rem;
+  top: 23rem;
   right: 0;
-}
-#inspire a {
-  color: #fff;
-  text-decoration: none;
-}
-#inspire a:hover {
-  color: #5076a4;
-}
-#inspire .btn:hover a {
-  color: #5076a4;
 }
 li {
   list-style: none;
@@ -128,13 +126,19 @@ li {
 .back {
   margin-bottom: 3%;
 }
-.table {
-  width: 100%;
-  margin: 0 auto;
-}
-.data { 
+
+.tableau {
   width: 90%;
-  margin-right: 1rem;
+  margin: 0 auto;
+  text-align: center;
+}
+.data {
+  width: 315px !important;
+  margin-left: -0.4rem;
+}
+.b-table thead {
+  background-color: #8ea9c4;
+  color: #fff;
 }
 .empty {
   background-color: #8ea9c4;
@@ -145,41 +149,79 @@ li {
   padding: 3%;
   font-size: 15px;
 }
+/* Galaxy 5 screen*/
+@media only screen and (min-width: 321px) and (max-width: 360px) {
+  .data {
+    width: 300px !important;
+    margin-left: -2.1rem;
+  }
+}
+
+/* iPhone 6,7,8 + X screen*/
+@media only screen and (min-width: 361px) and (max-width: 400px) {
+  .data {
+    width: 300px !important;
+    margin-left: -1.69rem;
+  }
+}
+
+/* ipnone 5 screen*/
 @media only screen and (max-width: 320px) {
-  
-  .btn {
-    width: 130px;
-    margin-top: 7%;
+  .container {
+    width: 320px;
+  }
+  .square {
+    width: 50%;
+    margin-bottom: 2rem;
+  }
+  .table th,
+  .table td {
+    padding: 1px !important;
+  }
+  .data {
+    width: 310px !important;
+    margin-left: -1.8rem;
+  }
+  .right,
+  .left {
+    top: 25rem;
   }
   .back {
     margin-top: 1%;
-    margin-bottom: 1rem;
-  }
-  .data {
-    width: 295px;
-    margin-left: -2rem;
   }
 }
+
+@media only screen and (min-width: 412px) and (max-width: 767px) {
+  .data {
+    width: 90% !important;
+    margin: 0 auto;
+  }
+}
+
 @media only screen and (min-width: 768px) {
   .top {
     width: 90%;
     margin: 0 auto;
   }
-  .table {
-    width: 90%;
+  .data {
+    width: 90% !important;
     margin: 0 auto;
   }
+
   h3 {
     margin-top: -2%;
   }
-  
+
   .back {
     margin-top: -1%;
   }
 }
+@media only screen and (min-width: 959px) {
+  h4 {
+    margin-bottom: 1rem;
+  }
+}
 @media only screen and (min-width: 1264px) {
-  
-  
   #input-1 {
     width: 70%;
     margin: 0 auto;
@@ -191,7 +233,11 @@ li {
     height: 180px;
     margin: 0 auto;
   }
-  .btn {
+  h4 {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+  }
+  .square {
     width: 200px;
     height: 35px;
     border-radius: 2px;
@@ -210,7 +256,7 @@ li {
     margin-top: -0.5%;
   }
   .back {
-    margin-top: 0.5%;
+    margin-top: 2%;
   }
 }
 </style>
