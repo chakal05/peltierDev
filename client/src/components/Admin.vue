@@ -134,7 +134,7 @@ li {
 }
 .data {
   width: 315px !important;
-  margin-left: -0.4rem;
+  margin: 0 auto;
 }
 .b-table thead {
   background-color: #8ea9c4;
@@ -148,21 +148,6 @@ li {
   margin: 0 auto;
   padding: 3%;
   font-size: 15px;
-}
-/* Galaxy 5 screen*/
-@media only screen and (min-width: 321px) and (max-width: 360px) {
-  .data {
-    width: 300px !important;
-    margin-left: -2.1rem;
-  }
-}
-
-/* iPhone 6,7,8 + X screen*/
-@media only screen and (min-width: 361px) and (max-width: 400px) {
-  .data {
-    width: 300px !important;
-    margin-left: -1.69rem;
-  }
 }
 
 /* ipnone 5 screen*/
@@ -180,7 +165,7 @@ li {
   }
   .data {
     width: 310px !important;
-    margin-left: -1.8rem;
+    margin-left: -1rem;
   }
   .right,
   .left {
@@ -191,12 +176,7 @@ li {
   }
 }
 
-@media only screen and (min-width: 412px) and (max-width: 767px) {
-  .data {
-    width: 90% !important;
-    margin: 0 auto;
-  }
-}
+
 
 @media only screen and (min-width: 768px) {
   .top {

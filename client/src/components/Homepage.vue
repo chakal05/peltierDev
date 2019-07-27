@@ -72,7 +72,7 @@
               <div slot="modal-footer" class="w-100">
                 <b-button class="continuer" @click="handleOk">Connexion</b-button>
               </div>
-              <p v-if="connexionErr" class="rouge">Il y'a un problème avec l'identifiant</p>
+              <p v-if="connexionErr" class="rouge">Il y'a un problème avec l'identifiant et ou le mot de passe</p>
             </b-modal>
           </div>
         </div>
