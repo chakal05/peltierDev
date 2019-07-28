@@ -72,7 +72,7 @@
               <div slot="modal-footer" class="w-100">
                 <b-button class="continuer" @click="handleOk">Connexion</b-button>
               </div>
-              <p v-if="connexionErr" class="rouge">Il y'a un problème avec l'identifiant et ou le mot de passe</p>
+              <p v-if="connexionErr" class="rouge">Il y'a un problème avec l'identifiant et/ou le mot de passe</p>
             </b-modal>
           </div>
         </div>
@@ -230,9 +230,9 @@ export default {
           pass: this.pass
         })
         .then(response => {
-          if (response.data.user) {
-            localStorage.setItem("jwt", response.data.token);
-            if (localStorage.getItem("jwt") != null) {
+          if (response.status === 200) {
+            sessionStorage.setItem("status", 200);
+            if (sessionStorage.getItem("status") != null) {
               this.$router.push({ name: "admin" });
             }
           }
@@ -253,7 +253,9 @@ export default {
       });
     },
     async sendData() {
-      // Get today'date and compare it to the picked date. If picked date is previous than today's date, alert them to choose a new date
+      // Get today'date and compare it to the picked date. 
+      //If picked date is previous than today's date, alert them to choose a new date
+
       var d = new Date().toISOString().substr(0, 10);
       var today = new Date(d);
       var tid = new Date(this.picker);

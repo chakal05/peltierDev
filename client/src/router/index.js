@@ -31,7 +31,7 @@ const router = new Router({
 // ? If token doest exist, redirect to homepage
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!localStorage.getItem("jwt")) {
+    if (!sessionStorage.getItem("status")) {
       next({
         name: 'Home',
         query: {
