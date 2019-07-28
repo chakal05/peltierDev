@@ -239,7 +239,7 @@ export default {
         })
         .catch(error => {
           this.connexionErr = true;
-        });
+        }); 
     },
     checkForm() {
       this.$validator.validateAll().then(result => {
@@ -659,7 +659,7 @@ input:focus {
 }
 
 @media screen and (max-width: 320px) {
-  .tidCo {
+  .continuer {
     margin-bottom: 3rem;
   }
   .application--wrap {
@@ -669,6 +669,7 @@ input:focus {
     height: 43vh;
     margin-top: 2%;
     margin-bottom: 1rem;
+    padding-bottom: 2rem;
   }
   .perso h5 {
     padding-top: 1.3rem;
@@ -709,6 +710,10 @@ input:focus {
 
   .last p {
     margin-bottom: 2rem;
+  }
+
+  .time ul{
+    margin-bottom: 3rem;
   }
 }
 @media only screen and (min-width: 768px) {

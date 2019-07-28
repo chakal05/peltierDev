@@ -98,6 +98,7 @@ h4 {
   border-color: #fff;
   background-color: #8ea9c4;
   color: #fff;
+  margin-bottom: 3rem;
 }
 .square:hover,
 .square:focus {
@@ -112,12 +113,12 @@ h4 {
 
 .left {
   position: absolute;
-  top: 23rem;
+  top: 25rem;
   left: 0;
 }
 .right {
   position: absolute;
-  top: 23rem;
+  top: 25rem;
   right: 0;
 }
 li {
@@ -157,7 +158,7 @@ li {
   }
   .square {
     width: 50%;
-    margin-bottom: 2rem;
+    margin-bottom: 5rem;
   }
   .table th,
   .table td {
@@ -169,7 +170,7 @@ li {
   }
   .right,
   .left {
-    top: 25rem;
+    top: 26rem;
   }
   .back {
     margin-top: 1%;
