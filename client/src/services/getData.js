@@ -7,7 +7,7 @@ export default {
 
   getLogo(logoName) {
     return axios.get("/upload", {
-      params: {
+      params : {
         filename: logoName
       }
     });

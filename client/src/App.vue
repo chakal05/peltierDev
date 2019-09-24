@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <v-app-bar>
+
+<v-app>
+
+    <v-app-bar app>
       <div class="logo">
         <img src="./assets/logo.61d2e5ee.jpg" alt />
       </div>
@@ -9,7 +12,14 @@
 
       <div class="flex-grow-1"></div>
     </v-app-bar>
-    <router-view></router-view>
+
+    <v-content>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </v-content>
+</v-app>
+   
   </div>
 </template>
 
@@ -58,4 +68,5 @@ body {
     }
   }
 }
+
 </style>
