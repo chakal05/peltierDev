@@ -1,50 +1,23 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Homepage from '@/components/Homepage'
-import admin from '@/components/Admin'
-import notFound from '@/components/notFound'
-Vue.use(Router)
+import Vue from "vue";
+import Router from "vue-router";
+import Home from "../views/homePage.vue";
+import admin from "../views/admin.vue";
+Vue.use(Router);
 
 const router = new Router({
   routes: [
     {
-      path: '/',
-      name: 'Home',
-      component: Homepage
+      path: "/",
+      name: "first",
+      component: Home
     },
-    {
-      path: 'dashboard',
-      name: 'admin',
-      component: admin,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '*',
-      name:'404', 
-      component: notFound
-  }
-  ]
-})
 
-// ? If token doest exist, redirect to homepage
-router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!sessionStorage.getItem("status")) {
-      next({
-        name: 'Home',
-        query: {
-          redirect: to.fullPath,
-        },
-      });
-    } else {
-      next();
+    {
+      path: "/dashboard",
+      name: "admin",
+      component: admin
     }
-  } else {
-    next();
-  }
-})
+  ]
+});
 
-
-export default router
+export default router;

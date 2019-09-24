@@ -1,32 +1,24 @@
-/*eslint-disable */
-import Vue from 'vue'
-import BootstrapVue from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-import App from './App'
-import router from './router'
-import VeeValidate, {Validator} from 'vee-validate'
-import fr from 'vee-validate/dist/locale/fr'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
-import VueAxios from 'vue-axios'
-import axios from 'axios'
-import underscore from 'vue-underscore'
-Vue.use(router)
-Vue.use(underscore)
-Vue.use(VueAxios ,axios)
-Vue.use(Vuetify, {
-  iconfont: 'mdi' // 'md' || 'mdi' || 'fa' || 'fa4'
+ import Vue from "vue"
+ import App from "./App.vue"
+ import vuetify from "./plugins/vuetify"
+ import Vuetify from 'vuetify/lib'
+ import fr from 'vuetify/lib/locale/fr'
+ import router from './router/index'
+ import store from './router/store'
+ Vue.use(router)
+ Vue.config.productionTip = false
+ Vue.use(Vuetify, {
+ lang : {
+   locale : { fr },
+   current: 'fr'
+ }
 })
-Vue.use(BootstrapVue)
-Vue.config.productionTip = false
-Vue.use(VeeValidate)
-Validator.localize('fr', fr)
+ new Vue({
+   router,
+   store,
+   vuetify,
+   render: h => h(App)
+ }).$mount("#app");
 
 
-new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
-})
+ 
