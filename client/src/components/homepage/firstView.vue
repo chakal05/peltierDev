@@ -1,20 +1,19 @@
 <template>
   <v-container>
+    <v-parallax dark src="../../assets/doctors.jpg">
+      <v-row align="center" justify="center">
+        <h1 class="display-2 font-weight-bold mb-4 black--text">Hôpital Général Peltier</h1>
+        <h4 class="subheading black--text">On prend soin de vous !</h4>
+      </v-row>
+    </v-parallax>
 
-    <v-row align="center" justify="center">
-      
-      <v-card max-width="60%" class="mx-auto">
-        <v-app-bar dark color="#385F73">
-          <v-toolbar-title>Hôpital Général Peltier</v-toolbar-title>
-
-          <div class="flex-grow-1"></div>
-        </v-app-bar>
-
-        <v-container class="pa-2" fluid>
-          <v-row>
-            <v-col>
-              <v-card color="blue-grey darken-2" dark>
-                <v-card-text class="white--text">
+    <v-item-group>
+      <v-container>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-item>
+              <v-card color="teal lighten-4" height="210">
+                <v-card-text>
                   <div class="headline mb-2">
                     <v-toolbar-title>Les horaires d'appel</v-toolbar-title>
                   </div>Vous pouvez joindre l'hopital du Dimanche au Jeudi, de 8:00 a 17:00
@@ -26,14 +25,16 @@
                   </p>
                 </v-card-actions>
               </v-card>
-            </v-col>
-          </v-row>
+            </v-item>
+          </v-col>
 
-          <v-row>
-            <v-col>
-              <v-card color="blue-grey darken-2" dark>
+          <v-col cols="12" md="4">
+            <v-item>
+              <v-card color="blue-grey darken-2" dark height="210">
                 <v-card-text class="white--text">
-                  <div class="headline mb-2">Les horaires de consultation</div>Les consultations sont prises en charge du Dimanche au Jeudi, de 8:00 a 17:00
+                  <div class="headline mb-2">
+                    <v-toolbar-title>Les horaires de consultation</v-toolbar-title>
+                  </div>Les consultations sont prises en charge du Dimanche au Jeudi, de 8:00 a 17:00
                 </v-card-text>
 
                 <v-card-actions>
@@ -42,14 +43,16 @@
                   </p>
                 </v-card-actions>
               </v-card>
-            </v-col>
-          </v-row>
+            </v-item>
+          </v-col>
 
-          <v-row>
-            <v-col>
+          <v-col cols="12" md="4">
+            <v-item>
               <v-card color="blue-grey darken-2" dark>
                 <v-card-text class="white--text">
-                  <div class="headline mb-2">Les consultations</div>Les consultations dure 30 minutes par patients afin de pouvoir recevoir le plus de patients possible. Nous vous recommandons fortement donc, d'arriver un quart d'heure en avance pour éviter les surprises. Si vous n'etes pas en place à l'heure, votre consultation sera occtroyé au patient suivant sur la liste.
+                  <div class="headline mb-2">
+                    <v-toolbar-title>Les horaires de consultation</v-toolbar-title>
+                  </div>Les consultations dure 30 minutes par patients afin de pouvoir recevoir le plus de patients possible. Nous vous recommandons fortement donc, d'arriver un quart d'heure en avance pour éviter les surprises. Si vous n'etes pas en place à l'heure, votre consultation sera occtroyé au patient suivant sur la liste.
                 </v-card-text>
 
                 <v-card-actions>
@@ -58,11 +61,11 @@
                   <v-btn text>Administration</v-btn>
                 </v-card-actions>
               </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-card>
-    </v-row>
+            </v-item>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-item-group>
   </v-container>
 </template>
 
@@ -71,13 +74,4 @@ export default {};
 </script>
 
 <style lang='scss' scoped>
-.container {
-  .v-toolbar__title {
-    color: #fff !important;
-  }
-
-  .btns {
-    // margin-top: -1.5rem;
-  }
-}
 </style>

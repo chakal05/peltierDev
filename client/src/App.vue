@@ -3,7 +3,7 @@
 
 <v-app>
 
-    <v-app-bar app>
+    <v-app-bar app >
       <div class="logo">
         <img src="./assets/logo.61d2e5ee.jpg" alt />
       </div>
@@ -18,6 +18,21 @@
         <router-view></router-view>
       </v-container>
     </v-content>
+
+<v-card >
+    <v-footer
+      absolute
+      class="white elevation-5"
+    >
+      <v-col
+        class="text-center"
+        cols="12"
+      >
+        {{ new Date().getFullYear() }} — <strong>Hôpital Général Peltier</strong>
+      </v-col>
+    </v-footer>
+  </v-card>
+
 </v-app>
    
   </div>
