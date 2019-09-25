@@ -19,20 +19,6 @@
       </v-container>
     </v-content>
 
-<v-card >
-    <v-footer
-      absolute
-      class="white elevation-5"
-    >
-      <v-col
-        class="text-center"
-        cols="12"
-      >
-        {{ new Date().getFullYear() }} — <strong>Hôpital Général Peltier</strong>
-      </v-col>
-    </v-footer>
-  </v-card>
-
 </v-app>
    
   </div>
