@@ -1,33 +1,37 @@
 
 <template>
   <v-container>
-    <firstView v-if="firstView"></firstView>
-    <form1 v-if="formulaire"></form1>
+   <!--
+      <firstView v-if="firstView"></firstView>
+  <calendrier></calendrier>
+   
+     -->
+   <form1 ></form1>
   </v-container>
 </template>
 
 
 <script>
-import firstView from "../components/homepage/firstView";
+// import firstView from "../components/homepage/firstView";
 import form1 from "../components/homepage/form";
-import { mapState } from "vuex";
+//import calendrier from "../components/homepage/calendrier"
+//import { mapState } from "vuex";
 export default {
   name: "landingPage",
   components: {
-    firstView,
-    form1,
-    
+   // firstView,
+  form1
+   // calendrier
   },
   props: {
     source: String
   },
   data: () => ({
-    first: true,
-    form: false
-  }),
+    //
+      }),
 
   computed: {
-    ...mapState(["firstView", "formulaire"])
+  //  ...mapState(["firstView", "formulaire"])
   },
 
   methods: {

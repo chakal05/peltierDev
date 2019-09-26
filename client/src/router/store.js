@@ -8,8 +8,8 @@ Vue.use(vuex);
 
 export default new vuex.Store({
   state: {
-    firstView: true,
-    formulaire: false
+   // firstView   
+  //  formulaire: false
   },
 
   //  getters : {
@@ -17,10 +17,10 @@ export default new vuex.Store({
   //  },
 
   mutations: {
-    changeView1: state => {
-      state.firstView = false;
-      state.formulaire = true;
-    }
+  //  changeView1: state => {
+  //    state.firstView = false;
+  //    state.formulaire = true;
+  //  }
   },
 
   actions: {}

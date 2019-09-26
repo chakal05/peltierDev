@@ -1,71 +1,57 @@
 <template>
-  <v-form
-    ref="form"
-    v-model="valid"
-    lazy-validation
+  <v-container> 
+    <v-card
+    max-width="500"
+    class="mx-auto"
   >
-    <v-text-field
-      v-model="name"
-      :counter="10"
-      :rules="nameRules"
-      label="Name"
-      required
-    ></v-text-field>
-
-    <v-text-field
-      v-model="email"
-      :rules="emailRules"
-      label="E-mail"
-      required
-    ></v-text-field>
-
-    <v-select
-      v-model="select"
-      :items="items"
-      :rules="[v => !!v || 'Item is required']"
-      label="Item"
-      required
-    ></v-select>
-
-    <v-checkbox
-      v-model="checkbox"
-      :rules="[v => !!v || 'You must agree to continue!']"
-      label="Do you agree?"
-      required
-    ></v-checkbox>
-
-    <v-btn
-      :disabled="!valid"
-      color="success"
-      class="mr-4"
-      @click="validate"
+     <v-toolbar
+      color="teal"
+      dark
     >
-      Validate
-    </v-btn>
 
-    <v-btn
-      color="error"
-      class="mr-4"
-      @click="reset"
-    >
-      Reset Form
-    </v-btn>
+      <v-toolbar-title>Formulaire</v-toolbar-title>
+    </v-toolbar>
+    <v-row align='center' justify='center'>
+      <v-form ref="form" >
+        <v-text-field v-model="name" :counter="10" :rules="nameRules" label="Nom" required></v-text-field>
 
-    <v-btn
-      color="warning"
-      @click="resetValidation"
-    >
-      Reset Validation
-    </v-btn>
-  </v-form>
+        <v-text-field v-model="email" :rules="emailRules" label="Prénom" required></v-text-field>
+
+        <v-text-field v-model="email" :rules="emailRules" label="Téléphone" required></v-text-field>
+
+        <v-radio-group v-model="radios" :mandatory="false">
+          <p> Je suis :  </p>
+
+          <v-radio label="un homme" value="radio-1" selected ></v-radio>
+          <v-radio label="une femme" value="radio-2"></v-radio>
+        </v-radio-group>
+
+        <v-col class="text-center" cols="12">
+          <v-btn :disabled="!valid" color="teal" class="white--text mr-4" @click="validate">Valider</v-btn>
+
+          <v-btn color="error" class="mr-4" @click="reset">Annuler</v-btn>
+        </v-col>
+      </v-form>
+    </v-row>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
+
+// todo responsiveness for mobiles 
+
 export default {
-    
-}
+  data : ()  =>  ({
+   radios : 'radio-1'
+  })
+};
 </script>
 
 <style lang='scss' scoped>
-
+.container {
+  .card{
+ 
+  }
+}
 </style>

@@ -88,18 +88,19 @@
 <script>
 
 // todo responsiveness between ipad and ipad Pro
-import { mapState, mapMutations } from "vuex";
+
+//import {  mapMutations } from "vuex";
 export default {
 
   data : () => ({
 
   }),
   computed: {
-    ...mapState([''])
+    //
   },
   
   methods : {
-...mapMutations(['changeView1'])
+// ...mapMutations(['changeView1'])
   }
 };
 </script>
@@ -107,7 +108,7 @@ export default {
 <style lang='scss' scoped>
 .container{
     .v-parallax{
-        height: 700px !important;
+        height: 731px !important;
     }
 }
 </style>
