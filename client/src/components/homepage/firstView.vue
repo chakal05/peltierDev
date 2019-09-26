@@ -15,7 +15,7 @@
         <v-row>
           <v-col cols="12" md="4">
             <v-item>
-              <v-card color="teal darken-1" >
+              <v-card color="teal" >
                 <v-card-text class="white--text">
                   <div class="headline mb-2">
                     <v-toolbar-title>La mission de l'hôpital</v-toolbar-title>
@@ -35,7 +35,7 @@
 
           <v-col cols="12" md="4">
             <v-item>
-              <v-card color="teal darken-2" dark>
+              <v-card color="teal" dark>
                 <v-card-text class="white--text">
                   <div class="headline mb-2">
                     <v-toolbar-title>Les horaires de consultation</v-toolbar-title>
@@ -62,7 +62,7 @@
 
           <v-col cols="12" md="4">
             <v-item>
-              <v-card color="teal darken-3" dark>
+              <v-card color="teal" dark>
                 <v-card-text class="white--text">
                   <div class="headline mb-2">
                     <v-toolbar-title>Les consultations</v-toolbar-title>

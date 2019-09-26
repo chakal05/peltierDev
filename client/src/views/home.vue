@@ -3,25 +3,30 @@
   <v-container>
    <!--
       <firstView v-if="firstView"></firstView>
-  <calendrier></calendrier>
-   
+ 
+   <calendrier></calendrier>
+    <form1 ></form1>
      -->
-   <form1 ></form1>
+
+     <tableau></tableau>
   </v-container>
 </template>
 
 
 <script>
 // import firstView from "../components/homepage/firstView";
-import form1 from "../components/homepage/form";
+//import form1 from "../components/homepage/form";
 //import calendrier from "../components/homepage/calendrier"
 //import { mapState } from "vuex";
+import tableau from '../components/homepage/tableHeureDispo'
 export default {
   name: "landingPage",
   components: {
    // firstView,
-  form1
-   // calendrier
+//  form1,
+  //  calendrier,
+  tableau
+
   },
   props: {
     source: String
