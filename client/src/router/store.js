@@ -3,13 +3,19 @@ import vuex from "vuex";
 
 Vue.use(vuex);
 
-// State's property should be retrievied from db and mutations should become actions
-// When changed by school admin, update data accordingly
-
 export default new vuex.Store({
   state: {
-   // firstView   
-  //  formulaire: false
+    nom: null,
+    prenom: null,
+    telephone: null,
+    sexe: null,
+    jour: null,
+    heure: null
+    // homeView : true ,
+    //  formulaire: false,
+    // calendrier: false,
+    // lesHeures : false,
+    // recap : false
   },
 
   //  getters : {
@@ -17,11 +23,35 @@ export default new vuex.Store({
   //  },
 
   mutations: {
-  //  changeView1: state => {
-  //    state.firstView = false;
-  //    state.formulaire = true;
-  //  }
+    //  changeView1: state => {
+    //    state.homeView = false;
+    //    state.formulaire = true;
+    //  }
+
+    getInfo: (state, nom, prenom, telephone, sexe) => {
+      state.nom = nom;
+      state.prenom = prenom;
+      state.telephone = telephone;
+      state.sexe = sexe;
+
+      state.calendrier = true;
+      alert("got em from the store");
+    },
+
+    getJour: (state, jour) => {
+      state.jour = jour;
+
+      state.lesHeures = true;
+    },
+
+    getTime: (state, hour) => {
+      state.hour = hour;
+
+      state.recap = true;
+    }
   },
 
-  actions: {}
+  actions: {
+    // retrieve hours
+  }
 });

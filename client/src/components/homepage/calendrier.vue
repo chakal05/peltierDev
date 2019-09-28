@@ -24,6 +24,4 @@ export default {
   margin-top: 7rem;
   margin-bottom: 4rem;
 }
-.row {
-}
 </style>
