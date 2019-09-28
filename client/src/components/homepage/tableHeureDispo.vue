@@ -19,7 +19,7 @@
     </v-data-table>
 
     <v-col class="text-center" cols="12">
-      <v-btn color="teal" class="white--text mr-4" @click="loadhours">Validate</v-btn>
+      <v-btn color="teal" class="white--text mr-4" >Validate</v-btn>
 
       <v-btn color="error" class="mr-4">Reset Form</v-btn>
     </v-col>
@@ -53,22 +53,18 @@ export default {
   },
 
   methods: {
- //   ...mapActions("loadhours"),
+   ...mapActions(["loadHours"]),
 
-  //  created() {
-  //    this.loadHours();
-  //  },
 
     getColor(disponiblité) {
       if (disponiblité === "occupé") return "red";
       else return "teal";
-    },
+    }
+  },
 
-     loadhours() {
-     const response = axios.get("/loadHours");
-  
-   }
-  }
+ created() {
+  this.loadHours();
+ }
 };
 </script>
 

@@ -5,7 +5,7 @@ const state = {
   //prenom: null,
   //telephone: null,
   //sexe: null,
-  //jour: null,
+  //jour: '8:00',
   //heure: null
   // homeView : true ,
   //  formulaire: false,
@@ -44,16 +44,20 @@ const mutations = {
     state.hour = hour;
 
     state.recap = true;
-  }
+  },
+
+  setHours : (state, dispoHours) => (state.dispoHours = dispoHours)
 };
 
 const actions = {
   // retrieve hours
-  // async loadhours({ commit }, day) {
-  //   const response = axios.get("/loadHours");
-  //
-  //   console.loadhours(response.data);
-  // }
+  
+  async loadHours ( { commit } ) {
+    const response = await axios.get("/loadHours");
+  commit('setHours', response.data);
+
+  }
+
 };
 
 export default {
