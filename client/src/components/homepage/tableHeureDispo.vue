@@ -1,16 +1,16 @@
 <template>
   <div class="bigBox">
     <div class="text-center">
-      <h1 class="display-1 font-weight-thin mb-4"> Choississez une heure  </h1>
+      <h1 class="display-1 font-weight-thin mb-4">Choississez une heure</h1>
     </div>
 
     <v-data-table
       v-model="selected"
-      :items="dispo"
+      :items="getHours"
       show-select
       :single-select="singleSelect"
       :headers="headers"
-       item-key="name"
+      item-key="name"
       class="elevation-1"
     >
       <template v-slot:item.disponiblité="{ item }">
@@ -18,21 +18,21 @@
       </template>
     </v-data-table>
 
-     <v-col class="text-center" cols="12">
-          <v-btn  color="teal" class="white--text mr-4" @click="validate">Validate</v-btn>
+    <v-col class="text-center" cols="12">
+      <v-btn color="teal" class="white--text mr-4" @click="loadhours">Validate</v-btn>
 
-          <v-btn color="error" class="mr-4" @click="reset">Reset Form</v-btn>
-        </v-col>
+      <v-btn color="error" class="mr-4">Reset Form</v-btn>
+    </v-col>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+import axios from 'axios';
 export default {
-
-
   data() {
     return {
-      singleSelect: true ,
+      singleSelect: true,
       selected: [],
       headers: [
         {
@@ -44,67 +44,30 @@ export default {
 
         { text: "Heure de consultation", value: "heure" },
         { text: "disponiblité", value: "disponiblité" }
-      ],
-
-      dispo: [
-        {
-          name: "Dr Omar Nour Fara",
-          disponiblité: "occupé",
-          heure: "8:00"
-        },
-        {
-          name: "Dr Roda Youssouf Adaweh",
-          disponiblité: "libre",
-          heure: "8:30"
-        },
-        {
-          name: "Dr Moussa Mounin Mouktar",
-          disponiblité: "libre",
-          heure: "9:00"
-        },
-        {
-          name: "Dr Osman Abdikarim Mohamed",
-          disponiblité: "occupé",
-          heure: "9:30"
-        },
-        {
-          name: "Dr Filsan Moumin Moussa",
-          disponiblité: "libre",
-          heure: "10:00"
-        },
-        {
-          name: "Zakaria Muhyadin Ali",
-          disponiblité: "libre",
-          heure: "10:30"
-        },
-        {
-          name: "Dr Abdirahman Ali Hassan",
-          disponiblité: "libre",
-          heure: "11:00"
-        },
-        {
-          name: "Dr Houssein Khaire Yonis",
-          disponiblité: "occupé",
-          heure: "11:30"
-        },
-        {
-          name: "Dr Nima Mohamed Sarah",
-          disponiblité: "libre",
-          heure: "12:00"
-        },
-        {
-          name: "Dr Amina Ahmed Moussa",
-          disponiblité: "occupé",
-          heure: "12:30"
-        }
       ]
     };
   },
+
+  computed: {
+    ...mapGetters(["getHours"])
+  },
+
   methods: {
+ //   ...mapActions("loadhours"),
+
+  //  created() {
+  //    this.loadHours();
+  //  },
+
     getColor(disponiblité) {
       if (disponiblité === "occupé") return "red";
       else return "teal";
-    }
+    },
+
+     loadhours() {
+     const response = axios.get("/loadHours");
+  
+   }
   }
 };
 </script>
@@ -117,7 +80,7 @@ export default {
   }
 
   .elevation-1 {
-     margin-bottom: 3rem;
+    margin-bottom: 3rem;
   }
 }
 </style>

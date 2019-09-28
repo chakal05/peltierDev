@@ -30,8 +30,8 @@
             required
             :rules="[v => !!v || 'Entrez votre genre pour continuer']"
           >
-            <v-radio label="Un homme" value="radio-1"></v-radio>
-            <v-radio label="Une femme" value="radio-2"></v-radio>
+            <v-radio label="Un homme" value="homme"></v-radio>
+            <v-radio label="Une femme" value="femme"></v-radio>
           </v-radio-group>
         </div>
         <v-col class="text-center boutonBox" cols="12">
@@ -56,11 +56,11 @@ export default {
     name: "",
     firstname: "",
     genre: "",
+    telephone: null,
     nameRules: [
       v => !!v || "Le nom est requis",
       v => isNaN(v) || "Le nom ne doit contenir aucun chiffre"
     ],
-    telephone: "",
     telephoneRules: [
       v => !!v || "Le numéro de téléphone est requis",
       v =>
@@ -71,11 +71,14 @@ export default {
   }),
 
   methods: {
-    ...mapMutations(['getInfo']),
+    ...mapMutations(['getName', 'getFirstname', 'getNumber', 'getGenre']),
 
     validate() {
       if (this.$refs.form.validate()) {
-        this.getInfo(this.name , this.firstname , this.telephone , this.genre);
+        this.getName(this.name);
+        this.getFirstname(this.firstname);
+        this.getNumber(this.telephone);
+        this.getGenre(this.genre);
       }
     },
     reset() {

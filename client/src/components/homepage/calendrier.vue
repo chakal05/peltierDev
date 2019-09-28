@@ -5,23 +5,60 @@
     </div>
 
     <v-row align="center" justify="center">
-      <v-date-picker color="teal" v-model="date" width="700"></v-date-picker>
+      <v-date-picker color="teal" v-model="picker" locale="fr-fr" width="700"></v-date-picker>
     </v-row>
+
+    <v-col class="text-center boutonBox" cols="12">
+      <h3 class="red--text font-weight-thin mb-4"  > {{error}} </h3 >
+      <v-btn color="teal" class="white--text mr-4" @click="getDate">Valider</v-btn>
+
+      <v-btn color="error" class="mr-4">Annuler</v-btn>
+    </v-col>
   </v-container>
 </template>
 
 <script>
 //todo responsiveness for mobiles devices
+
+import { mapMutations } from "vuex";
 export default {
   data: () => ({
-    date: new Date().toISOString().substr(0, 10)
-  })
+    picker: new Date().toISOString().substr(0, 10),
+    fafa: "from data",
+    error: null
+  }),
+
+  methods: {
+    ...mapMutations(["getJour"]),
+
+    getDate() {
+      // Get today'date and compare it to the picked date.
+      //If picked date is previous than today's date, alert them to choose a new date
+
+      let idag = new Date().toISOString().substr(0, 10);
+      let today = new Date(idag);
+      let pickedDate = new Date(this.picker);
+
+      if (this.picker) {
+        if (pickedDate.getTime() > today.getTime()) {
+          if (pickedDate.getDay() === 5 || pickedDate.getDay() === 6) {
+             this.error = "Pas de consultation pendant les weekends";
+          } else {
+            this.getJour(this.picker);
+            this.error = null;
+          }
+        } else {
+          this.error = "La date choissie est déja passée";
+        }
+      }
+    }
+  }
 };
 </script>
 
 <style lang='scss' scoped>
 .text-center {
-  margin-top: 7rem;
-  margin-bottom: 4rem;
+  margin-top: 4rem;
+  margin-bottom: 3rem;
 }
 </style>

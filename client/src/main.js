@@ -3,8 +3,8 @@
  import vuetify from "./plugins/vuetify"
  import Vuetify from 'vuetify/lib'
  import fr from 'vuetify/lib/locale/fr'
- import router from "./router/index"
- import store from './router/store'
+ import router from "./Router/index"
+ import store from './Store'
  Vue.use(router);
  Vue.config.productionTip = false;
  Vue.use(Vuetify, {
