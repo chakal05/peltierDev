@@ -19,16 +19,15 @@
     </v-data-table>
 
     <v-col class="text-center" cols="12">
-      <v-btn color="teal" class="white--text mr-4" >Validate</v-btn>
+      <v-btn color="teal" class="white--text mr-4" @click="toRecap">Validate</v-btn>
 
-      <v-btn color="error" class="mr-4">Reset Form</v-btn>
+      <v-btn color="error" class="mr-4" @click="toCalendar">Reset Form</v-btn>
     </v-col>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import axios from 'axios';
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -59,7 +58,9 @@ export default {
     getColor(disponiblité) {
       if (disponiblité === "occupé") return "red";
       else return "teal";
-    }
+    },
+
+    ...mapMutations(['toRecap', 'toCalendar'])
   },
 
  created() {

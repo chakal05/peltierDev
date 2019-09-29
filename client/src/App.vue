@@ -5,10 +5,10 @@
 
     <v-app-bar app >
       <div class="logo">
-        <img src="./assets/logo.61d2e5ee.jpg" alt />
+       <v-icon color='teal darken-4'> local_hospital</v-icon>
       </div>
 
-      <v-toolbar-title>Hôpital Général Peltier</v-toolbar-title>
+      <v-toolbar-title>Manedek Medical Center</v-toolbar-title>
 
       <div class="flex-grow-1"></div>
     </v-app-bar>
@@ -61,11 +61,10 @@ body {
 
 .v-sheet {
   .logo {
-    img {
-      width: 40px;
-      height: 40px;
-      margin-right: 1rem;
-      margin-top: 0.3rem;
+    
+    .v-icon {
+      margin-right: .3rem;
+     font-size: 3rem;
     }
   }
 }

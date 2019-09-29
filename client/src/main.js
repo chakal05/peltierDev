@@ -4,7 +4,7 @@
  import Vuetify from 'vuetify/lib'
  import fr from 'vuetify/lib/locale/fr'
  import router from "./Router/index"
- import store from './Store'
+ import store from './Store/index'
  Vue.use(router);
  Vue.config.productionTip = false;
  Vue.use(Vuetify, {

@@ -1,12 +1,7 @@
 import axios from "axios";
 
 const state = {
-  //nom: null,
-  //prenom: null,
-  //telephone: null,
-  //sexe: null,
-  //jour: '8:00',
-  //heure: null
+ 
   // homeView : true ,
   //  formulaire: false,
   // calendrier: false,
@@ -21,43 +16,19 @@ const getters = {
 };
 
 const mutations = {
-  //  changeView1: state => {
-  //    state.homeView = false;
-  //    state.formulaire = true;
-  //  }
-
-  getName: (state, nom) => (state.nom = nom),
-
-  getFirstname: (state, prenom) => (state.prenom = prenom),
-
-  getNumber: (state, telephone) => (state.telephone = telephone),
-
-  getGenre: (state, sexe) => (state.sexe = sexe),
-
-  getJour: (state, jour) => {
-    state.jour = jour;
-
-    //state.lesHeures = true;
-  },
-
-  getTime: (state, hour) => {
-    state.hour = hour;
-
-    state.recap = true;
-  },
-
-  setHours : (state, dispoHours) => (state.dispoHours = dispoHours)
+  setHours: (state, dispoHours) => (
+    state.dispoHours = dispoHours,
+    state.recap = true
+  )
 };
 
 const actions = {
   // retrieve hours
-  
-  async loadHours ( { commit } ) {
+
+  async loadHours({ commit }) {
     const response = await axios.get("/loadHours");
-  commit('setHours', response.data);
-
+    commit("setHours", response.data);
   }
-
 };
 
 export default {

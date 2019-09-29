@@ -15,7 +15,7 @@
         <v-row>
           <v-col cols="12" md="4">
             <v-item>
-              <v-card color="teal" >
+              <v-card color="teal darken-3" >
                 <v-card-text class="white--text">
                   <div class="headline mb-2">
                     <v-toolbar-title>La mission de l'hôpital</v-toolbar-title>
@@ -71,9 +71,9 @@
 
                 <v-card-actions>
                   <v-col class="text-center" cols="12">
-                    <v-btn text @click="changeView1">Consultation</v-btn>
+                    <v-btn color='white' class="black--text" @click="toFormulaire">Consultation</v-btn>
 
-                    <v-btn text>Administration</v-btn>
+                    <v-btn color='white' class="black--text" >Administration</v-btn>
                   </v-col>
                 </v-card-actions>
               </v-card>
@@ -89,7 +89,7 @@
 
 // todo responsiveness between ipad and ipad Pro
 
-//import {  mapMutations } from "vuex";
+import {  mapMutations } from "vuex";
 export default {
 
   data : () => ({
@@ -100,7 +100,7 @@ export default {
   },
   
   methods : {
-// ...mapMutations(['changeView1'])
+ ...mapMutations(["toFormulaire" , "toHomeView"])
   }
 };
 </script>

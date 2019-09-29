@@ -1,6 +1,7 @@
 import Vuex from "vuex";
 import Vue from "vue";
 import loadHours from "../modules/getHours";
+import nextPrev from "../modules/nextPrev";
 
 // Load Vuex
 Vue.use(Vuex);
@@ -9,6 +10,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    loadHours
+    nextPrev,
+    loadHours,
+  
   }
 });

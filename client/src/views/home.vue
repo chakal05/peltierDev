@@ -1,49 +1,46 @@
 <template>
   <v-container>
-    <!--
-      <firstView v-if="firstView"></firstView>
-  <form1 ></form1>
-   <calendrier></calendrier>
+    <firstView v-if="showFirst"></firstView>
     
-     
-      <recap> </recap>
-    -->
-<tableau></tableau>
-   
+    <form1 v-if="showForm" ></form1>
+    
+    <calendrier v-if="showCalendar"></calendrier>
+    
+    <tableau v-if="showHours"></tableau>
+    
+    <recap v-if="showRecap"></recap>
+  
   </v-container>
 </template>
 
 
 <script>
-// import firstView from "../components/homepage/firstView";
-//import form1 from "../components/homepage/form";
-//import calendrier from "../components/homepage/calendrier";
-//import { mapState } from "vuex";
+import firstView from "../components/homepage/firstView";
+import form1 from "../components/homepage/form";
+import calendrier from "../components/homepage/calendrier";
 import tableau from '../components/homepage/tableHeureDispo'
-//import recap from "../components/homepage/final";
+import recap from "../components/homepage/final";
+import { mapGetters} from "vuex";
 
 export default {
   name: "landingPage",
   components: {
-    // firstView,
-    //  form1,
-   // calendrier
-    tableau,
-    // recap
-  },
-  props: {
-    source: String
+    firstView,
+     form1,
+     calendrier,
+     tableau,
+     recap
   },
   data: () => ({
     //
   }),
 
-  computed: {
-    //  ...mapState(["firstView", "formulaire"])
+ computed: {
+    ...mapGetters(["showFirst", "showForm", "showCalendar" , "showHours", "showRecap"])
   },
 
   methods: {
-    //
+   //
   }
 };
 </script>

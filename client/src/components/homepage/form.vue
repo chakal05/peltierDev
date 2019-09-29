@@ -71,7 +71,7 @@ export default {
   }),
 
   methods: {
-    ...mapMutations(['getName', 'getFirstname', 'getNumber', 'getGenre']),
+    ...mapMutations(['getName', 'getFirstname', 'getNumber', 'getGenre', 'toHomeView', 'toCalendar']),
 
     validate() {
       if (this.$refs.form.validate()) {
@@ -79,10 +79,13 @@ export default {
         this.getFirstname(this.firstname);
         this.getNumber(this.telephone);
         this.getGenre(this.genre);
+        this.toCalendar();
+
       }
     },
     reset() {
       this.$refs.form.reset();
+      this.toHomeView();
     }
   }
 };
@@ -98,7 +101,7 @@ export default {
   .row {
     .v-form {
       background-color: #fff;
-      width: 800px !important;
+      width: 70% !important;
 
       .v-toolbar {
         margin-bottom: 1rem;
