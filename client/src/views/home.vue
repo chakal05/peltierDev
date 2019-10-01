@@ -1,10 +1,14 @@
 <template>
   <v-container>
-    <firstView v-if="showFirst"></firstView>
-    
+    <formulaire></formulaire>
+
     <!--
-    
-  <form1 v-if="showForm" ></form1>
+
+v-if="showForm" 
+
+    <firstView v-if="showFirst"></firstView>
+
+  
     
     <calendrier v-if="showCalendar"></calendrier>
     
@@ -13,26 +17,23 @@
     <recap v-if="showRecap"></recap>
 
     -->
-
-  
-  
   </v-container>
 </template>
 
 
 <script>
-import firstView from "../components/homepage/firstView";
-//import form1 from "../components/homepage/form";
+//import firstView from "../components/homepage/firstView";
+import formulaire from "../components/homepage/form";
 //import calendrier from "../components/homepage/calendrier";
 //import tableau from '../components/homepage/tableHeureDispo'
 //import recap from "../components/homepage/final";
-import { mapGetters} from "vuex";
+//import { mapGetters} from "vuex";
 
 export default {
   name: "landingPage",
   components: {
-    firstView,
-    // form1,
+    //firstView,
+    formulaire
     // calendrier,
     // tableau,
     // recap
@@ -41,23 +42,17 @@ export default {
     //
   }),
 
- computed: {
-    ...mapGetters(["showFirst", "showForm", "showCalendar" , "showHours", "showRecap"])
+  computed: {
+    //  ...mapGetters(["showFirst", "showForm", "showCalendar" , "showHours", "showRecap"])
   },
 
   methods: {
-   //
+    //
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
-
-.container{
-
-  @media (min-width: 960px) {
-   //   max-width: 100% !important;
-  }
-}
+//
 </style>

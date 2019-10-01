@@ -94,13 +94,13 @@ export default {
 .container {
   .titre {
     margin-top: 2rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
 
   .row {
     .v-form {
       background-color: #fff;
-      width: 70% !important;
+      width: 50% !important;
 
       .v-toolbar {
         margin-bottom: 1rem;
@@ -114,11 +114,19 @@ export default {
       .radioCercles {
         margin-top: 1rem;
         margin-left: 1.2rem;
+
+        .v-radio{
+          margin: .5rem;
+        }
       }
 
       .boutonBox {
         margin-bottom: 1rem;
         margin-top: 2rem;
+
+        .v-btn{
+          margin: .5rem;
+        }
       }
     }
   }
