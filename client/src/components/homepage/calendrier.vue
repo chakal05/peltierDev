@@ -10,8 +10,8 @@
         v-model="picker"
         locale="fr-fr"
         full-width
-        :landscape="$vuetify.breakpoint.smAndUp"
-        class="mt-4"
+          :landscape="$vuetify.breakpoint.smAndUp"
+       class="mt-4"
       ></v-date-picker>
     </v-row>
 
@@ -25,7 +25,6 @@
 </template>
 
 <script>
-//todo responsiveness for mobiles devices
 
 import { mapMutations } from "vuex";
 export default {
@@ -72,8 +71,12 @@ export default {
   }
 
   .row {
-    width: 70% !important;
+    width: 60% !important;
     margin: auto;
+
+    @media (max-width: 1264px) {
+      width: 90% !important;
+    }
   }
 }
 </style>

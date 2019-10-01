@@ -1,16 +1,16 @@
 <template>
   <v-container>
-    <formulaire></formulaire>
-
+   
+ <calendrier ></calendrier>
+   
     <!--
-
-v-if="showForm" 
+      v-if="showCalendar"
 
     <firstView v-if="showFirst"></firstView>
 
-  
+   <formulaire v-if="showForm" ></formulaire>
+
     
-    <calendrier v-if="showCalendar"></calendrier>
     
     <tableau v-if="showHours"></tableau>
     
@@ -23,8 +23,8 @@ v-if="showForm"
 
 <script>
 //import firstView from "../components/homepage/firstView";
-import formulaire from "../components/homepage/form";
-//import calendrier from "../components/homepage/calendrier";
+//import formulaire from "../components/homepage/form";
+import calendrier from "../components/homepage/calendrier";
 //import tableau from '../components/homepage/tableHeureDispo'
 //import recap from "../components/homepage/final";
 //import { mapGetters} from "vuex";
@@ -33,8 +33,8 @@ export default {
   name: "landingPage",
   components: {
     //firstView,
-    formulaire
-    // calendrier,
+   // formulaire
+     calendrier,
     // tableau,
     // recap
   },

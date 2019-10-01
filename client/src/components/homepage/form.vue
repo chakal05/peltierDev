@@ -44,7 +44,6 @@
 </template>
 
 <script>
-// todo responsiveness for mobiles
 
 import {mapMutations} from 'vuex';
 
