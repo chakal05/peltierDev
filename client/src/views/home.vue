@@ -1,18 +1,18 @@
 <template>
   <v-container>
    
- <calendrier ></calendrier>
-   
+    <tableau ></tableau>
+    
     <!--
-      v-if="showCalendar"
+     v-if="showHours"
 
     <firstView v-if="showFirst"></firstView>
 
    <formulaire v-if="showForm" ></formulaire>
 
-    
-    
-    <tableau v-if="showHours"></tableau>
+      
+ <calendrier  v-if="showCalendar"></calendrier>
+ 
     
     <recap v-if="showRecap"></recap>
 
@@ -24,8 +24,8 @@
 <script>
 //import firstView from "../components/homepage/firstView";
 //import formulaire from "../components/homepage/form";
-import calendrier from "../components/homepage/calendrier";
-//import tableau from '../components/homepage/tableHeureDispo'
+//import calendrier from "../components/homepage/calendrier";
+import tableau from '../components/homepage/dispoHours'
 //import recap from "../components/homepage/final";
 //import { mapGetters} from "vuex";
 
@@ -34,8 +34,8 @@ export default {
   components: {
     //firstView,
    // formulaire
-     calendrier,
-    // tableau,
+    // calendrier,
+     tableau,
     // recap
   },
   data: () => ({

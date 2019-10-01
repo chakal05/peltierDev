@@ -5,28 +5,23 @@
     </div>
 
     <v-item-group>
-    <v-container>
-      <v-row>
-        <v-col
-          v-for="(hour,index) in getHours"
-          :key="index"
-          cols="12"
-          md="4"
-        >
-          <v-item v-slot:default="{ active, toggle }">
-            <v-card
-              :color="active ? 'teal darken-3' : 'teal lighten-1'"
-              class="d-flex align-center"
-              height="71"
-              @click="toggle"
-            >
-            <v-card-title @click="getTime" class="white--text"> {{ hour }} </v-card-title>
-            </v-card>
-          </v-item>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-item-group>
+      <v-container>
+        <v-row>
+          <v-col v-for="(hour,index) in getHours" :key="index" cols="12" md="4">
+            <v-item v-slot:default="{ active, toggle }">
+              <v-card
+                :color="active ? 'teal darken-3' : 'teal lighten-1'"
+                class="d-flex align-center"
+                height="71"
+                @click="toggle"
+              >
+                <v-card-title @click="getTime" class="white--text">{{ hour }}</v-card-title>
+              </v-card>
+            </v-item>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-item-group>
 
     <v-col class="text-center" cols="12">
       <h3 class="red--text font-weight-thin mb-4">{{ error}}</h3>
@@ -72,7 +67,6 @@ export default {
       let item = event.target.innerText;
 
       if (item) {
-        alert(item);
         this.time = item;
       }
     }
@@ -87,8 +81,8 @@ export default {
 <style lang='scss' scoped>
 .bigBox {
   .text-center {
-    margin-top: 5rem;
-    margin-bottom: 5rem;
+    margin-top: 4rem;
+    margin-bottom: 4rem;
   }
 
   .row {
@@ -97,8 +91,8 @@ export default {
 
     .v-card {
       .v-card__title {
-       margin: auto;
-       width: 100%;
+        margin: auto;
+        width: 100%;
       }
     }
   }
