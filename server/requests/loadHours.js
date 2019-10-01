@@ -16,34 +16,24 @@ async function loadTider() {
   return connection.db("peltier").collection("bookings");
 }
 
-router.get("/", async function(req, res) {
-
- // const dag = req.body.date;
+router.post("/", async function(req, res) {
+  let bookedHours = [];
+  const dag = req.body.date;
   const jour = await loadTider();
-  const day = jour.find({}).toArray();
+
+  const day = jour
+    .find({
+      date: dag
+    })
+    .toArray();
   const timmar = await day;
 
-  res.send(timmar);
+  timmar.forEach(el => {
+    bookedHours.push(el.heure);
+  });
+
+  console.log(bookedHours);
+  res.send(bookedHours);
 });
-
-/*
-router.post('/', async function(req, res) {
-	let bookedHours = [];
-	const dag = req.body.date;
-	const jour = await loadTider();
-	const day = jour
-		.find({
-			date: dag
-		})
-		.toArray();
-	const timmar = await day;
-
-	timmar.forEach((el) => {
-		bookedHours.push(el.heure);
-	});
-	res.send(bookedHours);
-});
-
-*/
 
 module.exports = router;

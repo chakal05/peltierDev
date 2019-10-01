@@ -36,7 +36,7 @@ export default {
   }),
 
   methods: {
-    ...mapMutations(["getJour" , "toHours", "toFormulaire"]),
+    ...mapMutations(["setJour" , "toHours", "toFormulaire"]),
 
     getDate() {
       // Get today'date and compare it to the picked date.
@@ -51,7 +51,7 @@ export default {
           if (pickedDate.getDay() === 5 || pickedDate.getDay() === 6) {
             this.error = "Pas de consultation pendant les weekends";
           } else {
-            this.getJour(this.picker);
+            this.setJour(this.picker);
             this.error = null;
             this.toHours();
           }

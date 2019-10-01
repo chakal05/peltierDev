@@ -8,7 +8,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'login',
+      name: 'home',
       component: Home
     },
 

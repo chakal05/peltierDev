@@ -9,10 +9,9 @@
         <v-toolbar color="teal" dark>
           <v-toolbar-title>Formulaire</v-toolbar-title>
         </v-toolbar>
-        <v-text-field v-model="name" :rules="nameRules" label="Nom" required></v-text-field>
 
         <v-text-field v-model="firstname" :rules="nameRules" label="Prénom" required></v-text-field>
-
+        <v-text-field v-model="name" :rules="nameRules" label="Nom" required></v-text-field>
         <v-text-field
           v-model="telephone"
           :counter="8"
@@ -71,14 +70,14 @@ export default {
   }),
 
   methods: {
-    ...mapMutations(['getName', 'getFirstname', 'getNumber', 'getGenre', 'toHomeView', 'toCalendar']),
+    ...mapMutations(['setName', 'setFirstname', 'setNumber', 'setGenre', 'toHomeView', 'toCalendar']),
 
     validate() {
       if (this.$refs.form.validate()) {
-        this.getName(this.name);
-        this.getFirstname(this.firstname);
-        this.getNumber(this.telephone);
-        this.getGenre(this.genre);
+        this.setName(this.name);
+        this.setFirstname(this.firstname);
+        this.setNumber(this.telephone);
+        this.setGenre(this.genre);
         this.toCalendar();
 
       }

@@ -2,7 +2,7 @@
   <v-container>
     <v-parallax dark src="../../assets/doctors.jpg">
       <v-row align="center" justify="center">
-        <h1 class="display-2 font-weight-bold mb-4 black--text">Hôpital Général Peltier</h1>
+        <h1 class="display-2 font-weight-bold mb-4 black--text">Manedek Medical Center</h1>
         <h4 class="subheading black--text">Services en ligne</h4>
       </v-row>
     </v-parallax>
@@ -108,6 +108,7 @@ export default {
 <style lang='scss' scoped>
 .container{
     .v-parallax{
+      margin-top: -3rem;
         height: 731px !important;
     }
 }

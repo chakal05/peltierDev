@@ -1,25 +1,37 @@
 <template>
   <div class="bigBox">
     <div class="text-center">
-      <h1 class="display-1 font-weight-thin mb-4">Choississez une heure</h1>
+      <h1 class="display-1 font-weight-thin mb-4">Les heures disponibles :</h1>
     </div>
 
-    <v-data-table
-      v-model="selected"
-      :items="getHours"
-      show-select
-      :single-select="singleSelect"
-      :headers="headers"
-      item-key="name"
-      class="elevation-1"
-    >
-      <template v-slot:item.disponiblité="{ item }">
-        <v-chip :color="getColor(item.disponiblité)" dark>{{ item.disponiblité }}</v-chip>
-      </template>
-    </v-data-table>
+    <v-item-group>
+    <v-container>
+      <v-row>
+        <v-col
+          v-for="(hour,index) in getHours"
+          :key="index"
+          cols="12"
+          md="4"
+        >
+          <v-item v-slot:default="{ active, toggle }">
+            <v-card
+              :color="active ? 'teal darken-3' : 'teal lighten-1'"
+              class="d-flex align-center"
+              height="71"
+              @click="toggle"
+            >
+            <v-card-title @click="getTime" class="white--text"> {{ hour }} </v-card-title>
+            </v-card>
+          </v-item>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-item-group>
 
     <v-col class="text-center" cols="12">
-      <v-btn color="teal" class="white--text mr-4" @click="toRecap">Validate</v-btn>
+      <h3 class="red--text font-weight-thin mb-4">{{ error}}</h3>
+
+      <v-btn color="teal" class="white--text mr-4" @click="validate">Validate</v-btn>
 
       <v-btn color="error" class="mr-4" @click="toCalendar">Reset Form</v-btn>
     </v-col>
@@ -27,57 +39,67 @@
 </template>
 
 <script>
+// todo responsiveness
+
 import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      singleSelect: true,
-      selected: [],
-      headers: [
-        {
-          text: "Nom du docteur ",
-          align: "left",
-          sortable: false,
-          value: "name"
-        },
-
-        { text: "Heure de consultation", value: "heure" },
-        { text: "disponiblité", value: "disponiblité" }
-      ]
+      error: null,
+      time: null
     };
   },
 
   computed: {
-    ...mapGetters(["getHours"])
+    ...mapGetters(["getHours", "getJour"])
   },
 
   methods: {
-   ...mapActions(["loadHours"]),
+    ...mapActions(["loadHours"]),
 
+    ...mapMutations(["toRecap", "toCalendar", "setTime"]),
 
-    getColor(disponiblité) {
-      if (disponiblité === "occupé") return "red";
-      else return "teal";
+    validate() {
+      if (!this.time) {
+        this.error = "Vous devez choisir une heure de visite";
+      } else {
+        this.setTime(this.time);
+        this.toRecap();
+      }
     },
 
-    ...mapMutations(['toRecap', 'toCalendar'])
+    getTime(event) {
+      let item = event.target.innerText;
+
+      if (item) {
+        alert(item);
+        this.time = item;
+      }
+    }
   },
 
- created() {
-  this.loadHours();
- }
+  created() {
+    this.loadHours();
+  }
 };
 </script>
 
 <style lang='scss' scoped>
 .bigBox {
   .text-center {
-    margin-top: 1rem;
-    margin-bottom: 2rem;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
   }
 
-  .elevation-1 {
-    margin-bottom: 3rem;
+  .row {
+    width: 80%;
+    margin: auto;
+
+    .v-card {
+      .v-card__title {
+       margin: auto;
+      }
+    }
   }
 }
 </style>

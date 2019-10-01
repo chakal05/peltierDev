@@ -1,8 +1,7 @@
 import Vuex from "vuex";
 import Vue from "vue";
-import loadHours from "../modules/getHours";
 import nextPrev from "../modules/nextPrev";
-
+import submitForm from "../modules/submitForm";
 // Load Vuex
 Vue.use(Vuex);
 
@@ -11,7 +10,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     nextPrev,
-    loadHours,
-  
+    submitForm
   }
 });
