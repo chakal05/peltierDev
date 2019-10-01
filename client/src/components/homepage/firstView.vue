@@ -2,8 +2,8 @@
   <v-container>
     <v-parallax dark src="../../assets/doctors.jpg">
       <v-row align="center" justify="center">
-        <h1 class="display-2 font-weight-bold mb-4 black--text">Manedek Medical Center</h1>
-        <h4 class="subheading black--text">Services en ligne</h4>
+        <h1 class="display-2 font-weight-bold mb-4 white--text">Manedek Medical Center</h1>
+        <h4 class="subheading white--text">Services en ligne</h4>
       </v-row>
     </v-parallax>
 
@@ -15,7 +15,7 @@
         <v-row>
           <v-col cols="12" md="4">
             <v-item>
-              <v-card color="teal darken-3" >
+              <v-card color="teal darken-3">
                 <v-card-text class="white--text">
                   <div class="headline mb-2">
                     <v-toolbar-title>La mission de l'hôpital</v-toolbar-title>
@@ -35,7 +35,7 @@
 
           <v-col cols="12" md="4">
             <v-item>
-              <v-card color="teal" dark>
+              <v-card color="teal darken-3" dark>
                 <v-card-text class="white--text">
                   <div class="headline mb-2">
                     <v-toolbar-title>Les horaires de consultation</v-toolbar-title>
@@ -62,18 +62,17 @@
 
           <v-col cols="12" md="4">
             <v-item>
-              <v-card color="teal" dark>
+              <v-card color="teal darken-3" dark>
                 <v-card-text class="white--text">
                   <div class="headline mb-2">
                     <v-toolbar-title>Les consultations</v-toolbar-title>
                   </div>Les consultations dure 30 minutes par patients afin de pouvoir recevoir le plus de patients possible. Nous vous recommandons fortement donc, d'arriver un quart d'heure en avance pour éviter les surprises. Si vous n'etes pas en place à l'heure, votre consultation sera occtroyé au patient suivant sur la liste.
                 </v-card-text>
-
                 <v-card-actions>
                   <v-col class="text-center" cols="12">
-                    <v-btn color='white' class="black--text" @click="toFormulaire">Consultation</v-btn>
+                    <v-btn color="white" class="black--text" @click="toFormulaire">Consultation</v-btn>
 
-                    <v-btn color='white' class="black--text" >Administration</v-btn>
+                    <v-btn color="white" class="black--text">Administration</v-btn>
                   </v-col>
                 </v-card-actions>
               </v-card>
@@ -86,30 +85,73 @@
 </template>
 
 <script>
-
 // todo responsiveness between ipad and ipad Pro
 
-import {  mapMutations } from "vuex";
+import { mapMutations } from "vuex";
 export default {
-
-  data : () => ({
-
-  }),
+  data: () => ({}),
   computed: {
     //
   },
-  
-  methods : {
- ...mapMutations(["toFormulaire" , "toHomeView"])
+
+  methods: {
+    ...mapMutations(["toFormulaire", "toHomeView"])
   }
 };
 </script>
 
 <style lang='scss' scoped>
-.container{
-    .v-parallax{
-      margin-top: -3rem;
-        height: 731px !important;
+.container {
+  .v-parallax {
+    margin-top: -3rem;
+    height: 731px !important;
+
+    .row {
+      @media (max-width: 800px) {
+        flex: none !important;
+        text-align: center;
+        padding: 1rem;
+      }
+
+      h1 {
+        background-color: #00695C;
+        padding: 0.5rem;
+        border-radius: 3px;
+      }
+
+      h4 {
+        background-color: #00695C;
+        padding: 0.2rem;
+        border-radius: 3px;
+      }
     }
+  }
+
+  .v-item-group {
+    .row {
+      .v-card {
+        .v-card__actions {
+
+          margin-top: .3rem;
+
+          .v-btn {
+            margin: 0.5rem;
+          }
+        }
+
+        @media (max-width: 960px) {
+          height: auto !important;
+        }
+
+        @media (max-width: 1264px) {
+          height: 450px;
+        }
+
+        @media (min-width: 1265px) {
+          height: 350px;
+        }
+      }
+    }
+  }
 }
 </style>
