@@ -98,6 +98,7 @@ export default {
     .v-card {
       .v-card__title {
        margin: auto;
+       width: 100%;
       }
     }
   }

@@ -4,9 +4,7 @@
       <h1 class="display-1 font-weight-thin mb-4">Recapitulatif</h1>
     </div>
 
-    <div class="elevation-3 text-center">
-      <v-sheet color="teal" dark>Hello, world! I'm a simple v-sheet</v-sheet>
-    </div>
+    <v-alert v-if="ifSuccess" class="mx-auto text-center font-weight-bold " max-width='500' type="teal">Votre rendez-vous a ete enregistre. Bienvenue !</v-alert>
 
     <v-card class="mx-auto" max-width="345">
       <v-toolbar color="teal" dark>
@@ -42,7 +40,9 @@ import { mapGetters, mapMutations } from "vuex";
 //todo Responsivness for mobil devices
 
 export default {
-  data: () => ({}),
+  data: () => ({
+ //
+  }),
   computed: {
     ...mapGetters([
       "getName",
@@ -50,7 +50,8 @@ export default {
       "getPhone",
       "getGenre",
       "getJour",
-      "getHeure"
+      "getHeure",
+      "ifSuccess"
     ])
   },
   methods: {
@@ -66,7 +67,8 @@ export default {
     margin-bottom: 2rem;
   }
 
-  .elevation-3{
+
+  .elevation-3 {
     width: 70%;
     height: 30px;
     margin: auto;

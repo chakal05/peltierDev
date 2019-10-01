@@ -8,7 +8,8 @@ const state = {
   sexe: null,
   jour: null,
   heure: null,
-  dispoHours: []
+  dispoHours: [],
+  success : false
 };
 
 const getters = {
@@ -18,7 +19,8 @@ const getters = {
   getGenre: state => state.sexe,
   getJour: state => state.jour,
   getHeure: state => state.heure,
-  getHours: state => state.dispoHours
+  getHours: state => state.dispoHours,
+  ifSuccess: state => state.success
 };
 
 const mutations = {
@@ -51,7 +53,14 @@ const mutations = {
       });
 
     if (sendData && sendData.status === 200) {
-      location.reload();
+
+      state.success = true;
+
+      setTimeout( () => {
+        location.reload();
+      }, 5000);
+
+     
     }
   }
 };
@@ -63,6 +72,8 @@ const actions = {
     const response = await axios.post("/loadHours", {
       date: state.jour
     });
+
+    // Default hours
 
     const baseHours = [
       "8 h 30",
@@ -81,9 +92,15 @@ const actions = {
     ];
 
     if (!response.data[0]) {
+
+   // No reservations for that day, send default hours   
+
       commit("setHours", baseHours);
 
     } else {
+
+    // if there are reservations for that day, display available hours  
+
       let displayHours = _.difference(baseHours, response.data);
       commit("setHours", displayHours);
 
