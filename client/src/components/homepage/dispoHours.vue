@@ -83,6 +83,11 @@ export default {
   .text-center {
     margin-top: 4rem;
     margin-bottom: 4rem;
+
+    @media (max-width: 960px){
+       margin-top: 2rem;
+    margin-bottom: 1rem;
+    }
   }
 
   .row {
