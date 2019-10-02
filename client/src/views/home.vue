@@ -63,5 +63,15 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
- 
+ .container{
+   .v-toolbar{
+     padding-left: .5rem;
+   }
+
+   .logo{
+     .v-icon{
+       font-size: 3rem;
+     }
+   }
+ }
 </style>

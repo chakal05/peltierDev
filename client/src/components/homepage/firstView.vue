@@ -134,6 +134,7 @@ export default {
 
 <style lang='scss' scoped>
 .container {
+  margin-top: 1rem;
   .v-parallax {
     height: 731px !important;
 

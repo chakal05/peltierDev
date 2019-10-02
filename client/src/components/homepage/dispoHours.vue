@@ -1,7 +1,7 @@
 <template>
   <v-container class="bigBox">
     <div class="text-center">
-      <h1 class="display-1 font-weight-thin mb-4">Les heures disponibles :</h1>
+      <h1 class="display-2 font-weight-thin mb-4">Les heures disponibles :</h1>
     </div>
 
     <v-item-group>

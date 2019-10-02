@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="text-center">
-      <h1 class="display-1 font-weight-thin mb-4">Recapitulatif</h1>
+      <h1 class="display-2 font-weight-thin mb-4">Recapitulatif</h1>
     </div>
 
     <v-alert v-if="ifSuccess" class="mx-auto text-center font-weight-bold " max-width='500' type="teal">Votre rendez-vous a été enregistré. Bienvenue !</v-alert>
