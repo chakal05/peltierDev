@@ -61,6 +61,7 @@ export default {
 
 <style lang='scss' scoped >
 .container {
+  margin-top: 5rem;
   .text-center {
     margin-top: 2rem;
     margin-bottom: 2rem;

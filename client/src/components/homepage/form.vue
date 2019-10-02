@@ -36,7 +36,7 @@
         <v-col class="text-center boutonBox" cols="12">
           <v-btn :disabled="!valid" color="teal" class="white--text mr-4" @click="validate">Valider</v-btn>
 
-          <v-btn color="error" class="mr-4" @click="reset">Annuler</v-btn>
+          <v-btn color="error" class="mr-4" @click="reset">Retourner</v-btn>
         </v-col>
       </v-form>
     </v-row>
@@ -91,6 +91,12 @@ export default {
 
 <style lang='scss' scoped>
 .container {
+  margin-top: 5rem;
+
+@media (max-width: 800px) {
+  margin-top: 3rem;
+}
+
   .titre {
     margin-top: 2rem;
     margin-bottom: 2rem;

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="text-center">
-      <h1 class="display-2 font-weight-thin mb-4">Choississez une date</h1>
+      <h1 class="display-2 font-weight-thin mb-4">Choississez une date :</h1>
     </div>
 
     <v-row align="center" justify="center">
@@ -19,7 +19,7 @@
       <h3 class="red--text font-weight-thin mb-4">{{error}}</h3>
       <v-btn color="teal" class="white--text mr-4" @click="getDate">Valider</v-btn>
 
-      <v-btn color="error" class="mr-4" @click="toFormulaire">Annuler</v-btn>
+      <v-btn color="error" class="mr-4" @click="toFormulaire">Retourner</v-btn>
     </v-col>
   </v-container>
 </template>
@@ -65,6 +65,12 @@ export default {
 
 <style lang='scss' scoped>
 .container {
+  margin-top: 3rem;
+
+  @media (max-width: 800px) {
+    margin-top: 1rem;
+  }
+
   .text-center {
     margin-top: 4rem;
     margin-bottom: 3rem;

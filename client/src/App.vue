@@ -1,26 +1,14 @@
 <template>
   <div id="app">
+    <v-app>
+    
 
-<v-app>
-
-    <v-app-bar app >
-      <div class="logo">
-       <v-icon color='teal darken-4'> local_hospital</v-icon>
-      </div>
-
-      <v-toolbar-title>Manedek Medical Center</v-toolbar-title>
-
-      <div class="flex-grow-1"></div>
-    </v-app-bar>
-
-    <v-content>
-      <v-container fluid>
-        <router-view></router-view>
-      </v-container>
-    </v-content>
-
-</v-app>
-   
+      <v-content>
+        <v-container fluid>
+          <router-view></router-view>
+        </v-container>
+      </v-content>
+    </v-app>
   </div>
 </template>
 
@@ -29,13 +17,12 @@ export default {
   name: "App",
 
   data: () => ({
-    //
-  })
+  }),
+
+  computed : {
+  }
 };
 </script>
-
-//Todo Make a better logo 
-
 
 <style lang='scss'>
 html,
@@ -61,12 +48,10 @@ body {
 
 .v-sheet {
   .logo {
-    
     .v-icon {
-      margin-right: .3rem;
-     font-size: 3rem;
+      margin-left: 0.3rem;
+      font-size: 3rem;
     }
   }
 }
-
 </style>

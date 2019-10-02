@@ -72,7 +72,37 @@
                   <v-col class="text-center" cols="12">
                     <v-btn color="white" class="black--text" @click="toFormulaire">Consultation</v-btn>
 
-                    <v-btn color="white" class="black--text">Administration</v-btn>
+                    <v-dialog v-model="dialog" persistent max-width="600px">
+                      <template v-slot:activator="{ on }">
+                        <v-btn color="white" class="black--text" v-on="on">Administration</v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                          <span class="headline">Administration</span>
+                        </v-card-title>
+                        <v-card-text>
+                          <v-container>
+                            <v-row>
+                              <v-col cols="12">
+                                <v-text-field label="Email" required></v-text-field>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-text-field label="Password" type="password" required></v-text-field>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                          <div class="flex-grow-1"></div>
+                          <v-btn
+                            color="teal darken-4"
+                            class="white--text"
+                            @click="dialog = false"
+                          >Valider</v-btn>
+                          <v-btn color="error" @click="dialog = false">Annuler</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
                   </v-col>
                 </v-card-actions>
               </v-card>
@@ -89,7 +119,9 @@
 
 import { mapMutations } from "vuex";
 export default {
-  data: () => ({}),
+  data: () => ({
+    dialog : false
+  }),
   computed: {
     //
   },
@@ -103,7 +135,6 @@ export default {
 <style lang='scss' scoped>
 .container {
   .v-parallax {
-    margin-top: -3rem;
     height: 731px !important;
 
     .row {
@@ -114,13 +145,13 @@ export default {
       }
 
       h1 {
-        background-color: #00695C;
+        background-color: #00695c;
         padding: 0.5rem;
         border-radius: 3px;
       }
 
       h4 {
-        background-color: #00695C;
+        background-color: #00695c;
         padding: 0.2rem;
         border-radius: 3px;
       }
@@ -131,8 +162,7 @@ export default {
     .row {
       .v-card {
         .v-card__actions {
-
-          margin-top: .3rem;
+          margin-top: 0.3rem;
 
           .v-btn {
             margin: 0.5rem;

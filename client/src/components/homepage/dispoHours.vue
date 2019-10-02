@@ -1,5 +1,5 @@
 <template>
-  <div class="bigBox">
+  <v-container class="bigBox">
     <div class="text-center">
       <h1 class="display-1 font-weight-thin mb-4">Les heures disponibles :</h1>
     </div>
@@ -28,9 +28,9 @@
 
       <v-btn color="teal" class="white--text mr-4" @click="validate">Validate</v-btn>
 
-      <v-btn color="error" class="mr-4" @click="toCalendar">Reset Form</v-btn>
+      <v-btn color="error" class="mr-4" @click="toCalendar">Retourner</v-btn>
     </v-col>
-  </div>
+  </v-container>
 </template>
 
 <script>
@@ -79,7 +79,8 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.bigBox {
+.container {
+  margin-top: 2rem;
   .text-center {
     margin-top: 4rem;
     margin-bottom: 4rem;

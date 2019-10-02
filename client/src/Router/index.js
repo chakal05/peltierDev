@@ -6,18 +6,25 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
 
-  
-    {
-      path: '/dashboard',
-      name: 'admin',
-      component: admin
-    }
+   // {
+   //   path: '/',
+   //   name: 'admin',
+   //   component: admin
+   // },
+
+   {
+     path: '/',
+     name: 'home',
+     component: Home
+   },
+
+   // {
+   //   path: '/dashboard',
+   //   name: 'admin',
+   //   component: admin
+   // }
+    
   ]
 })
 

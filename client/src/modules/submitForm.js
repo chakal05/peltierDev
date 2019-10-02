@@ -49,7 +49,7 @@ const mutations = {
         time: state.heure
       })
       .catch(e => {
-        console.log(e);
+        alert(e);
       });
 
     if (sendData && sendData.status === 200) {
