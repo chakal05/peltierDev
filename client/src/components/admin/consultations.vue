@@ -64,6 +64,10 @@
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field v-model="editedItem.heure" label="Heure"></v-text-field>
                       </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field v-model="theDate" ></v-text-field>
+                     
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -102,9 +106,11 @@ export default {
   data: () => ({
     dialog: false,
     picker: new Date().toISOString().substr(0, 10),
+    theDate: null ,
     showTable: false,
     showCalendar: true,
     search: "",
+    indexToDel: null,
     headers: [
       {
         text: "Nom",
@@ -162,8 +168,11 @@ export default {
 
     deleteItem(item) {
       const index = this.bookings.indexOf(item);
+      this.indexToDel = this.bookings[index];
+
       confirm("Are you sure you want to delete this item?") &&
         this.bookings.splice(index, 1);
+      this.delItem();
     },
 
     close() {
@@ -186,11 +195,16 @@ export default {
 
     async loadBookings() {
       let bookings = await axios
-        .post("/reservations", { date: this.picker })
+        .get("/reservations", {
+          params: {
+            date: this.picker
+          }
+        })
         .catch(e => alert(e));
 
       if (bookings && bookings.status === 200) {
         this.bookings = bookings.data;
+        this.theDate = this.picker;
         this.showTable = true;
         this.showCalendar = false;
       }
@@ -201,6 +215,14 @@ export default {
         .put("/reservations", {
           item: this.editedItem
         })
+        .catch(e => alert(e));
+    },
+
+    async delItem() {
+      let toDelItem = await axios
+        .post("/reservations", {
+         item: this.indexToDel._id }
+        )
         .catch(e => alert(e));
     },
 
