@@ -2,12 +2,14 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
+
 // Routers
 
 const reservations = require("./requests/reservations");
 const login = require("./requests/login");
 const loadHours = require("./requests/loadHours");
 const register = require("./requests/register");
+const edit = require("./requests/editItem");
 
 // Middleware
 
@@ -18,7 +20,7 @@ app.use("/reservations", reservations);
 app.use("/login", login);
 app.use("/loadHours", loadHours);
 app.use("/register", register);
-
+app.use("/edit", edit);
 //// Static folder
 //app.use(express.static(__dirname + "/public/"));
 //// SPA

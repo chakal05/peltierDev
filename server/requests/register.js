@@ -1,15 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const cors = require("cors");
-const bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/peltier", { useNewUrlParser: true });
-
-//Middleware
-
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
-router.use(cors());
 
 //Connection URL
 const db = mongoose.connection;
@@ -21,8 +13,7 @@ var bookingSchema = new mongoose.Schema({
   téléphone: Number,
   genre: String,
   date: String,
-  heure: String,
-  disponibilite: String
+  heure: String
 });
 async function loadTider() {
   let booking = mongoose.model("booking", bookingSchema);
