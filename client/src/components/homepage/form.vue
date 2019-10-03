@@ -29,8 +29,8 @@
             required
             :rules="[v => !!v || 'Entrez votre genre pour continuer']"
           >
-            <v-radio label="Un homme" value="homme"></v-radio>
-            <v-radio label="Une femme" value="femme"></v-radio>
+            <v-radio label="Un homme" value="Homme"></v-radio>
+            <v-radio label="Une femme" value="Femme"></v-radio>
           </v-radio-group>
         </div>
         <v-col class="text-center boutonBox" cols="12">

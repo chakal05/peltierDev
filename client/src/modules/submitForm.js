@@ -38,6 +38,8 @@ const mutations = {
 
   setHours: (state, available) => (state.dispoHours = available),
 
+
+
   async register() {
     const sendData = await axios
       .post("/register", {

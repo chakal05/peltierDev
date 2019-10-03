@@ -30,7 +30,6 @@ import { mapMutations } from "vuex";
 export default {
   data: () => ({
     picker: new Date().toISOString().substr(0, 10),
-    fafa: "from data",
     error: null
   }),
 

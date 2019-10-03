@@ -19,6 +19,7 @@ var bookingSchema = new mongoose.Schema({
   nom: String,
   prénom: String,
   téléphone: Number,
+  genre: String,
   date: String,
   heure: String,
   disponibilite: String
@@ -32,12 +33,11 @@ async function loadTider() {
 
 router.post("/", async function(req, res) {
   const nyTid = {
-    nom: req.body.nom,
-    prénom: req.body.prenom,
+    nom: req.body.prenom  + ' ' + req.body.nom ,
     téléphone: req.body.telephone,
+    genre: req.body.genre,
     date: req.body.date,
-    heure: req.body.time,
-    disponibilite: req.body.disponibilite
+    heure: req.body.time
   };
 
   var connexion = await loadTider();

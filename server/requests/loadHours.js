@@ -2,14 +2,6 @@ const express = require("express");
 const router = express.Router();
 const mongo = require("mongodb").MongoClient;
 const url = "mongodb://localhost:27017/";
-const cors = require("cors");
-const bodyParser = require("body-parser");
-
-// Middleware
-
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
-router.use(cors());
 
 async function loadTider() {
   const connection = await mongo.connect(url, { useNewUrlParser: true });

@@ -1,49 +1,71 @@
 <template>
-<div>
-    <v-app id="inspire">
-      <v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app>
+  <v-container>
+    <v-app>
+      <v-navigation-drawer
+        color="teal darken-4"
+        dark
+        v-model="drawer"
+        :clipped="$vuetify.breakpoint.lgAndUp"
+        app
+      >
         <div class="logo-gris">
           <v-app-bar-nav-icon class="bar" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-          <v-toolbar-title class="mr-5 align-center">
-            <span>manedek</span>
-            <v-icon >local_hospital</v-icon>
+          <v-toolbar-title class="white--text">
+            Manedek
+            <v-icon>local_hospital</v-icon>
           </v-toolbar-title>
         </div>
 
-        <v-list dense>
-            <v-list-item @click="dashboarde">
-              <v-list-item-icon>
-                <v-icon>home</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>Tableau de bord</v-list-item-title>
-            </v-list-item>
+        <v-list>
+          <v-list-item  @click="showDashboard">
+            <v-list-item-icon>
+              <v-icon>  dashboard </v-icon>
+            </v-list-item-icon>
 
+            <v-list-item-content>
+              <v-list-item-title> Tableau de bord</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+           <v-list-item  @click="showBookings">
+            <v-list-item-icon>
+              <v-icon>  schedule </v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>Consultations</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
+
+        <template v-slot:append>
+          <div class="pa-2">
+            <v-btn color='white' light block>Logout</v-btn>
+          </div>
+        </template>
       </v-navigation-drawer>
 
       <v-app-bar app clipped-left>
-        <v-app-bar-nav-icon  @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
         <v-toolbar-title class="mr-5 align-center">
-         
-          <span class="title">Manedek Medical Center </span>
-          <v-icon color="teal darken-4" class="mx-3">local_hospital</v-icon>
-         
+          Manedek Medical Center
+          <v-icon color="teal darken-4">local_hospital</v-icon>
         </v-toolbar-title>
 
         <v-spacer></v-spacer>
 
         <v-btn icon>
-          <v-icon >language</v-icon>
+          <v-icon>language</v-icon>
         </v-btn>
         <v-btn icon>
           <v-icon>mail_outline</v-icon>
         </v-btn>
         <v-btn icon>
-          <v-icon >mdi-bell</v-icon>
+          <v-icon>mdi-bell</v-icon>
         </v-btn>
         <v-btn icon>
-          <v-icon >account_circle</v-icon>
+          <v-icon>account_circle</v-icon>
         </v-btn>
       </v-app-bar>
 
@@ -51,39 +73,82 @@
         <v-container fill-height>
           <v-layout justify-center align-center>
             <v-flex>
-
+              <dashboard v-if="getDashboard"></dashboard>
+              <bookings v-if="getBookings"></bookings>
             </v-flex>
           </v-layout>
         </v-container>
       </v-content>
     </v-app>
-  </div>
+  </v-container>
 </template>
 
 <script>
+import dashboard from '../components/admin/dashboard';
+import bookings from '../components/admin/consultations';
+import { mapGetters, mapMutations} from 'vuex';
 export default {
-  data: () => ({
-    drawer: null,
+  components: {
+    dashboard,
+    bookings
+  },
   
+  computed : {
+    ...mapGetters(['getDashboard', 'getBookings'])
+  },
+  data: () => ({
+    drawer: null
   }),
 
-  methods : {
+  methods: {
+    ...mapMutations(['showDashboard', 'showBookings'])
   }
 };
 </script>
 
 <style  lang='scss' scoped>
-.v-navigation-drawer{
- .logo-gris {
-    display: flex;
-    justify-content: baseline;
-    align-items: baseline;
+.container {
+  .v-application--wrap {
+    .v-navigation-drawer {
+      .logo-gris {
+        display: none;
 
-    .bar{
-      margin-left: .5rem;
-      margin-right: 1.5rem;
+        @media (max-width: 1264px) {
+          display: block;
+        }
+
+        .bar {
+          margin-left: 0.5rem;
+          margin-top: 0.5rem;
+        }
+
+        .v-toolbar__title {
+          position: relative;
+          top: -2.2rem;
+          left: 3.3rem;
+          font-size: 1.5rem;
+
+          .v-icon {
+            font-size: 2rem;
+            margin-left: 0.5rem;
+            margin-top: 0rem;
+          }
+        }
+      }
     }
+
+    .v-app-bar {
+      .v-toolbar__title {
+        margin-left: -1rem;
+        font-size: 1.5rem;
+        margin-top: 0.3rem;
+
+        .v-icon {
+          font-size: 3rem;
+          margin-left: rem;
+        }
+      }
     }
+  }
 }
-
 </style>
