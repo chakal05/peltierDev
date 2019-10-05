@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <div class="up" v-if="showCalendar">
-      <div class="text-center titre">
+    <div class="calendarView" v-if="showCalendar">
+      <div class="text-center">
         <h1 class="display-2 font-weight-thin mb-4">Entrez une date</h1>
       </div>
 
@@ -16,12 +16,16 @@
         ></v-date-picker>
       </v-row>
 
-      <v-col class="text-center boutonBox" cols="12">
+      <v-col class="text-center " cols="12">
         <v-btn color="teal darken-4" class="white--text mr-4" @click="loadBookings">Retrouver</v-btn>
       </v-col>
     </div>
 
-    <div v-if="showTable">
+    <div class="table" v-if="showTable">
+         <div class="text-center titre">
+        <h1 class="display-2 font-weight-thin mb-4">Consultations</h1>
+      </div>
+
       <v-data-table
         :headers="headers"
         :items="bookings"
@@ -42,7 +46,7 @@
             <div class="flex-grow-1"></div>
             <v-dialog v-model="dialog" max-width="500px">
               <template v-slot:activator="{ on }">
-                <v-btn color="teal darken-4" dark class="mb-2" v-on="on">New Item</v-btn>
+                <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Ajouter</v-btn>
               </template>
               <v-card>
                 <v-card-title>
@@ -65,8 +69,7 @@
                         <v-text-field v-model="editedItem.heure" label="Heure"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="theDate" ></v-text-field>
-                     
+                        <v-text-field v-model="theDate" label="La date"></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -74,8 +77,8 @@
 
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
-                  <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                  <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                  <v-btn color="teal darken-4" text @click="close">Annuler</v-btn>
+                  <v-btn color="teal darken-4" text @click="save">Enregistrer</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -90,14 +93,13 @@
         </template>
       </v-data-table>
       <v-col class="text-center boutonBox" cols="12">
-        <v-btn color="teal darken-4" class="white--text mr-4" @click="retourner">Retrouver</v-btn>
+        <v-btn color="teal darken-4" class="white--text mr-4" @click="backToCalendar">Retourner</v-btn>
       </v-col>
     </div>
   </v-container>
 </template>
 
 <script>
-// todo add and delete new item to and from
 // todo ascending order for booked times
 // todo handle 404 message when response returns empty
 
@@ -106,7 +108,7 @@ export default {
   data: () => ({
     dialog: false,
     picker: new Date().toISOString().substr(0, 10),
-    theDate: null ,
+    theDate: null,
     showTable: false,
     showCalendar: true,
     search: "",
@@ -221,17 +223,38 @@ export default {
     async delItem() {
       let toDelItem = await axios
         .post("/reservations", {
-         item: this.indexToDel._id }
-        )
+          item: this.indexToDel._id
+        })
         .catch(e => alert(e));
     },
 
-    retourner() {
+    backToCalendar() {
       this.showTable = false;
       this.showCalendar = true;
     }
   }
 };
 </script>
-<style>
+<style lang='scss' scoped>
+.container {
+  .calendarView {
+    margin-top: -5rem;
+
+    .text-center {
+      margin-bottom: 2rem;
+    }
+    .row {
+      width: 70%;
+      margin: auto;
+      margin-bottom: 3rem;
+    }
+  }
+
+  .table{
+
+    .v-data-table{
+      margin-bottom: 1rem;
+    }
+  }
+}
 </style>

@@ -1,57 +1,57 @@
 const state = {
-  homeView: true,
-  formulaire: false,
-  calendrier: false,
-  lesHeures: false,
+  home: true,
+  form: false,
+  calendar: false,
+  hours: false,
   recap: false
 };
 
 const getters = {
-    showFirst : (state) => state.homeView,
-    showForm : (state) => state.formulaire,
-    showCalendar : (state) => state.calendrier,
-    showHours : (state) => state.lesHeures,
+    showHome : (state) => state.home,
+    showForm : (state) => state.form,
+    showCalendar : (state) => state.calendar,
+    showHours : (state) => state.hours,
     showRecap : (state) => state.recap
 };
 
 const mutations = {
     toHomeView: state => {
-        state.homeView = true;
-        state.formulaire = false;
-        state.calendrier = false;
-        state.lesHeures = false;
+        state.home = true;
+        state.form = false;
+        state.calendar = false;
+        state.hours = false;
         state.recap = false;
     },
 
   toFormulaire: state => {
-    state.homeView = false;
-    state.formulaire = true;
-    state.calendrier = false;
-    state.lesHeures = false;
+    state.home = false;
+    state.form = true;
+    state.calendar = false;
+    state.hours = false;
     state.recap = false;
   },
 
   toCalendar : state => {
-    state.homeView = false;
-    state.formulaire = false;
-    state.calendrier = true;
-    state.lesHeures = false;
+    state.home = false;
+    state.form = false;
+    state.calendar = true;
+    state.hours = false;
     state.recap = false;
   },
 
   toHours : state => {
-    state.homeView = false;
-    state.formulaire = false;
-    state.calendrier = false;
-    state.lesHeures = true;
+    state.home = false;
+    state.form = false;
+    state.calendar = false;
+    state.hours = true;
     state.recap = false;
   },
 
   toRecap : state => {
-    state.homeView = false;
-    state.formulaire = false;
-    state.calendrier = false;
-    state.lesHeures = false;
+    state.home = false;
+    state.form = false;
+    state.calendar = false;
+    state.hours = false;
     state.recap = true;
   }
 };

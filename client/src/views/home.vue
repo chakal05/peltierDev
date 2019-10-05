@@ -13,11 +13,11 @@
 
 
     <div>
-      <firstView v-if="showFirst"></firstView>
-    <formulaire v-if="showForm"></formulaire>
-    <calendrier v-if="showCalendar"></calendrier>
-    <tableau v-if="showHours"></tableau>
-    <recap v-if="showRecap"></recap>
+      <home v-if="showHome"></home>
+    <patientInfo v-if="showForm"></patientInfo>
+    <calendar v-if="showCalendar"></calendar>
+    <availableHours v-if="showHours"></availableHours>
+    <sendForm v-if="showRecap"></sendForm>
     </div>
     
   </v-container>
@@ -25,21 +25,21 @@
 
 
 <script>
-import firstView from "../components/homepage/firstView";
-import formulaire from "../components/homepage/form";
-import calendrier from "../components/homepage/calendrier";
-import tableau from "../components/homepage/dispoHours";
-import recap from "../components/homepage/final";
+import home from "../components/homepage/home";
+import patientInfo from "../components/homepage/form";
+import calendar from "../components/homepage/calendar";
+import availableHours from "../components/homepage/availableHours";
+import sendForm from "../components/homepage/sendForm";
 import { mapGetters } from "vuex";
 
 export default {
   name: "landingPage",
   components: {
-    firstView,
-    formulaire,
-    calendrier,
-    tableau,
-    recap
+    home,
+    patientInfo,
+    calendar,
+    availableHours,
+    sendForm
   },
   data: () => ({
     //
@@ -47,7 +47,7 @@ export default {
 
   computed: {
     ...mapGetters([
-      "showFirst",
+      "showHome",
       "showForm",
       "showCalendar",
       "showHours",

@@ -17,19 +17,19 @@
         </div>
 
         <v-list>
-          <v-list-item  @click="showDashboard">
+          <v-list-item @click="showDashboard">
             <v-list-item-icon>
-              <v-icon>  dashboard </v-icon>
+              <v-icon>dashboard</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title> Tableau de bord</v-list-item-title>
+              <v-list-item-title>Tableau de bord</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
-           <v-list-item  @click="showBookings">
+          <v-list-item @click="showBookings">
             <v-list-item-icon>
-              <v-icon>  schedule </v-icon>
+              <v-icon>schedule</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
@@ -40,7 +40,7 @@
 
         <template v-slot:append>
           <div class="pa-2">
-            <v-btn color='white' light block>Logout</v-btn>
+            <v-btn color="white" light block>Logout</v-btn>
           </div>
         </template>
       </v-navigation-drawer>
@@ -55,12 +55,6 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon>
-          <v-icon>language</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>mail_outline</v-icon>
-        </v-btn>
         <v-btn icon>
           <v-icon>mdi-bell</v-icon>
         </v-btn>
@@ -84,24 +78,24 @@
 </template>
 
 <script>
-import dashboard from '../components/admin/dashboard';
-import bookings from '../components/admin/consultations';
-import { mapGetters, mapMutations} from 'vuex';
+import dashboard from "../components/admin/dashboard";
+import bookings from "../components/admin/bookings";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
     dashboard,
     bookings
   },
-  
-  computed : {
-    ...mapGetters(['getDashboard', 'getBookings'])
+
+  computed: {
+    ...mapGetters(["getDashboard", "getBookings"])
   },
   data: () => ({
     drawer: null
   }),
 
   methods: {
-    ...mapMutations(['showDashboard', 'showBookings'])
+    ...mapMutations(["showDashboard", "showBookings"])
   }
 };
 </script>
