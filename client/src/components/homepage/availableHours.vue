@@ -6,7 +6,7 @@
 
     <v-item-group>
       <v-container>
-        <v-row>
+        <v-row align='center' justify='center'>
           <v-col v-for="(hour,index) in getHours" :key="index" cols="12" md="4">
             <v-item v-slot:default="{ active, toggle }">
               <v-card
@@ -46,7 +46,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["getHours", "getJour"])
+    ...mapGetters(["getHours"])
   },
 
   methods: {

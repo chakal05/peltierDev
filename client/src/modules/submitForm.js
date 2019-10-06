@@ -9,7 +9,7 @@ const state = {
   jour: null,
   heure: null,
   dispoHours: [],
-  success : false
+  success: false
 };
 
 const getters = {
@@ -36,9 +36,9 @@ const mutations = {
 
   setTime: (state, hour) => (state.heure = hour),
 
-  setHours: (state, available) => (state.dispoHours = available),
-
-
+  setHours: (state, available) => {
+    state.dispoHours = available;
+  },
 
   async register() {
     const sendData = await axios
@@ -55,14 +55,11 @@ const mutations = {
       });
 
     if (sendData && sendData.status === 200) {
-
       state.success = true;
 
-      setTimeout( () => {
+      setTimeout(() => {
         location.reload();
       }, 5000);
-
-     
     }
   }
 };
@@ -90,22 +87,26 @@ const actions = {
       "17 h 00",
       "17 h 30",
       "18 h 00"
-
     ];
 
     if (!response.data[0]) {
-
-   // No reservations for that day, send default hours   
+      // No reservations for that day, send default hours
 
       commit("setHours", baseHours);
-
     } else {
-
-    // if there are reservations for that day, display available hours  
+      // if there are reservations for that day, display available hours
 
       let displayHours = _.difference(baseHours, response.data);
-      commit("setHours", displayHours);
 
+      if (!displayHours[0]) {
+        //if fully booked
+
+        let full = ["Fully booked"];
+
+        commit("setHours", full);
+      } else {
+        commit("setHours", displayHours);
+      }
     }
   }
 };

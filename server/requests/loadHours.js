@@ -9,6 +9,7 @@ async function loadTider() {
 }
 
 router.post("/", async function(req, res) {
+
   let bookedHours = [];
   const dag = req.body.date;
   const jour = await loadTider();
@@ -24,7 +25,6 @@ router.post("/", async function(req, res) {
     bookedHours.push(el.heure);
   });
 
-  console.log(bookedHours);
   res.send(bookedHours);
 });
 

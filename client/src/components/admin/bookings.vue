@@ -16,13 +16,62 @@
         ></v-date-picker>
       </v-row>
 
-      <v-col class="text-center " cols="12">
+      <v-col class="text-center" cols="12">
         <v-btn color="teal darken-4" class="white--text mr-4" @click="loadBookings">Retrouver</v-btn>
       </v-col>
     </div>
 
+    <div v-if="notFound">
+      <v-card max-width="344" class="mx-auto">
+        <v-card-title>Aucune consultation</v-card-title>
+        <v-card-text>Date: {{picker}}</v-card-text>
+        <v-card-actions>
+          <v-btn color="teal darken-4" class="white--text" @click="backToCalendar">Retourner</v-btn>
+     <v-btn color="teal darken-4" class="white--text" @click.stop="dialog2 = true">Ajouter</v-btn>
+    
+       <v-dialog v-model="dialog2" max-width="500px">
+            
+              <v-card>
+                <v-card-title>
+                  <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
+
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field v-model="editedItem.nom" label="Nom"></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field v-model="editedItem.genre" label="Genre"></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field v-model="editedItem.téléphone" :counter="8" label="Téléphone"></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-select :items="getHours" label="Heure"></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field v-model="picker" label="La date"></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+
+                <v-card-actions>
+                  <div class="flex-grow-1"></div>
+                  <v-btn color="teal darken-4" text @click="close">Annuler</v-btn>
+                  <v-btn color="teal darken-4" text @click="save">Enregistrer</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          
+        </v-card-actions>
+      </v-card>
+    </div>
+
     <div class="table" v-if="showTable">
-         <div class="text-center titre">
+      <div class="text-center titre">
         <h1 class="display-2 font-weight-thin mb-4">Consultations</h1>
       </div>
 
@@ -63,13 +112,13 @@
                         <v-text-field v-model="editedItem.genre" label="Genre"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.téléphone" label="Téléphone"></v-text-field>
+                        <v-text-field v-model="editedItem.téléphone" :counter="8" label="Téléphone"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.heure" label="Heure"></v-text-field>
+                        <v-select :items="getHours" label="Heure"></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="theDate" label="La date"></v-text-field>
+                        <v-text-field v-model="picker"  readonly label="La date"></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -101,14 +150,15 @@
 
 <script>
 // todo ascending order for booked times
-// todo handle 404 message when response returns empty
-
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import axios from "axios";
+
 export default {
   data: () => ({
     dialog: false,
+    dialog2:false,
     picker: new Date().toISOString().substr(0, 10),
-    theDate: null,
+    notFound: false,
     showTable: false,
     showCalendar: true,
     search: "",
@@ -143,13 +193,17 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    }
+      return this.editedIndex === -1 ? "Ajouter" : "Changer";
+    },
+    ...mapGetters(["getHours"])
   },
 
   watch: {
     dialog(val) {
       val || this.close();
+    },
+    dialog2(val){
+       val || this.close();
     }
   },
 
@@ -179,6 +233,7 @@ export default {
 
     close() {
       this.dialog = false;
+      this.dialog2 =false;
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
@@ -191,8 +246,15 @@ export default {
         this.edit();
       } else {
         this.bookings.push(this.editedItem);
+        this.addItem();
       }
       this.close();
+    },
+
+    handleErrors() {
+      this.notFound = true;
+      this.showTable = false;
+      this.showCalendar = false;
     },
 
     async loadBookings() {
@@ -202,14 +264,30 @@ export default {
             date: this.picker
           }
         })
-        .catch(e => alert(e));
+        .catch(e => {
+          this.handleErrors();
+        });
 
       if (bookings && bookings.status === 200) {
         this.bookings = bookings.data;
-        this.theDate = this.picker;
         this.showTable = true;
         this.showCalendar = false;
+        this.notFound = false;
+        this.setJour(this.picker);
+        this.loadHours();
       }
+    },
+
+    async addItem() {
+      let toAdd = await axios
+        .post("/register", {
+          nom: this.editedItem.nom,
+          genre: this.editItem.genre,
+          heure:this.editItem.heure,
+          telephone:this.editItem.telephone,
+          date:this.picker
+        })
+        .catch(e => alert(e));
     },
 
     async edit() {
@@ -228,8 +306,12 @@ export default {
         .catch(e => alert(e));
     },
 
+    ...mapMutations(["setJour"]),
+    ...mapActions(["loadHours"]),
+
     backToCalendar() {
       this.showTable = false;
+      this.notFound = false;
       this.showCalendar = true;
     }
   }
@@ -250,9 +332,8 @@ export default {
     }
   }
 
-  .table{
-
-    .v-data-table{
+  .table {
+    .v-data-table {
       margin-bottom: 1rem;
     }
   }
