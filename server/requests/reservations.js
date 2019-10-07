@@ -24,6 +24,8 @@ router.get("/", async function(req, res) {
 // Edit item
 
 router.put("/", async function(req, res) {
+
+  console.log(req.body);
   // get ObjectID from mongo for the query
 
   let ObjectID = require("mongodb").ObjectID;
@@ -31,14 +33,14 @@ router.put("/", async function(req, res) {
   let query = await checkUser();
 
   await query.updateOne(
-    { _id: ObjectID(req.body.item._id) },
+    { _id: ObjectID(req.body._id) },
     {
       $set: {
-        nom: req.body.item.nom,
-        téléphone: req.body.item.téléphone,
-        genre: req.body.item.genre,
-        date: req.body.item.date,
-        heure: req.body.item.heure
+        nom: req.body.nom,
+        téléphone: req.body.téléphone,
+        genre: req.body.genre,
+        date: req.body.date,
+        heure: req.body.heure
       }
     },
     function(err, data) {

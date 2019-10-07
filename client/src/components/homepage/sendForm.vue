@@ -7,7 +7,7 @@
     <v-alert v-if="ifSuccess" class="mx-auto text-center font-weight-bold " max-width='500' type="teal">Votre rendez-vous a été enregistré. Bienvenue !</v-alert>
 
     <v-card class="mx-auto" max-width="345">
-      <v-toolbar color="teal" dark>
+      <v-toolbar color="teal darken-4" dark>
         <v-toolbar-title>Consultation</v-toolbar-title>
 
         <div class="flex-grow-1"></div>
@@ -27,7 +27,7 @@
         <div class="display-1 font-weight-thin text--primary">{{ getHeure }}</div>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="teal" class="white--text" @click="register">Valider</v-btn>
+        <v-btn color="teal darken-4" class="white--text" @click="register">Valider</v-btn>
         <v-btn color="error" class="white--text" @click="toHours">Annuler</v-btn>
       </v-card-actions>
     </v-card>

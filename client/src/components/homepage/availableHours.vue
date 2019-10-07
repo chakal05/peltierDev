@@ -10,7 +10,7 @@
           <v-col v-for="(hour,index) in getHours" :key="index" cols="12" md="4">
             <v-item v-slot:default="{ active, toggle }">
               <v-card
-                :color="active ? 'teal darken-3' : 'teal lighten-1'"
+                :color="active ? 'teal darken-4' : 'teal lighten-1'"
                 class="d-flex align-center"
                 height="71"
                 @click="toggle"
@@ -26,7 +26,7 @@
     <v-col class="text-center" cols="12">
       <h3 class="red--text font-weight-thin mb-4">{{ error}}</h3>
 
-      <v-btn color="teal" class="white--text mr-4" @click="validate">Validate</v-btn>
+      <v-btn color="teal darken-4" class="white--text mr-4" @click="validate">Validate</v-btn>
 
       <v-btn color="error" class="mr-4" @click="toCalendar">Retourner</v-btn>
     </v-col>

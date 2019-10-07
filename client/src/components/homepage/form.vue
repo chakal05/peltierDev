@@ -6,7 +6,7 @@
 
     <v-row align="center" justify="center">
       <v-form ref="form" lazy-validation v-model="valid" class="elevation-5">
-        <v-toolbar color="teal" dark>
+        <v-toolbar color="teal darken-4" dark>
           <v-toolbar-title>Formulaire</v-toolbar-title>
         </v-toolbar>
 
@@ -34,7 +34,7 @@
           </v-radio-group>
         </div>
         <v-col class="text-center boutonBox" cols="12">
-          <v-btn :disabled="!valid" color="teal" class="white--text mr-4" @click="validate">Valider</v-btn>
+          <v-btn :disabled="!valid" color="teal darken-4" class="white--text mr-4" @click="validate">Valider</v-btn>
 
           <v-btn color="error" class="mr-4" @click="reset">Retourner</v-btn>
         </v-col>

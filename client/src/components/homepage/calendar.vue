@@ -6,7 +6,7 @@
 
     <v-row align="center" justify="center">
       <v-date-picker
-        color="teal"
+        color="teal darken-4"
         v-model="picker"
         locale="fr-fr"
         full-width
@@ -17,7 +17,7 @@
 
     <v-col class="text-center boutonBox" cols="12">
       <h3 class="red--text font-weight-thin mb-4">{{error}}</h3>
-      <v-btn color="teal" class="white--text mr-4" @click="getDate">Valider</v-btn>
+      <v-btn color="teal darken-4" class="white--text mr-4" @click="getDate">Valider</v-btn>
 
       <v-btn color="error" class="mr-4" @click="toFormulaire">Retourner</v-btn>
     </v-col>
