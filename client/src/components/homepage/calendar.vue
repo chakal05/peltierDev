@@ -43,9 +43,9 @@ export default {
       let idag = new Date().toISOString().substr(0, 10);
       let today = new Date(idag);
       let pickedDate = new Date(this.picker);
-//pickedDate.getTime() > today.getTime()
+
       if (this.picker) {
-        if (this.picker) {
+        if (pickedDate.getTime() > today.getTime()) {
           if (pickedDate.getDay() === 5 || pickedDate.getDay() === 6) {
             this.error = "Pas de consultation pendant les weekends";
           } else {
