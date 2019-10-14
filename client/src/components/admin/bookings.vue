@@ -1,38 +1,111 @@
 <template>
   <v-container>
     <div class="calendarView" v-if="showCalendar">
-      <div class="text-center">
-        <h1 class="display-2 font-weight-thin mb-4">Entrez une date</h1>
-      </div>
-
       <v-row align="center" justify="center">
-        <v-date-picker
-          color="teal darken-4"
-          v-model="picker"
-          locale="fr-fr"
-          full-width
-          :landscape="$vuetify.breakpoint.smAndUp"
-          class="mt-4"
-        ></v-date-picker>
+        <v-col>
+          <div class="text-center">
+            <h1 class="display-2 font-weight-thin mb-4">Retrouver</h1>
+          </div>
+
+          <v-date-picker
+            color="teal darken-4"
+            v-model="picker"
+            locale="fr-fr"
+            full-width
+            :landscape="$vuetify.breakpoint.smAndUp"
+            class="mt-4"
+          ></v-date-picker>
+          <v-col class="text-center" cols="12">
+            <v-btn color="teal darken-4" class="white--text mr-4" @click="loadBookings">Retrouver</v-btn>
+          </v-col>
+        </v-col>
+        <v-col>
+          <div class="text-center">
+            <h1 class="display-2 font-weight-thin mb-4">Ajouter</h1>
+          </div>
+
+          <v-date-picker
+            color="teal darken-4"
+            v-model="setter"
+            locale="fr-fr"
+            full-width
+            :landscape="$vuetify.breakpoint.smAndUp"
+            class="mt-4"
+          ></v-date-picker>
+          <v-col class="text-center" cols="12">
+            <v-btn color="teal darken-4" class="white--text mr-4" @click="showForm">Ajouter</v-btn>
+          </v-col>
+        </v-col>
       </v-row>
 
-      <v-col class="text-center" cols="12">
-        <v-btn color="teal darken-4" class="white--text mr-4" @click="loadBookings">Retrouver</v-btn>
-      </v-col>
+      <v-row align="center" justify="center" v-if="showFormulaire" class="elevation-5 formulaire">
+        <v-form v-model="valid">
+          <v-container>
+            <v-row>
+              <v-col cols="12" md="4">
+                <v-text-field
+                  v-model="firstname"
+                  :rules="nameRules"
+                  :counter="10"
+                  label="Nom"
+                  required
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" md="4">
+                <v-text-field
+                  v-model="lastname"
+                  :rules="nameRules"
+                  :counter="10"
+                  label="Prenom"
+                  required
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" md="4">
+                <v-text-field v-model="telephone" :rules="emailRules" label="Telephone" required></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="3">
+                <v-text-field v-model="d" :rules="emailRules" label="Genre" required></v-text-field>
+              </v-col>
+              <v-col cols="12" md="3">
+                <v-text-field v-model="d" :rules="emailRules" label="Date" required></v-text-field>
+              </v-col>
+              <v-col cols="12" md="3">
+                <v-text-field v-model="telephone" :rules="emailRules" label="Heure" required></v-text-field>
+              </v-col>
+              <v-col cols="12" md="3">
+                <v-text-field v-model="telephone" :rules="emailRules" label="Docteur" required></v-text-field>
+              </v-col>
+            </v-row>
+            <v-col class="text-center" cols='12'>
+ 
+              <v-btn color="error" @click="close">Annuler</v-btn>
+          
+              <v-btn color="teal darken-4" class="white--text" @click="save">Enregistrer</v-btn>
+            </v-col>
+          </v-container>
+        </v-form>
+      </v-row>
     </div>
 
-    <div class="notFound" v-if="notFound">
-      <v-card max-width="344" class="mx-auto">
-        <v-card-title>Aucune consultation</v-card-title>
-        <v-card-text>Pour la date suivante: {{picker}}</v-card-text>
-        <v-card-actions>
-          <v-col class="btnBox" cols="12">
-            <v-btn color="teal darken-4" class="white--text" @click="backToCalendar">Retourner</v-btn>
-            <v-btn color="light ">Créer</v-btn>
-          </v-col>
-        </v-card-actions>
-      </v-card>
-    </div>
+    <v-row align="center" justify="center" class="notFound" v-if="notFound">
+      <v-col cols="12" md="6">
+        <v-card class="d-flex align-center" height="400">
+          <v-card-text class="flex-grow-1 text-center">
+            <v-icon color="teal darken-4">fas fa-exclamation-circle</v-icon>
+            <h3 class="display-2 font-weight-thin">Rien à afficher</h3>
+            <p>Pour la date suivante : {{picker}}</p>
+            <v-col>
+              <v-btn color="teal darken-4" class="white--text" @click="save">Ajouter</v-btn>
+            </v-col>
+            <v-btn color="error" @click="backToCalendar">Retourner</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
 
     <div class="table" v-if="showTable">
       <div class="text-center titre">
@@ -42,6 +115,7 @@
       <v-data-table
         :headers="headers"
         :items="bookings"
+        :search="search"
         sort-by="nom"
         class="elevation-1"
         locale="fr-FR"
@@ -51,16 +125,13 @@
             <v-text-field
               v-model="search"
               append-icon="search"
-              label="Search"
+              label="Rechercher"
               single-line
               hide-details
             ></v-text-field>
-
+            <br />
             <div class="flex-grow-1"></div>
-            <v-dialog v-model="dialog" max-width="500px">
-              <template v-slot:activator="{ on }">
-                <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Ajouter</v-btn>
-              </template>
+            <v-dialog persistent v-model="dialog" max-width="500px">
               <v-card>
                 <v-card-title>
                   <span class="headline">{{ formTitle }}</span>
@@ -79,7 +150,7 @@
                         <v-text-field v-model="editedItem.téléphone" :counter="8" label="Téléphone"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-select :items="getHours"  v-model="editedItem.heure" label="Heure"></v-select>
+                        <v-select :items="getHours" v-model="editedItem.heure" label="Heure"></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field v-model="picker" readonly label="La date"></v-text-field>
@@ -90,8 +161,8 @@
 
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
-                  <v-btn color="teal darken-4" text @click="close">Annuler</v-btn>
-                  <v-btn color="teal darken-4" text @click="save">Enregistrer</v-btn>
+                  <v-btn color="error" @click="close">Annuler</v-btn>
+                  <v-btn color="teal darken-4" class="white--text" @click="save">Enregistrer</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -113,21 +184,17 @@
 </template>
 
 <script>
-// todo ## find a way to bind editedItem.heure and value of getHours
-// todo ## ascending order for booked times
-// todo ## if there is no consultation, the add btn should bring on
-// todo ## a new component
-
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import axios from "axios";
 
 export default {
   data: () => ({
     dialog: false,
-    dialog2: false,
+    setter: new Date().toISOString().substr(0, 10),
     picker: new Date().toISOString().substr(0, 10),
     notFound: false,
     showTable: false,
+    showFormulaire: false,
     showCalendar: true,
     value: "",
     search: "",
@@ -170,9 +237,6 @@ export default {
   watch: {
     dialog(val) {
       val || this.close();
-    },
-    dialog2(val) {
-      val || this.close();
     }
   },
 
@@ -202,7 +266,6 @@ export default {
 
     close() {
       this.dialog = false;
-      this.dialog2 = false;
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
@@ -219,7 +282,6 @@ export default {
       }
       this.close();
     },
-
 
     handleErrors() {
       this.notFound = true;
@@ -254,7 +316,7 @@ export default {
           nom: this.editedItem.nom,
           genre: this.editedItem.genre,
           telephone: this.editedItem.téléphone,
-          heure: this.value,
+          heure: this.editedItem.heure,
           date: this.picker
         })
         .catch(e => alert(e));
@@ -264,11 +326,11 @@ export default {
       this.editItem.heure = this.value;
       let edited = await axios
         .put("/reservations", {
-             id: this.editedItem._id,
-            nom: this.editedItem.nom,
+          id: this.editedItem._id,
+          nom: this.editedItem.nom,
           genre: this.editedItem.genre,
           telephone: this.editedItem.téléphone,
-          heure: this.value
+          heure: this.editedItem.heure
         })
         .catch(e => alert(e));
     },
@@ -284,6 +346,10 @@ export default {
     ...mapMutations(["setJour"]),
     ...mapActions(["loadHours"]),
 
+    showForm() {
+      this.showFormulaire = true;
+    },
+
     backToCalendar() {
       this.showTable = false;
       this.notFound = false;
@@ -295,13 +361,15 @@ export default {
 <style lang='scss' scoped>
 .container {
   .calendarView {
-    margin-top: -5rem;
-
     .text-center {
       margin-bottom: 2rem;
+
+      .v-btn {
+        margin-top: 1rem;
+      }
     }
     .row {
-      width: 70%;
+      width: 90%;
       margin: auto;
       margin-bottom: 3rem;
     }
@@ -309,6 +377,21 @@ export default {
 
   .table {
     .v-data-table {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .formulaire {
+    max-width: 70%;
+    background-color: #ffffff;
+
+    .v-btn{
+      margin: 1rem;
+    }
+  }
+  .notFound {
+    .v-icon {
+      font-size: 4rem;
       margin-bottom: 1rem;
     }
   }

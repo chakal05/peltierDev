@@ -23,24 +23,30 @@ async function loadTider() {
 // TODO Send the _id if they want an email confirmation and send email
 
 router.post("/", async function(req, res) {
+  let nom;
+  if (!req.body.prenom) {
+    nom = req.body.nom;
+  } else {
+    nom = req.body.prenom + " " + req.body.nom;
+  }
+  const nyTid = {
+    nom: nom,
+    téléphone: req.body.telephone,
+    genre: req.body.genre,
+    date: req.body.date,
+    heure: req.body.heure
+  };
 
- // const nyTid = {
- //   nom: req.body.prenom  + ' ' + req.body.nom ,
- //   téléphone: req.body.telephone,
- //   genre: req.body.genre,
- //   date: req.body.date,
- //   heure: req.body.time
- // };
-//
- // var connexion = await loadTider();
- // var post = new connexion(nyTid);
-//
- // if (post.save()) {
- //   console.log("inserted new row");
- //   res.status(200).end();
- // }
+  let connexion = await loadTider();
+  let post = new connexion(nyTid);
 
-console.log(req.body);
+
+   if (post.save()) {
+     console.log("inserted new row");
+     res.status(200).end();
+   }
+
+  
 });
 
 module.exports = router;

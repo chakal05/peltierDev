@@ -21,6 +21,7 @@ router.get("/", async function(req, res) {
   }
 });
 
+
 // Edit item
 
 router.put("/", async function(req, res) {
@@ -33,46 +34,41 @@ router.put("/", async function(req, res) {
   let query = await checkUser();
 
   await query.updateOne(
-    { _id: ObjectID(req.body._id) },
+    { _id: ObjectID(req.body.id) },
     {
       $set: {
         nom: req.body.nom,
-        téléphone: req.body.téléphone,
+        téléphone: req.body.telephone,
         genre: req.body.genre,
-        date: req.body.date,
         heure: req.body.heure
       }
     },
     function(err, data) {
       if (err) throw err;
-      if (data.matchedCount) {
+      if (data.modifiedCount === 1) {
         res.status(200).send();
+        console.log('modified one item');
       }
     }
   );
 });
 
-// Delete item 
+// Delete item
 router.post("/", async function(req, res) {
   let id = req.body.item;
+
   // get ObjectID from mongo for the query
 
-    let ObjectID = require("mongodb").ObjectID;
+  let ObjectID = require("mongodb").ObjectID;
+  let query = await checkUser();
 
-
-    let query = await checkUser();
-
-     await query.deleteOne(
-      { _id: ObjectID(id) },
-      function(err, data) {
-        if (err) throw err;
-        if (data) {
-          res.status(200).send();
-        }
-      }
-    );
-
-
+  query.deleteOne({ _id: ObjectID(id) }, function(err, data) {
+    if (err) throw err;
+    if (data.deletedCount === 1) {
+      console.log("deleted one item");
+      res.status(200).send();
+    }
+  });
 });
 
 module.exports = router;
