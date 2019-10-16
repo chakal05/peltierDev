@@ -16,18 +16,14 @@ router.get("/", async function(req, res) {
   let search = await query.find({ date: date }).toArray();
   if (search.length > 0) {
     res.send(search).end();
-   console.log(search);
   } else {
     res.sendStatus(404).end();
   }
 });
 
-
 // Edit item
 
 router.put("/", async function(req, res) {
-
-  console.log(req.body);
   // get ObjectID from mongo for the query
 
   let ObjectID = require("mongodb").ObjectID;
@@ -48,7 +44,7 @@ router.put("/", async function(req, res) {
       if (err) throw err;
       if (data.modifiedCount === 1) {
         res.status(200).send();
-        console.log('modified one item');
+        console.log("modified one item");
       }
     }
   );

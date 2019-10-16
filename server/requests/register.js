@@ -23,7 +23,6 @@ async function loadTider() {
 // TODO Send the _id if they want an email confirmation and send email
 
 router.post("/", async function(req, res) {
-  console.log(req.body);
   let nom;
   if (!req.body.prenom) {
     nom = req.body.nom;

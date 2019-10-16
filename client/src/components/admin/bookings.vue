@@ -41,7 +41,7 @@
 
     <v-row v-if="showFormulaire">
       <v-col cols="12" class="text-center">
-        <h1 class="display-2 font-weight-thin mb-4">Remplissez le formulaire</h1>
+        <h1 class="display-2 font-weight-thin mb-4">Remplir le formulaire</h1>
       </v-col>
       <br />
       <v-row align="center" justify="center" class="elevation-5 formulaire">

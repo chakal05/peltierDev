@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12" md="3">
-          <v-item v-slot:default="{ active, toggle }">
+          <v-item v-slot:default="{ active, toggle}">
             <v-card
               :color="active ? 'grey lighten-2' : ''"
               class="d-flex align-center"
@@ -122,7 +122,7 @@
               :color="active ? 'grey lighten-2' : ''"
               class="d-flex align-center"
               height="200"
-              @click="toggle"
+              @click="showBookings"
             >
               <v-scroll-y-transition>
                 <v-card-text class="display-3 flex-grow-1 text-center">
@@ -236,7 +236,17 @@
 </template>
 
 <script>
-export default {};
+import { mapGetters, mapMutations } from "vuex";
+export default {
+    computed: {
+    ...mapGetters(["getDashboard", "getBookings"])
+  },
+   methods: {
+    ...mapMutations(["showDashboard", "showBookings"]),
+
+   
+  }
+};
 </script>
 
 <style lang='scss' scoped>
