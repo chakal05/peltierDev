@@ -37,8 +37,14 @@
           </v-col>
         </v-col>
       </v-row>
+    </div>
 
-      <v-row align="center" justify="center" v-if="showFormulaire" class="elevation-5 formulaire">
+    <v-row v-if="showFormulaire">
+      <v-col cols="12" class="text-center">
+        <h1 class="display-2 font-weight-thin mb-4">Remplissez le formulaire</h1>
+      </v-col>
+      <br />
+      <v-row align="center" justify="center" class="elevation-5 formulaire">
         <v-form v-model="valid">
           <v-container>
             <v-row>
@@ -68,28 +74,27 @@
             </v-row>
             <v-row>
               <v-col cols="12" md="3">
-                <v-text-field v-model="d" :rules="emailRules" label="Genre" required></v-text-field>
+                <v-select :items="genre" v-model="gender" label="Genre" required></v-select>
               </v-col>
               <v-col cols="12" md="3">
-                <v-text-field v-model="d" :rules="emailRules" label="Date" required></v-text-field>
+                <v-text-field v-model="setter" readonly label="Date" required></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
-                <v-text-field v-model="telephone" :rules="emailRules" label="Heure" required></v-text-field>
+                <v-select v-model="tillgTimmar" :items="getHours" label="Heure" required></v-select>
               </v-col>
               <v-col cols="12" md="3">
-                <v-text-field v-model="telephone" :rules="emailRules" label="Docteur" required></v-text-field>
+                <v-select v-model="doc" :items="docteur" label="Docteur" required></v-select>
               </v-col>
             </v-row>
-            <v-col class="text-center" cols='12'>
- 
-              <v-btn color="error" @click="close">Annuler</v-btn>
-          
-              <v-btn color="teal darken-4" class="white--text" @click="save">Enregistrer</v-btn>
+            <v-col class="text-center" cols="12">
+              <v-btn color="error" @click="backToCalendar">Retourner</v-btn>
+
+              <v-btn color="teal darken-4" class="white--text" @click="save">Ajouter</v-btn>
             </v-col>
           </v-container>
         </v-form>
       </v-row>
-    </div>
+    </v-row>
 
     <v-row align="center" justify="center" class="notFound" v-if="notFound">
       <v-col cols="12" md="6">
@@ -198,7 +203,14 @@ export default {
     showCalendar: true,
     value: "",
     search: "",
+    gender: "",
+    docteur: [
+      "Dr Omar Hassan Houssein",
+      "Dr Hodan Farah Nour",
+      "Dr Moussa Moussa Ali"
+    ],
     indexToDel: null,
+    genre: [`Homme`, `Femme`],
     headers: [
       {
         text: "Nom",
@@ -346,14 +358,40 @@ export default {
     ...mapMutations(["setJour"]),
     ...mapActions(["loadHours"]),
 
-    showForm() {
-      this.showFormulaire = true;
+   async showForm() {
+      if (new Date(this.setter).getTime() < new Date().getTime()) {
+      //  alert(`la date est passee`);
+        backToCalendar();
+      } else {
+        this.showFormulaire = true;
+        this.showTable = false;
+        this.notFound = false;
+        this.showCalendar = false;
+
+        let bookings = await axios
+        .get("/reservations", {
+          params: {
+            date: this.setter
+          }
+        })
+        .catch(e => {
+          // this.handleErrors();
+         
+        });
+
+      if (bookings && bookings.status ) {
+        this.setJour(this.setter);
+        this.loadHours();
+      }
+      }
     },
 
+   
     backToCalendar() {
       this.showTable = false;
       this.notFound = false;
       this.showCalendar = true;
+      this.showFormulaire = false;
     }
   }
 };
@@ -382,10 +420,11 @@ export default {
   }
 
   .formulaire {
-    max-width: 70%;
+    max-width: 90%;
+    margin: auto;
     background-color: #ffffff;
 
-    .v-btn{
+    .v-btn {
       margin: 1rem;
     }
   }

@@ -23,6 +23,7 @@ async function loadTider() {
 // TODO Send the _id if they want an email confirmation and send email
 
 router.post("/", async function(req, res) {
+  console.log(req.body);
   let nom;
   if (!req.body.prenom) {
     nom = req.body.nom;
@@ -34,7 +35,7 @@ router.post("/", async function(req, res) {
     téléphone: req.body.telephone,
     genre: req.body.genre,
     date: req.body.date,
-    heure: req.body.heure
+    heure: req.body.time 
   };
 
   let connexion = await loadTider();
@@ -42,7 +43,7 @@ router.post("/", async function(req, res) {
 
 
    if (post.save()) {
-     console.log("inserted new row");
+     console.log(`Inserted one row`);
      res.status(200).end();
    }
 

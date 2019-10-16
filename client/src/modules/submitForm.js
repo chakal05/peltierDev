@@ -38,6 +38,7 @@ const mutations = {
 
   setHours: (state, available) => {
     state.dispoHours = available;
+    alert(state.dispoHours);
   },
 
   async register() {

@@ -16,6 +16,7 @@ router.get("/", async function(req, res) {
   let search = await query.find({ date: date }).toArray();
   if (search.length > 0) {
     res.send(search).end();
+   console.log(search);
   } else {
     res.sendStatus(404).end();
   }
