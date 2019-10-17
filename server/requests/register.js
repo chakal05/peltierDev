@@ -24,23 +24,32 @@ async function loadTider() {
 
 router.post("/", async function(req, res) {
   let nom;
+  let doc;
   if (!req.body.prenom) {
     nom = req.body.nom;
   } else {
     nom = req.body.prenom + " " + req.body.nom;
   }
+
+  if (req.body.docteur) {
+     doc = req.body.docteur;
+  } else {
+    doc = 'Néant';
+  }
+
   const nyTid = {
     nom: nom,
     téléphone: req.body.telephone,
     genre: req.body.genre,
     date: req.body.date,
-    heure: req.body.time 
+    heure: req.body.time,
+    docteur: doc
   };
 
   let connexion = await loadTider();
   let post = new connexion(nyTid);
 
-
+console.log(nyTid);
    if (post.save()) {
      console.log(`Inserted one row`);
      res.status(200).end();
