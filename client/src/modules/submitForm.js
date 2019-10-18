@@ -8,6 +8,7 @@ const state = {
   sexe: null,
   jour: null,
   heure: null,
+  docteur: null,
   dispoHours: [],
   success: false
 };
@@ -37,16 +38,17 @@ const mutations = {
   setTime: (state, hour) => (state.heure = hour),
 
   setHours: (state, available) => (state.dispoHours = available),
-  
+
   async register() {
-    const sendData = await axios
+    let sendData = await axios
       .post("/register", {
         prenom: state.prenom,
         nom: state.nom,
         telephone: state.telephone,
         genre: state.sexe,
         date: state.jour,
-        time: state.heure
+        time: state.heure,
+        docteur: state.docteur
       })
       .catch(e => {
         alert(e);
@@ -55,9 +57,9 @@ const mutations = {
     if (sendData && sendData.status === 200) {
       state.success = true;
 
-      setTimeout(() => {
-        location.reload();
-      }, 5000);
+    //   setTimeout(() => {
+    //     location.reload();
+    //   }, 7000);
     }
   }
 };
@@ -73,18 +75,18 @@ const actions = {
     // Default hours
 
     const baseHours = [
-      "8 h 30",
-      "9 h 00",
-      "9 h 30",
-      "10 h 00",
-      "10 h 30",
-      "11 h 00",
-      "11 h 30",
-      "12 h 00",
-      "16 h 30",
-      "17 h 00",
-      "17 h 30",
-      "18 h 00"
+      "8:30",
+      "9:00",
+      "9:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30",
+      "12:00",
+      "16:30",
+      "17:00",
+      "17:30",
+      "18:00"
     ];
 
     if (!response.data[0]) {

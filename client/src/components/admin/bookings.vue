@@ -69,7 +69,12 @@
               </v-col>
 
               <v-col cols="12" md="4">
-                <v-text-field v-model="telephone" :rules="emailRules" label="Telephone" required></v-text-field>
+                <v-text-field
+                  v-model="telephone"
+                  :rules="telephoneRules"
+                  label="Telephone"
+                  required
+                ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
@@ -103,9 +108,6 @@
             <v-icon color="teal darken-4">fas fa-exclamation-circle</v-icon>
             <h3 class="display-2 font-weight-thin">Rien à afficher</h3>
             <p>Pour la date suivante : {{picker}}</p>
-            <v-col>
-              <v-btn color="teal darken-4" class="white--text" @click="save">Ajouter</v-btn>
-            </v-col>
             <v-btn color="error" @click="backToCalendar">Retourner</v-btn>
           </v-card-text>
         </v-card>
@@ -160,6 +162,9 @@
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field v-model="picker" readonly label="La date"></v-text-field>
                       </v-col>
+                         <v-col cols="12" sm="6" md="4">
+                        <v-text-field v-model="editedItem.docteur" readonly label="La date"></v-text-field>
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
@@ -178,7 +183,7 @@
           <v-icon small @click="deleteItem(item)">delete</v-icon>
         </template>
         <template v-slot:no-data>
-          <v-btn color="primary" @click="initialize">Reset</v-btn>
+          <v-btn color="teal darken-4" class="white--text" @click="initialize">RESET</v-btn>
         </template>
       </v-data-table>
       <v-col class="text-center boutonBox" cols="12">
@@ -201,6 +206,7 @@ export default {
     showTable: false,
     showFormulaire: false,
     showCalendar: true,
+    error: "",
     value: "",
     search: "",
     gender: "",
@@ -221,21 +227,41 @@ export default {
       { text: "Genre", value: "genre" },
       { text: "Téléphone", value: "téléphone" },
       { text: "Heure", value: "heure" },
+      { text: "Docteur", value: "doc" },
       { text: "Actions", value: "action", sortable: false }
     ],
     bookings: [],
+    nameRules: [
+      v => !!v || "Le nom est requis",
+      v => isNaN(v) || "Le nom ne doit contenir aucun chiffre"
+    ],
+    telephoneRules: [
+      v => !!v || "Le numéro de téléphone est requis",
+      v =>
+        (v && v.length <= 8) ||
+        "Le numéro de téléphone doit avoir 8 caractere au max",
+      v => !isNaN(v) || "Le numéro de téléphone doit etre numerique"
+    ],
+    valid: "",
+    firstname: "",
+    lastname: "",
+    doc: "",
+    tillgTimmar: "",
+    telephone: "",
     editedIndex: -1,
     editedItem: {
       nom: "",
       genre: "",
       heure: "",
-      téléphone: ""
+      téléphone: "",
+      doc: ""
     },
     defaultItem: {
       nom: "",
       genre: "",
       heure: "",
-      téléphone: ""
+      téléphone: "",
+      doc: ""
     }
   }),
 
@@ -313,6 +339,7 @@ export default {
         });
 
       if (bookings && bookings.status === 200) {
+      
         this.bookings = bookings.data;
         this.showTable = true;
         this.showCalendar = false;
@@ -325,11 +352,13 @@ export default {
     async addItem() {
       let toAdd = await axios
         .post("/register", {
-          nom: this.editedItem.nom,
-          genre: this.editedItem.genre,
-          telephone: this.editedItem.téléphone,
-          heure: this.editedItem.heure,
-          date: this.picker
+          nom: this.lastname,
+          prenom: this.firstname,
+          genre: this.gender,
+          telephone: this.telephone,
+          time: this.tillgTimmar,
+          date: this.setter,
+          docteur: this.doc
         })
         .catch(e => alert(e));
     },
@@ -358,35 +387,43 @@ export default {
     ...mapMutations(["setJour"]),
     ...mapActions(["loadHours"]),
 
-   async showForm() {
-      if (new Date(this.setter).getTime() < new Date().getTime()) {
-      //  alert(`la date est passee`);
-        backToCalendar();
-      } else {
-        this.showFormulaire = true;
-        this.showTable = false;
-        this.notFound = false;
-        this.showCalendar = false;
+    async showForm() {
+      if (this.setter) {
+        if (
+          new Date(this.setter).getDate() === new Date().getDate() ||
+          new Date(this.setter).getTime() > new Date().getTime()
+        ) {
+          if (
+            new Date(this.setter).getDay() === 5 ||
+            new Date(this.setter).getDay() === 6
+          ) {
+            alert("Pas de consultation pendant les weekends");
+          } else {
+            this.showFormulaire = true;
+            this.showTable = false;
+            this.notFound = false;
+            this.showCalendar = false;
 
-        let bookings = await axios
-        .get("/reservations", {
-          params: {
-            date: this.setter
+            let bookings = await axios
+              .get("/reservations", {
+                params: {
+                  date: this.setter
+                }
+              })
+              .catch(e => {
+                // this.handleErrors();
+              });
+
+            if (bookings && bookings.status) {
+              this.setJour(this.setter);
+              this.loadHours();
+            }
           }
-        })
-        .catch(e => {
-          // this.handleErrors();
-         
-        });
-
-      if (bookings && bookings.status ) {
-        this.setJour(this.setter);
-        this.loadHours();
-      }
+        } else {
+          alert("La date choissie est passee");
+        }
       }
     },
-
-   
     backToCalendar() {
       this.showTable = false;
       this.notFound = false;

@@ -4,7 +4,8 @@
       <h1 class="display-2 font-weight-thin mb-4">Recapitulatif</h1>
     </div>
 
-    <v-alert v-if="ifSuccess" class="mx-auto text-center font-weight-bold " max-width='500' type="teal">Votre rendez-vous a été enregistré. Bienvenue !</v-alert>
+    <v-alert v-if="ifSuccess" class="mx-auto text-center font-weight-bold " max-width='500' type="teal">Votre rendez-vous a été enregistré. Vous serez automatiquement 
+      redirigé vers la page d'acceuil. Bienvenue !</v-alert>
 
     <v-card class="mx-auto" max-width="345">
       <v-toolbar color="teal darken-4" dark>
