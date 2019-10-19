@@ -1,7 +1,9 @@
 import axios from "axios";
 import { _ } from "vue-underscore";
+import { ENGINE_METHOD_DIGESTS } from "constants";
 
 const state = {
+  id: null,
   nom: null,
   prenom: null,
   telephone: null,
@@ -10,10 +12,12 @@ const state = {
   heure: null,
   docteur: null,
   dispoHours: [],
-  success: false
+  success: false,
+  error: false
 };
 
 const getters = {
+  getId: state => state.id,
   getName: state => state.nom,
   getFirstname: state => state.prenom,
   getPhone: state => state.telephone,
@@ -21,7 +25,9 @@ const getters = {
   getJour: state => state.jour,
   getHeure: state => state.heure,
   getHours: state => state.dispoHours,
-  ifSuccess: state => state.success
+  getDocteur: state => state.docteur,
+  ifSuccess: state => state.success,
+  ifError: state => state.error,
 };
 
 const mutations = {
@@ -39,7 +45,11 @@ const mutations = {
 
   setHours: (state, available) => (state.dispoHours = available),
 
-  async register() {
+  setId: (state, puttedId) => (state.id = puttedId),
+
+  setdocteur: (state, docteur) => (state.docteur = docteur),
+
+  setRank: () => {
     let rank;
 
     if (state.heure) {
@@ -70,7 +80,13 @@ const mutations = {
       } else if (state.heure === "18:00") {
         rank = 13;
       }
+      // return rank;
     }
+
+    return rank;
+  },
+
+  async register() {
     let sendData = await axios
       .post("/register", {
         prenom: state.prenom,
@@ -80,10 +96,10 @@ const mutations = {
         date: state.jour,
         time: state.heure,
         docteur: state.docteur,
-        rank: rank
+        rank: mutations.setRank()
       })
-      .catch(e => {
-        alert(e);
+      .catch(() => {
+        this.error = true;
       });
 
     if (sendData && sendData.status === 200) {
@@ -92,6 +108,40 @@ const mutations = {
       setTimeout(() => {
         location.reload();
       }, 7000);
+    }
+  },
+
+  async changeItem() {
+    let sendData = await axios
+      .put("/reservations", {
+        id: state.id,
+        nom: state.nom,
+        telephone: state.telephone,
+        genre: state.sexe,
+        time: state.heure,
+        docteur: state.docteur,
+        rank: mutations.setRank()
+      })
+      .catch(() => {
+        this.error = true;
+      });
+
+    if (sendData && sendData.status === 200) {
+      state.success = true;
+    }
+  },
+
+  async SupprItem() {
+    let sendData = await axios
+      .post("/reservations", {
+        item: state.id
+      })
+      .catch(() => {
+        this.error = true;
+      });
+
+    if (sendData && sendData.status === 200) {
+      state.success = true;
     }
   }
 };

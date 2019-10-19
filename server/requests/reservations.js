@@ -7,6 +7,8 @@ async function checkUser() {
   return connection.db("peltier").collection("bookings");
 }
 
+
+
 // get bookings
 
 router.get("/", async function(req, res) {
@@ -36,7 +38,9 @@ router.put("/", async function(req, res) {
         nom: req.body.nom,
         téléphone: req.body.telephone,
         genre: req.body.genre,
-        heure: req.body.heure
+        heure: req.body.time,
+        docteur: req.body.docteur,
+        rank: req.body.rank
       }
     },
     function(err, data) {

@@ -27,7 +27,6 @@ async function loadTider() {
 router.post("/", async function(req, res) {
   let nom;
   let doc;
-  let rank;
   if (!req.body.prenom) {
     nom = req.body.nom;
   } else {
@@ -40,8 +39,6 @@ router.post("/", async function(req, res) {
     doc = "Néant";
   }
 
-  
-
   const nyTid = {
     nom: nom,
     téléphone: req.body.telephone,
@@ -49,7 +46,7 @@ router.post("/", async function(req, res) {
     date: req.body.date,
     heure: req.body.time,
     docteur: doc,
-    rank:req.body.rank
+    rank: req.body.rank
   };
 
   let connexion = await loadTider();

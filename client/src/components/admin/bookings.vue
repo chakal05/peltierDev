@@ -4,7 +4,7 @@
       <v-row align="center" justify="center">
         <v-col>
           <div class="text-center">
-            <h1 class="display-2 font-weight-thin mb-4">Retrouver</h1>
+            <h1 class="display-2 font-weight-thin mb-4">Consultations</h1>
           </div>
 
           <v-date-picker
@@ -17,22 +17,6 @@
           ></v-date-picker>
           <v-col class="text-center" cols="12">
             <v-btn color="teal darken-4" class="white--text mr-4" @click="loadBookings">Retrouver</v-btn>
-          </v-col>
-        </v-col>
-        <v-col>
-          <div class="text-center">
-            <h1 class="display-2 font-weight-thin mb-4">Ajouter</h1>
-          </div>
-
-          <v-date-picker
-            color="teal darken-4"
-            v-model="setter"
-            locale="fr-fr"
-            full-width
-            :landscape="$vuetify.breakpoint.smAndUp"
-            class="mt-4"
-          ></v-date-picker>
-          <v-col class="text-center" cols="12">
             <v-btn color="teal darken-4" class="white--text mr-4" @click="showForm">Ajouter</v-btn>
           </v-col>
         </v-col>
@@ -82,7 +66,7 @@
                 <v-select :items="genre" v-model="gender" label="Genre" required></v-select>
               </v-col>
               <v-col cols="12" md="3">
-                <v-text-field v-model="setter" readonly label="Date" required></v-text-field>
+                <v-text-field v-model="picker" readonly label="Date" required></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
                 <v-select v-model="tillgTimmar" :items="getHours" label="Heure" required></v-select>
@@ -123,7 +107,7 @@
         :headers="headers"
         :items="bookings"
         :search="search"
-       :sort-by="['rank']"
+        :sort-by="['rank']"
         class="elevation-1"
         locale="fr-FR"
       >
@@ -151,7 +135,7 @@
                         <v-text-field v-model="editedItem.nom" label="Nom"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.genre" label="Genre"></v-text-field>
+                        <v-select :items="genre" v-model="editedItem.genre" label="Genre" required></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field v-model="editedItem.téléphone" :counter="8" label="Téléphone"></v-text-field>
@@ -163,7 +147,7 @@
                         <v-text-field v-model="picker" readonly label="La date"></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.docteur" readonly label="Docteur"></v-text-field>
+                        <v-select v-model="doc" :items="docteur" label="Docteur" required></v-select>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -194,13 +178,14 @@
 </template>
 
 <script>
+//TODO Make sure no field is sent empty
+
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import axios from "axios";
 
 export default {
   data: () => ({
     dialog: false,
-    setter: new Date().toISOString().substr(0, 10),
     picker: new Date().toISOString().substr(0, 10),
     notFound: false,
     showTable: false,
@@ -269,7 +254,7 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "Ajouter" : "Changer";
     },
-    ...mapGetters(["getHours"])
+    ...mapGetters(["getHours", "ifSuccess", "ifError"])
   },
 
   watch: {
@@ -316,9 +301,8 @@ export default {
         this.edit();
       } else {
         this.bookings.push(this.editedItem);
-        this.addItem();
+        this.add();
       }
-      this.close();
     },
 
     handleErrors() {
@@ -334,7 +318,7 @@ export default {
             date: this.picker
           }
         })
-        .catch(e => {
+        .catch(() => {
           this.handleErrors();
         });
 
@@ -348,53 +332,72 @@ export default {
       }
     },
 
-    async addItem() {
-      let toAdd = await axios
-        .post("/register", {
-          nom: this.lastname,
-          prenom: this.firstname,
-          genre: this.gender,
-          telephone: this.telephone,
-          time: this.tillgTimmar,
-          date: this.setter,
-          docteur: this.doc
-        })
-        .catch(e => alert(e));
-    },
-
-    async edit() {
+    edit() {
       this.editItem.heure = this.value;
-      let edited = await axios
-        .put("/reservations", {
-          id: this.editedItem._id,
-          nom: this.editedItem.nom,
-          genre: this.editedItem.genre,
-          telephone: this.editedItem.téléphone,
-          heure: this.editedItem.heure
-        })
-        .catch(e => alert(e));
+      this.setId(this.editedItem._id);
+      this.setName(this.editedItem.nom);
+      this.setNumber(this.editedItem.téléphone);
+      this.setGenre(this.editedItem.genre);
+      this.setTime(this.editedItem.heure);
+      this.setJour(this.picker);
+      this.setdocteur(this.doc);
+      this.changeItem();
+
+      if (this.ifSuccess) {
+        this.close();
+
+        this.backToCalendar();
+      } else if (this.ifError) {
+        this.handleErrors();
+      }
     },
 
-    async delItem() {
-      let toDelItem = await axios
-        .post("/reservations", {
-          item: this.indexToDel._id
-        })
-        .catch(e => alert(e));
+    add() {
+      this.setName(this.lastname);
+      this.setFirstname(this.firstname);
+      this.setNumber(this.telephone);
+      this.setGenre(this.gender);
+      this.setJour(this.firstname);
+      this.setTime(this.tillgTimmar);
+      this.setJour(this.picker);
+      this.setdocteur(this.doc);
+      this.register();
+
+      if (this.ifSuccess) {
+        this.backToCalendar();
+      }
     },
 
-    ...mapMutations(["setJour"]),
+    delItem() {
+      this.setId(this.indexToDel._id);
+      this.SupprItem();
+    },
+
+    ...mapMutations([
+      "setJour",
+      "setName",
+      "setFirstname",
+      "setNumber",
+      "setGenre",
+      "setJour",
+      "setTime",
+      "setdocteur",
+      "setId",
+      "register",
+      "changeItem",
+      "SupprItem"
+    ]),
     ...mapActions(["loadHours"]),
 
     async showForm() {
-      if (this.setter) {
+      if (this.picker) {
         if (
-          new Date(this.setter).getDate() === new Date().getDate() ||
-          new Date(this.setter).getTime() > new Date().getTime()
+          new Date(this.picker).getDate() === new Date().getDate() ||
+          new Date(this.picker).getTime() > new Date().getTime()
         ) {
           if (
-            new Date(this.setter).getDay() === 5 ||
-            new Date(this.setter).getDay() === 6
+            new Date(this.picker).getDay() === 5 ||
+            new Date(this.picker).getDay() === 6
           ) {
             alert("Pas de consultation pendant les weekends");
           } else {
@@ -406,15 +409,15 @@ export default {
             let bookings = await axios
               .get("/reservations", {
                 params: {
-                  date: this.setter
+                  date: this.picker
                 }
               })
               .catch(e => {
                 // this.handleErrors();
               });
 
-            if (bookings && bookings.status) {
-              this.setJour(this.setter);
+            if (bookings && bookings.status === 200) {
+              this.setJour(this.picker);
               this.loadHours();
             }
           }
@@ -443,7 +446,7 @@ export default {
       }
     }
     .row {
-      width: 90%;
+      width: 70%;
       margin: auto;
       margin-bottom: 3rem;
     }
