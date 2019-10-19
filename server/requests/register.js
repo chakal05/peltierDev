@@ -13,7 +13,9 @@ var bookingSchema = new mongoose.Schema({
   téléphone: Number,
   genre: String,
   date: String,
-  heure: String
+  heure: String,
+  docteur: String,
+  rank: Number
 });
 async function loadTider() {
   let booking = mongoose.model("booking", bookingSchema);
@@ -25,6 +27,7 @@ async function loadTider() {
 router.post("/", async function(req, res) {
   let nom;
   let doc;
+  let rank;
   if (!req.body.prenom) {
     nom = req.body.nom;
   } else {
@@ -32,10 +35,12 @@ router.post("/", async function(req, res) {
   }
 
   if (req.body.docteur) {
-     doc = req.body.docteur;
+    doc = req.body.docteur;
   } else {
-    doc = 'Néant';
+    doc = "Néant";
   }
+
+  
 
   const nyTid = {
     nom: nom,
@@ -43,19 +48,18 @@ router.post("/", async function(req, res) {
     genre: req.body.genre,
     date: req.body.date,
     heure: req.body.time,
-    docteur: doc
+    docteur: doc,
+    rank:req.body.rank
   };
 
   let connexion = await loadTider();
   let post = new connexion(nyTid);
 
-console.log(nyTid);
-   if (post.save()) {
-     console.log(`Inserted one row`);
-     res.status(200).end();
-   }
-
-  
+  console.log(nyTid);
+  if (post.save()) {
+    console.log(`Inserted one row`);
+    res.status(200).end();
+  }
 });
 
 module.exports = router;

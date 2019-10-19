@@ -40,6 +40,37 @@ const mutations = {
   setHours: (state, available) => (state.dispoHours = available),
 
   async register() {
+    let rank;
+
+    if (state.heure) {
+      if (state.heure === "8:30") {
+        rank = 1;
+      } else if (state.heure === "9:00") {
+        rank = 2;
+      } else if (state.heure === "9:30") {
+        rank = 3;
+      } else if (state.heure === "10:00") {
+        rank = 4;
+      } else if (state.heure === "10:30") {
+        rank = 5;
+      } else if (state.heure === "11:00") {
+        rank = 6;
+      } else if (state.heure === "11:30") {
+        rank = 7;
+      } else if (state.heure === "12:00") {
+        rank = 8;
+      } else if (state.heure === "16:00") {
+        rank = 9;
+      } else if (state.heure === "16:30") {
+        rank = 10;
+      } else if (state.heure === "17:00") {
+        rank = 11;
+      } else if (state.heure === "17:30") {
+        rank = 12;
+      } else if (state.heure === "18:00") {
+        rank = 13;
+      }
+    }
     let sendData = await axios
       .post("/register", {
         prenom: state.prenom,
@@ -48,7 +79,8 @@ const mutations = {
         genre: state.sexe,
         date: state.jour,
         time: state.heure,
-        docteur: state.docteur
+        docteur: state.docteur,
+        rank: rank
       })
       .catch(e => {
         alert(e);
@@ -57,9 +89,9 @@ const mutations = {
     if (sendData && sendData.status === 200) {
       state.success = true;
 
-    //   setTimeout(() => {
-    //     location.reload();
-    //   }, 7000);
+      setTimeout(() => {
+        location.reload();
+      }, 7000);
     }
   }
 };
@@ -105,6 +137,7 @@ const actions = {
 
         commit("setHours", full);
       } else {
+        // let sorted = mutations.sortProperties(displayHours, "heure", false, false);
         commit("setHours", displayHours);
       }
     }

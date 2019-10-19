@@ -123,7 +123,7 @@
         :headers="headers"
         :items="bookings"
         :search="search"
-        sort-by="nom"
+       :sort-by="['rank']"
         class="elevation-1"
         locale="fr-FR"
       >
@@ -162,8 +162,8 @@
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field v-model="picker" readonly label="La date"></v-text-field>
                       </v-col>
-                         <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.docteur" readonly label="La date"></v-text-field>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field v-model="editedItem.docteur" readonly label="Docteur"></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -227,7 +227,7 @@ export default {
       { text: "Genre", value: "genre" },
       { text: "Téléphone", value: "téléphone" },
       { text: "Heure", value: "heure" },
-      { text: "Docteur", value: "doc" },
+      { text: "Docteur", value: "docteur" },
       { text: "Actions", value: "action", sortable: false }
     ],
     bookings: [],
@@ -254,14 +254,14 @@ export default {
       genre: "",
       heure: "",
       téléphone: "",
-      doc: ""
+      docteur: ""
     },
     defaultItem: {
       nom: "",
       genre: "",
       heure: "",
       téléphone: "",
-      doc: ""
+      docteur: ""
     }
   }),
 
@@ -339,7 +339,6 @@ export default {
         });
 
       if (bookings && bookings.status === 200) {
-      
         this.bookings = bookings.data;
         this.showTable = true;
         this.showCalendar = false;
