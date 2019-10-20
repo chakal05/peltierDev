@@ -450,7 +450,7 @@ export default {
                 }
               })
               .catch(e => {
-                // this.handleErrors();
+                alert(e);
               });
 
             if (bookings && bookings.status === 200) {

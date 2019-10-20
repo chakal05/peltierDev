@@ -27,6 +27,16 @@
             </v-list-item-content>
           </v-list-item>
 
+          <v-list-item @click="showDoctors">
+            <v-list-item-icon>
+              <v-icon>fas fa-user-md</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>Doctors</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
           <v-list-item @click="showBookings">
             <v-list-item-icon>
               <v-icon>schedule</v-icon>
@@ -69,6 +79,7 @@
             <v-flex>
               <dashboard v-if="getDashboard"></dashboard>
               <bookings v-if="getBookings"></bookings>
+              <doctors v-if="getDoctors"></doctors>
             </v-flex>
           </v-layout>
         </v-container>
@@ -80,22 +91,24 @@
 <script>
 import dashboard from "../components/admin/dashboard";
 import bookings from "../components/admin/bookings";
+import doctors from "../components/admin/doctors";
 import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
     dashboard,
+    doctors,
     bookings
   },
 
   computed: {
-    ...mapGetters(["getDashboard", "getBookings"])
+    ...mapGetters(["getDashboard", "getBookings", "getDoctors"])
   },
   data: () => ({
     drawer: null
   }),
 
   methods: {
-    ...mapMutations(["showDashboard", "showBookings"])
+    ...mapMutations(["showDashboard", "showBookings", "showDoctors"])
   }
 };
 </script>
