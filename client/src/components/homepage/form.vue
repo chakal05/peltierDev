@@ -9,32 +9,60 @@
         <v-toolbar color="teal darken-4" dark>
           <v-toolbar-title>Formulaire</v-toolbar-title>
         </v-toolbar>
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-text-field v-model="firstname" :rules="nameRules" label="Prénom" required></v-text-field>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field v-model="name" :rules="nameRules" label="Nom" required></v-text-field>
+          </v-col>
+          <v-col cols="12" >
+            <v-text-field
+              v-model="telephone"
+              :counter="8"
+              :rules="telephoneRules"
+              label="Télephone"
+              required
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-select
+              :items="genre"
+              :rules="[v => !!v || 'Entrez votre genre pour continuer']"
+              v-model="gender"
+              label="Genre"
+              required
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="6" >
+            <v-dialog
+              ref="dialog"
+              v-model="modal"
+              :return-value.sync="date"
+              persistent
+              width="290px"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field v-model="date" label="Date" prepend-icon="event" readonly v-on="on"></v-text-field>
+              </template>
+              <v-date-picker color="teal darken-4" v-model="date" scrollable>
+                <v-spacer></v-spacer>
+                <v-btn text color="teal darken-4" @click="modal = false">Cancel</v-btn>
+                <v-btn text color="teal darken-4" @click="$refs.dialog.save(date)">OK</v-btn>
+              </v-date-picker>
+            </v-dialog>
+          </v-col>
+        </v-row>
 
-        <v-text-field v-model="firstname" :rules="nameRules" label="Prénom" required></v-text-field>
-        <v-text-field v-model="name" :rules="nameRules" label="Nom" required></v-text-field>
-        <v-text-field
-          v-model="telephone"
-          :counter="8"
-          :rules="telephoneRules"
-          label="Télephone"
-          required
-        ></v-text-field>
-
-        <div class="radioCercles">
-          <p>Je suis :</p>
-
-          <v-radio-group
-            v-model="genre"
-            row
-            required
-            :rules="[v => !!v || 'Entrez votre genre pour continuer']"
-          >
-            <v-radio label="Un homme" value="Homme"></v-radio>
-            <v-radio label="Une femme" value="Femme"></v-radio>
-          </v-radio-group>
-        </div>
         <v-col class="text-center boutonBox" cols="12">
-          <v-btn :disabled="!valid" color="teal darken-4" class="white--text mr-4" @click="validate">Valider</v-btn>
+          <v-btn
+            :disabled="!valid"
+            color="teal darken-4"
+            class="white--text mr-4"
+            @click="validate"
+          >Valider</v-btn>
 
           <v-btn color="error" class="mr-4" @click="reset">Retourner</v-btn>
         </v-col>
@@ -44,8 +72,7 @@
 </template>
 
 <script>
-
-import {mapMutations} from 'vuex';
+import { mapMutations } from "vuex";
 
 export default {
   data: () => ({
@@ -53,7 +80,10 @@ export default {
     valid: true,
     name: "",
     firstname: "",
-    genre: "",
+    date: new Date().toISOString().substr(0, 10),
+    modal: false,
+    genre: ["Homme", "Femme"],
+    gender: "",
     telephone: null,
     nameRules: [
       v => !!v || "Le nom est requis",
@@ -62,23 +92,52 @@ export default {
     telephoneRules: [
       v => !!v || "Le numéro de téléphone est requis",
       v =>
-        (v && v.length <= 8) ||
-        "Le numéro de téléphone doit avoir 8 caractere au max",
+        (v && v.length >= 8) ||
+        "Le numéro de téléphone doit avoir 8 caractere au minimum",
       v => !isNaN(v) || "Le numéro de téléphone doit etre numerique"
     ]
   }),
 
   methods: {
-    ...mapMutations(['setName', 'setFirstname', 'setNumber', 'setGenre', 'toHomeView', 'toCalendar']),
+    ...mapMutations([
+      "setName",
+      "setFirstname",
+      "setNumber",
+      "setGenre",
+      "toHomeView",
+      "setJour",
+      "toHours"
+    ]),
+
+    getDate() {
+      // Get today'date and compare it to the picked date.
+      //If picked date is previous than today's date, alert them to choose a new date
+
+      if (this.date) {
+        if (
+          new Date(this.date).getDate() === new Date().getDate() ||
+          new Date(this.date).getTime() > new Date().getTime()
+        ) {
+          if (
+            new Date(this.date).getDay() === 5 ||
+            new Date(this.date).getDay() === 6
+          ) {
+            alert("Pas de consultation pendant les weekends");
+          }
+        } else {
+          alert("La date choissie est passee");
+        }
+      }
+    },
 
     validate() {
       if (this.$refs.form.validate()) {
         this.setName(this.name);
         this.setFirstname(this.firstname);
         this.setNumber(this.telephone);
-        this.setGenre(this.genre);
-        this.toCalendar();
-
+        this.setGenre(this.gender);
+        this.setJour(this.date);
+        this.toHours();
       }
     },
     reset() {
@@ -93,9 +152,9 @@ export default {
 .container {
   margin-top: 5rem;
 
-@media (max-width: 800px) {
-  margin-top: 3rem;
-}
+  @media (max-width: 800px) {
+    margin-top: 3rem;
+  }
 
   .titre {
     margin-top: 2rem;
@@ -120,8 +179,8 @@ export default {
         margin-top: 1rem;
         margin-left: 1.2rem;
 
-        .v-radio{
-          margin: .5rem;
+        .v-radio {
+          margin: 0.5rem;
         }
       }
 
@@ -129,8 +188,8 @@ export default {
         margin-bottom: 1rem;
         margin-top: 2rem;
 
-        .v-btn{
-          margin: .5rem;
+        .v-btn {
+          margin: 0.5rem;
         }
       }
     }

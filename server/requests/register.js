@@ -22,8 +22,6 @@ async function loadTider() {
   return booking;
 }
 
-// TODO Send the _id if they want an email confirmation and send email
-
 router.post("/", async function(req, res) {
   let nom;
   let doc;
@@ -36,7 +34,7 @@ router.post("/", async function(req, res) {
   if (req.body.docteur) {
     doc = req.body.docteur;
   } else {
-    doc = "Néant";
+    doc = "toAssign";
   }
 
   const nyTid = {
@@ -52,7 +50,6 @@ router.post("/", async function(req, res) {
   let connexion = await loadTider();
   let post = new connexion(nyTid);
 
-  console.log(nyTid);
   if (post.save()) {
     console.log(`Inserted one row`);
     res.status(200).end();

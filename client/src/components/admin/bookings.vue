@@ -62,6 +62,11 @@
               </v-col>
             </v-row>
             <v-row>
+              <v-col cols="12">
+                <v-text-field v-model="email" :rules="emailRules" label="Email" required></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
               <v-col cols="12" md="3">
                 <v-select :items="genre" v-model="gender" label="Genre" required></v-select>
               </v-col>
@@ -78,7 +83,11 @@
             <v-col class="text-center" cols="12">
               <v-btn color="error" @click="backToCalendar">Retourner</v-btn>
 
-              <v-btn color="teal darken-4" class="white--text" @click="save">Ajouter</v-btn>
+              <v-btn
+                color="teal darken-4"
+                class="white--text"
+                @click="save"
+              >Ajouter</v-btn>
             </v-col>
           </v-container>
         </v-form>
@@ -132,19 +141,29 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.nom" label="Nom"></v-text-field>
+                        <v-text-field v-model="editedItem.nom" label="Nom" required></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-select :items="genre" v-model="editedItem.genre" label="Genre" required></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.téléphone" :counter="8" label="Téléphone"></v-text-field>
+                        <v-text-field
+                          v-model="editedItem.téléphone"
+                          :counter="8"
+                          label="Téléphone"
+                          required
+                        ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-select :items="getHours" v-model="editedItem.heure" label="Heure"></v-select>
+                        <v-select
+                          :items="getHours"
+                          v-model="editedItem.heure"
+                          label="Heure"
+                          required
+                        ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="picker" readonly label="La date"></v-text-field>
+                        <v-text-field v-model="picker" readonly label="La date" required></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-select v-model="doc" :items="docteur" label="Docteur" required></v-select>
@@ -226,6 +245,11 @@ export default {
         (v && v.length <= 8) ||
         "Le numéro de téléphone doit avoir 8 caractere au max",
       v => !isNaN(v) || "Le numéro de téléphone doit etre numerique"
+    ],
+    email: "",
+    emailRules: [
+      v => !!v || "E-mail is required",
+      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
     ],
     valid: "",
     firstname: "",
@@ -353,18 +377,30 @@ export default {
     },
 
     add() {
-      this.setName(this.lastname);
-      this.setFirstname(this.firstname);
-      this.setNumber(this.telephone);
-      this.setGenre(this.gender);
-      this.setJour(this.firstname);
-      this.setTime(this.tillgTimmar);
-      this.setJour(this.picker);
-      this.setdocteur(this.doc);
-      this.register();
+      if (
+        this.lastname &&
+        this.firstname &&
+        this.telephone &&
+        this.gender &&
+        this.tillgTimmar &&
+        this.picker &&
+        this.doc
+      ) {
+        this.setName(this.lastname);
+        this.setFirstname(this.firstname);
+        this.setNumber(this.telephone);
+        this.setGenre(this.gender);
+        this.setTime(this.tillgTimmar);
+        this.setJour(this.picker);
+        this.setdocteur(this.doc);
+        this.setEmail(this.email);
+        this.register();
 
-      if (this.ifSuccess) {
-        this.backToCalendar();
+        if (this.ifSuccess) {
+          this.backToCalendar();
+        }
+      } else {
+        alert("All fields must be filled");
       }
     },
 
@@ -378,6 +414,7 @@ export default {
       "setName",
       "setFirstname",
       "setNumber",
+      "setEmail",
       "setGenre",
       "setJour",
       "setTime",

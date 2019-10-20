@@ -28,7 +28,7 @@
 
       <v-btn color="teal darken-4" class="white--text mr-4" @click="validate">Validate</v-btn>
 
-      <v-btn color="error" class="mr-4" @click="toCalendar">Retourner</v-btn>
+      <v-btn color="error" class="mr-4" @click="toFormulaire">Retourner</v-btn>
     </v-col>
   </v-container>
 </template>
@@ -52,7 +52,7 @@ export default {
   methods: {
     ...mapActions(["loadHours"]),
 
-    ...mapMutations(["toRecap", "toCalendar", "setTime"]),
+    ...mapMutations(["toRecap", "toFormulaire", "setTime"]),
 
     validate() {
       if (!this.time) {

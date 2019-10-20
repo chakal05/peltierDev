@@ -1,6 +1,5 @@
 import axios from "axios";
 import { _ } from "vue-underscore";
-import { ENGINE_METHOD_DIGESTS } from "constants";
 
 const state = {
   id: null,

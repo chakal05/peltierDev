@@ -4,8 +4,15 @@
       <h1 class="display-2 font-weight-thin mb-4">Recapitulatif</h1>
     </div>
 
-    <v-alert v-if="ifSuccess" class="mx-auto text-center font-weight-bold " max-width='500' type="teal">Votre rendez-vous a été enregistré. Vous serez automatiquement 
-      redirigé vers la page d'acceuil. Bienvenue !</v-alert>
+    <v-alert
+      v-if="ifSuccess"
+      class="mx-auto text-center font-weight-bold"
+      max-width="500"
+      type="teal"
+    >
+      Votre rendez-vous a été enregistré. Vous serez automatiquement
+      redirigé vers la page d'acceuil. Bienvenue !
+    </v-alert>
 
     <v-card class="mx-auto" max-width="345">
       <v-toolbar color="teal darken-4" dark>
@@ -16,7 +23,7 @@
 
       <v-card-text>
         <div>Nom complet</div>
-        <p class="display-1 font-weight-thin text--primary">{{getFirstname + ' ' + getName }} </p>
+        <p class="display-1 font-weight-thin text--primary">{{getFirstname + ' ' + getName }}</p>
         <p>Telephone</p>
         <div class="display-1 font-weight-thin text--primary">{{ getPhone }}</div>
         <p>Genre</p>
@@ -38,10 +45,9 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 
-
 export default {
   data: () => ({
- //
+    //
   }),
   computed: {
     ...mapGetters([
@@ -49,6 +55,7 @@ export default {
       "getFirstname",
       "getPhone",
       "getGenre",
+      "getEmail",
       "getJour",
       "getHeure",
       "ifSuccess"
@@ -74,7 +81,7 @@ export default {
     margin: auto;
   }
 
-  .v-card{
+  .v-card {
     height: auto !important;
   }
 }

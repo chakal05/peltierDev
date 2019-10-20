@@ -1,7 +1,6 @@
 const state = {
   home: true,
   form: false,
-  calendar: false,
   hours: false,
   recap: false
 };
@@ -9,7 +8,6 @@ const state = {
 const getters = {
     showHome : (state) => state.home,
     showForm : (state) => state.form,
-    showCalendar : (state) => state.calendar,
     showHours : (state) => state.hours,
     showRecap : (state) => state.recap
 };
@@ -27,14 +25,6 @@ const mutations = {
     state.home = false;
     state.form = true;
     state.calendar = false;
-    state.hours = false;
-    state.recap = false;
-  },
-
-  toCalendar : state => {
-    state.home = false;
-    state.form = false;
-    state.calendar = true;
     state.hours = false;
     state.recap = false;
   },

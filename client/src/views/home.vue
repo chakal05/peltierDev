@@ -15,7 +15,6 @@
     <div>
       <home v-if="showHome"></home>
     <patientInfo v-if="showForm"></patientInfo>
-    <calendar v-if="showCalendar"></calendar>
     <availableHours v-if="showHours"></availableHours>
     <sendForm v-if="showRecap"></sendForm>
     </div>
@@ -27,7 +26,6 @@
 <script>
 import home from "../components/homepage/home";
 import patientInfo from "../components/homepage/form";
-import calendar from "../components/homepage/calendar";
 import availableHours from "../components/homepage/availableHours";
 import sendForm from "../components/homepage/sendForm";
 import { mapGetters } from "vuex";
@@ -37,7 +35,6 @@ export default {
   components: {
     home,
     patientInfo,
-    calendar,
     availableHours,
     sendForm
   },
@@ -49,7 +46,6 @@ export default {
     ...mapGetters([
       "showHome",
       "showForm",
-      "showCalendar",
       "showHours",
       "showRecap"
     ])
