@@ -9,6 +9,7 @@ const state = {
   sexe: null,
   jour: null,
   heure: null,
+  email: null,
   docteur: null,
   dispoHours: [],
   success: false,
@@ -25,8 +26,9 @@ const getters = {
   getHeure: state => state.heure,
   getHours: state => state.dispoHours,
   getDocteur: state => state.docteur,
+  getMail: state => state.email,
   ifSuccess: state => state.success,
-  ifError: state => state.error,
+  ifError: state => state.error
 };
 
 const mutations = {
@@ -44,7 +46,9 @@ const mutations = {
 
   setHours: (state, available) => (state.dispoHours = available),
 
-  setId: (state, puttedId) => (state.id = puttedId),
+  setId: (state, inputId) => (state.id = inputId),
+  
+  setEmail: (state, inputEmail) => (state.email = inputEmail),
 
   setdocteur: (state, docteur) => (state.docteur = docteur),
 
@@ -98,15 +102,11 @@ const mutations = {
         rank: mutations.setRank()
       })
       .catch(() => {
-        this.error = true;
+        state.error = true;
       });
 
     if (sendData && sendData.status === 200) {
       state.success = true;
-
-      setTimeout(() => {
-        location.reload();
-      }, 7000);
     }
   },
 
@@ -122,7 +122,7 @@ const mutations = {
         rank: mutations.setRank()
       })
       .catch(() => {
-        this.error = true;
+        state.error = true;
       });
 
     if (sendData && sendData.status === 200) {
@@ -136,7 +136,7 @@ const mutations = {
         item: state.id
       })
       .catch(() => {
-        this.error = true;
+        state.error = true;
       });
 
     if (sendData && sendData.status === 200) {

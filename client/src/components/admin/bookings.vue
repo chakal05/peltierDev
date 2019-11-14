@@ -68,26 +68,22 @@
             </v-row>
             <v-row>
               <v-col cols="12" md="3">
-                <v-select :items="genre" v-model="gender" label="Genre" required></v-select>
+                <v-select :items="genre" v-model="gender" label="Genre"></v-select>
               </v-col>
               <v-col cols="12" md="3">
-                <v-text-field v-model="picker" readonly label="Date" required></v-text-field>
+                <v-text-field v-model="picker" readonly label="Date"></v-text-field>
               </v-col>
               <v-col cols="12" md="3">
-                <v-select v-model="tillgTimmar" :items="getHours" label="Heure" required></v-select>
+                <v-select v-model="tillgTimmar" :items="getHours" label="Heure"></v-select>
               </v-col>
               <v-col cols="12" md="3">
-                <v-select v-model="doc" :items="docteur" label="Docteur" required></v-select>
+                <v-select v-model="doc" :items="docteur" label="Docteur"></v-select>
               </v-col>
             </v-row>
             <v-col class="text-center" cols="12">
               <v-btn color="error" @click="backToCalendar">Retourner</v-btn>
 
-              <v-btn
-                color="teal darken-4"
-                class="white--text"
-                @click="save"
-              >Ajouter</v-btn>
+              <v-btn color="teal darken-4" class="white--text" @click="add">Ajouter</v-btn>
             </v-col>
           </v-container>
         </v-form>
@@ -323,9 +319,6 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.bookings[this.editedIndex], this.editedItem);
         this.edit();
-      } else {
-        this.bookings.push(this.editedItem);
-        this.add();
       }
     },
 
@@ -342,8 +335,10 @@ export default {
             date: this.picker
           }
         })
-        .catch(() => {
-          this.handleErrors();
+        .catch(e => {
+          if (e) {
+            this.handleErrors();
+          }
         });
 
       if (bookings && bookings.status === 200) {
@@ -369,8 +364,6 @@ export default {
 
       if (this.ifSuccess) {
         this.close();
-
-        this.backToCalendar();
       } else if (this.ifError) {
         this.handleErrors();
       }
@@ -397,7 +390,17 @@ export default {
         this.register();
 
         if (this.ifSuccess) {
-          this.backToCalendar();
+          this.lastname = "";
+          this.firstname = "";
+          this.telephone = "";
+          this.gender = "";
+          this.tillgTimmar = "";
+          this.doc = "";
+          this.email = "";
+          this.getBookings();
+          alert(`Succesfully inserted a new appointment`);
+        } else if (this.ifError) {
+          alert("there was an error");
         }
       } else {
         alert("All fields must be filled");
@@ -414,8 +417,8 @@ export default {
       "setName",
       "setFirstname",
       "setNumber",
-      "setEmail",
       "setGenre",
+      "setEmail",
       "setJour",
       "setTime",
       "setdocteur",
@@ -426,7 +429,7 @@ export default {
     ]),
     ...mapActions(["loadHours"]),
 
-    async showForm() {
+    showForm() {
       if (this.picker) {
         if (
           new Date(this.picker).getDate() === new Date().getDate() ||
@@ -442,25 +445,28 @@ export default {
             this.showTable = false;
             this.notFound = false;
             this.showCalendar = false;
-
-            let bookings = await axios
-              .get("/reservations", {
-                params: {
-                  date: this.picker
-                }
-              })
-              .catch(e => {
-                alert(e);
-              });
-
-            if (bookings && bookings.status === 200) {
-              this.setJour(this.picker);
-              this.loadHours();
-            }
+            this.getBookings();
           }
         } else {
           alert("La date choissie est passee");
         }
+      }
+    },
+
+    async getBookings() {
+      let booking = await axios
+        .get("/reservations", {
+          params: {
+            date: this.picker
+          }
+        })
+        .catch
+        // handle 404
+        ();
+
+      if (booking && booking.status === 200) {
+        this.setJour(this.picker);
+        this.loadHours();
       }
     },
     backToCalendar() {

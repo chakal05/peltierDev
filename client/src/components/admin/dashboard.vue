@@ -8,7 +8,7 @@
               :color="active ? 'grey lighten-2' : ''"
               class="d-flex align-center"
               height="200"
-              @click="toggle"
+              @click="showDoctors"
             >
               <v-scroll-y-transition>
                 <v-card-text class="display-3 flex-grow-1 text-center">
@@ -173,7 +173,7 @@
           </v-item>
         </v-col>
 
-          <v-col cols="12" md="3">
+        <v-col cols="12" md="3">
           <v-item v-slot:default="{ active, toggle }">
             <v-card
               :color="active ? 'grey lighten-2' : ''"
@@ -183,8 +183,8 @@
             >
               <v-scroll-y-transition>
                 <v-card-text class="display-3 flex-grow-1 text-center">
-                  <v-icon>fas fa-bed </v-icon>
-                  <h3 class="display-2 font-weight-thin">Lits </h3>
+                  <v-icon>fas fa-bed</v-icon>
+                  <h3 class="display-2 font-weight-thin">Lits</h3>
                 </v-card-text>
                 <div v-if="active" class="display-3 flex-grow-1 text-center"></div>
               </v-scroll-y-transition>
@@ -192,7 +192,7 @@
           </v-item>
         </v-col>
 
-          <v-col cols="12" md="3">
+        <v-col cols="12" md="3">
           <v-item v-slot:default="{ active, toggle }">
             <v-card
               :color="active ? 'grey lighten-2' : ''"
@@ -202,7 +202,7 @@
             >
               <v-scroll-y-transition>
                 <v-card-text class="display-3 flex-grow-1 text-center">
-                  <v-icon>fas fa-tint </v-icon>
+                  <v-icon>fas fa-tint</v-icon>
                   <h3 class="display-2 font-weight-thin">Prises de sang</h3>
                 </v-card-text>
                 <div v-if="active" class="display-3 flex-grow-1 text-center"></div>
@@ -211,7 +211,7 @@
           </v-item>
         </v-col>
 
-          <v-col cols="12" md="3">
+        <v-col cols="12" md="3">
           <v-item v-slot:default="{ active, toggle }">
             <v-card
               :color="active ? 'grey lighten-2' : ''"
@@ -221,11 +221,10 @@
             >
               <v-scroll-y-transition>
                 <v-card-text class="display-3 flex-grow-1 text-center">
-                  <v-icon >fas fa-book </v-icon>
+                  <v-icon>fas fa-book</v-icon>
                   <h3 class="display-2 font-weight-thin">Rapports</h3>
                 </v-card-text>
-                <div v-if="active" class="display-3 flex-grow-1 text-center ">
-                </div>
+                <div v-if="active" class="display-3 flex-grow-1 text-center"></div>
               </v-scroll-y-transition>
             </v-card>
           </v-item>
@@ -238,13 +237,11 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 export default {
-    computed: {
-    ...mapGetters(["getDashboard", "getBookings"])
+  computed: {
+    ...mapGetters(["getDashboard", "getBookings", "getDoctors"])
   },
-   methods: {
-    ...mapMutations(["showDashboard", "showBookings"]),
-
-   
+  methods: {
+    ...mapMutations(["showDashboard", "showBookings", "showDoctors"])
   }
 };
 </script>
@@ -252,16 +249,12 @@ export default {
 <style lang='scss' scoped>
 .container {
   .row {
-    .v-card{
-
-     
-
-   .v-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+    .v-card {
+      .v-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
     }
-    }
- 
   }
 }
 </style>
