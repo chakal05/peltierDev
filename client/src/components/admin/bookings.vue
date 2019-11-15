@@ -10,7 +10,6 @@
           <v-date-picker
             color="teal darken-4"
             v-model="picker"
-            locale="fr-fr"
             full-width
             :landscape="$vuetify.breakpoint.smAndUp"
             class="mt-4"
@@ -114,7 +113,8 @@
         :search="search"
         :sort-by="['rank']"
         class="elevation-1"
-        locale="fr-FR"
+        :items-per-page="fifteen"
+        
       >
         <template v-slot:top>
           <v-toolbar flat color="white">
@@ -210,6 +210,7 @@ export default {
     value: "",
     search: "",
     gender: "",
+    fifteen: 15,
     docteur: [
       "Dr Omar Hassan Houssein",
       "Dr Hodan Farah Nour",
