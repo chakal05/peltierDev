@@ -6,6 +6,7 @@
  import router from "./Router/index"
  import store from './Store/index'
  Vue.use(router);
+ 
  Vue.config.productionTip = false;
  Vue.use(Vuetify, {
  lang : {

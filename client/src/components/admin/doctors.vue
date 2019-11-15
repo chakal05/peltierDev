@@ -74,12 +74,11 @@
     <v-col class="text-center" cols="12">
       <v-btn color="teal darken-4" class="white--text mr-4">Retrouver</v-btn>
     </v-col>
-    
   </v-container>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   data: () => ({
@@ -96,7 +95,7 @@ export default {
       { text: "Departement", value: "departement" },
       { text: "Telephone", value: "telephone" },
       { text: "Username", value: "username" },
-     // { text: "Password", value: "password" },
+      // { text: "Password", value: "password" },
       { text: "Actions", value: "action", sortable: false }
     ],
     doctorsList: [],
@@ -121,7 +120,7 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-    ...mapGetters(["getDoctorsList"])
+    ...mapGetters(["getDoctorsList", "success"])
   },
 
   watch: {
@@ -132,7 +131,6 @@ export default {
 
   created() {
     this.loadDoctors();
-   
     this.initialize();
   },
 
@@ -163,15 +161,57 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.getDoctorsList[this.editedIndex], this.editedItem);
+        //Object.assign(this.getDoctorsList[this.editedIndex], this.editedItem);
+        this.edit();
       } else {
-        this.getDoctorsList.push(this.editItem);
+        //   this.getDoctorsList.push(this.editItem);
+        this.add();
       }
       this.close();
     },
 
-    
-    ...mapActions(["loadDoctors"])
+    add() {
+      if (
+        this.editedItem.name &&
+        this.editedItem.departement &&
+        this.editedItem.telephone &&
+        this.editedItem.username &&
+        this.editedItem.password
+      ) {
+        this.setDoctorName(this.editedItem.name);
+        this.setDepartement(this.editedItem.departement);
+        this.setDoctorTelephone(this.editedItem.telephone);
+        this.setDoctorUsername(this.editedItem.username);
+        this.setDoctorPassword(this.editedItem.password);
+        this.addDoctor();
+
+        if (this.success) {
+          // todo find a way to update component
+          //this.$forceUpdate();
+        }
+      } else {
+        alert(`All fields must be filled`);
+      }
+    },
+
+    edit() {
+      this.setDoctorId(this.editedItem._id)
+      this.setDoctorName(this.editedItem.name);
+      this.setDepartement(this.editedItem.departement);
+      this.setDoctorTelephone(this.editedItem.telephone);
+      this.setDoctorUsername(this.editedItem.username);
+      this.setDoctorPassword(this.editedItem.password);
+      this.editDoctor();
+    },
+    ...mapMutations([
+      "setDoctorName",
+      "setDepartement",
+      "setDoctorTelephone",
+      "setDoctorUsername",
+      "setDoctorPassword",
+      "setDoctorId"
+    ]),
+    ...mapActions(["loadDoctors", "addDoctor", "editDoctor"])
   }
 };
 </script>

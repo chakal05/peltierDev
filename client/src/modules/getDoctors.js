@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const state = {
+  docId:null,
   docName: null,
   departement: null,
   docTelephone: null,
@@ -17,16 +18,18 @@ const getters = {
   getDoctorTelephone: state => state.docTelephone,
   getDoctorUsername: state => state.docUsername,
   getDoctorPassword: state => state.docPassword,
-  getDoctorsList: state => state.doctorsList
+  getDoctorsList: state => state.doctorsList,
+  getDoctorId: state => state.docId
 };
 
 const mutations = {
   setDoctors: (state, doctors) => (state.doctorsList = doctors),
   setDoctorName: (state, name) => (state.docName = name),
   setDepartement:(state, departement) => (state.departement = departement),
-  detDoctorTelephone:(state, tel) => (state.docTelephone = tel),
+  setDoctorTelephone:(state, tel) => (state.docTelephone = tel),
   setDoctorUsername:(state, username)=> (state.docUsername = username),
-  setDoctorPassword:(state, pass)=> (state.docPassword = pass)
+  setDoctorPassword:(state, pass)=> (state.docPassword = pass),
+  setDoctorId: (state, id) => (state.docId = id)
 };
 
 const actions = {
@@ -43,7 +46,7 @@ const actions = {
 
   async addDoctor() {
     let sendData = await axios
-      .post("/doctor", {
+      .post("/doctors", {
         name: state.docName,
         departement: state.departement,
         telephone: state.docTelephone,
@@ -56,7 +59,29 @@ const actions = {
 
     if (sendData && sendData.status === 200) {
       state.success = true;
+      if(state.success){
+        alert(sendData.data);
+      }
     }
+  },
+
+  async editDoctor() {
+    let sendData = await axios
+    .put("/doctors", {
+      id: state.docId,
+      name: state.docName,
+      departement: state.departement,
+      telephone: state.docTelephone,
+      username: state.docUsername,
+      password: state.docPassword
+    })
+    .catch(() => {
+      state.error = true;
+    });
+
+  if (sendData && sendData.status === 200) {
+    state.success = true;
+  }
   }
 };
 
