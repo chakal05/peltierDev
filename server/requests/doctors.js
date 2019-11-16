@@ -2,12 +2,12 @@ const express = require("express");
 let router = express.Router();
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/peltier", { useNewUrlParser: true });
-mongoose.set('useFindAndModify', false);
-//Connection URL
+
+// 'useFindAndModify' set to false
+mongoose.set("useFindAndModify", false);
+//Connection to db
+
 const db = mongoose.connection;
-if (db) {
-  console.log(`connected to db`);
-}
 db.on("error", console.error.bind(console, "connection error:"));
 
 var doctorSchema = new mongoose.Schema({
@@ -22,7 +22,7 @@ async function loadTider() {
   return doctor;
 }
 
-// add a doctor to the list of doctors
+// add or delete a doctor
 
 router.post("/", async function(req, res) {
   const doctor = await loadTider();
@@ -46,44 +46,32 @@ router.get("/", async function(req, res) {
 // Edit doctor
 
 router.put("/", async function(req, res) {
-  
   let query = await loadTider();
- await query.findByIdAndUpdate(
-   req.body.id,
-   req.body,
-   {new: true},
+  await query.findByIdAndUpdate(
+    req.body.id,
+    req.body,
+    { new: true },
 
-   (err, doctor) => {
-     if(err) return res.status(500).send(err);
-     console.log(doctor);
-     return res.status(200);
-
-   }
- )
-})
-/*
-// delete doctor 
-
-router.post("/", async function(req, res) {
-  let id = req.body.item;
-
-  if (id) {
-    // get ObjectID from mongo for the query
-
-    let ObjectID = require("mongodb").ObjectID;
-    let query = await checkUser();
-
-    query.deleteOne({ _id: ObjectID(id) }, function(err, data) {
-      if (err) throw err;
-      if (data.deletedCount === 1) {
-        console.log("deleted one item");
-        res.status(200).send();
-      }
-    });
-  }else{
-
-  }
+    (err) => {
+      if (err) return res.status(500).send(err);
+      return res.status(200);
+    }
+  );
 });
 
-*/
+router.delete("/", async function(req, res) {
+  
+  id = req.body._id;
+     let query = await loadTider();
+     query.findByIdAndRemove(id, (err, doc) => {
+       if (err) return res.status(500).send(err);
+  
+       const response = {
+         message: "Doctor successfully deleted from list",
+         id: doc._id
+       };
+       return res.status(200).send(response);
+     });
+});
+
 module.exports = router;

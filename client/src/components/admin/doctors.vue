@@ -24,7 +24,7 @@
           <v-spacer></v-spacer>
           <v-dialog persistent v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="teal darken-4" dark class="mb-2" v-on="on">New Item</v-btn>
+              <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Add new</v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -85,6 +85,7 @@ export default {
     dialog: false,
     fifteen: 15,
     search: "",
+    indexToDel: null,
     headers: [
       {
         text: "Name",
@@ -147,8 +148,10 @@ export default {
 
     deleteItem(item) {
       const index = this.getDoctorsList.indexOf(item);
+      this.indexToDel =  this.getDoctorsList[index];
       confirm("Are you sure you want to delete this item?") &&
         this.getDoctorsList.splice(index, 1);
+        this.supprDoc();
     },
 
     close() {
@@ -161,10 +164,10 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        //Object.assign(this.getDoctorsList[this.editedIndex], this.editedItem);
+        Object.assign(this.getDoctorsList[this.editedIndex], this.editedItem);
         this.edit();
       } else {
-        //   this.getDoctorsList.push(this.editItem);
+        this.getDoctorsList.push(this.editedItem);
         this.add();
       }
       this.close();
@@ -195,7 +198,7 @@ export default {
     },
 
     edit() {
-      this.setDoctorId(this.editedItem._id)
+      this.setDoctorId(this.editedItem._id);
       this.setDoctorName(this.editedItem.name);
       this.setDepartement(this.editedItem.departement);
       this.setDoctorTelephone(this.editedItem.telephone);
@@ -203,6 +206,12 @@ export default {
       this.setDoctorPassword(this.editedItem.password);
       this.editDoctor();
     },
+
+    supprDoc() {
+      this.setDoctorId(this.indexToDel);
+      this.deleteDoctor();
+    },
+
     ...mapMutations([
       "setDoctorName",
       "setDepartement",
@@ -211,7 +220,7 @@ export default {
       "setDoctorPassword",
       "setDoctorId"
     ]),
-    ...mapActions(["loadDoctors", "addDoctor", "editDoctor"])
+    ...mapActions(["loadDoctors", "addDoctor", "editDoctor", "deleteDoctor"])
   }
 };
 </script>

@@ -82,6 +82,20 @@ const actions = {
   if (sendData && sendData.status === 200) {
     state.success = true;
   }
+  },
+
+  async deleteDoctor() {
+    let sendData = await axios
+    .delete("/doctors", {
+        data:  state.docId
+      })
+      .catch(() => {
+        state.error = true;
+      });
+
+    if (sendData && sendData.status === 200) {
+      state.success = true;
+    }
   }
 };
 
