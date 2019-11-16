@@ -16,91 +16,10 @@
           ></v-date-picker>
           <v-col class="text-center" cols="12">
             <v-btn color="teal darken-4" class="white--text mr-4" @click="loadBookings">Retrouver</v-btn>
-            <v-btn color="teal darken-4" class="white--text mr-4" @click="showForm">Ajouter</v-btn>
           </v-col>
         </v-col>
       </v-row>
     </div>
-
-    <v-row v-if="showFormulaire">
-      <v-col cols="12" class="text-center">
-        <h1 class="display-2 font-weight-thin mb-4">Remplir le formulaire</h1>
-      </v-col>
-      <br />
-      <v-row align="center" justify="center" class="elevation-5 formulaire">
-        <v-form v-model="valid">
-          <v-container>
-            <v-row>
-              <v-col cols="12" md="4">
-                <v-text-field
-                  v-model="firstname"
-                  :rules="nameRules"
-                  :counter="10"
-                  label="Nom"
-                  required
-                ></v-text-field>
-              </v-col>
-
-              <v-col cols="12" md="4">
-                <v-text-field
-                  v-model="lastname"
-                  :rules="nameRules"
-                  :counter="10"
-                  label="Prenom"
-                  required
-                ></v-text-field>
-              </v-col>
-
-              <v-col cols="12" md="4">
-                <v-text-field
-                  v-model="telephone"
-                  :rules="telephoneRules"
-                  label="Telephone"
-                  required
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field v-model="email" :rules="emailRules" label="Email" required></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" md="3">
-                <v-select :items="genre" v-model="gender" label="Genre"></v-select>
-              </v-col>
-              <v-col cols="12" md="3">
-                <v-text-field v-model="picker" readonly label="Date"></v-text-field>
-              </v-col>
-              <v-col cols="12" md="3">
-                <v-select v-model="tillgTimmar" :items="getHours" label="Heure"></v-select>
-              </v-col>
-              <v-col cols="12" md="3">
-                <v-select v-model="doc" :items="docteur" label="Docteur"></v-select>
-              </v-col>
-            </v-row>
-            <v-col class="text-center" cols="12">
-              <v-btn color="error" @click="backToCalendar">Retourner</v-btn>
-
-              <v-btn color="teal darken-4" class="white--text" @click="add">Ajouter</v-btn>
-            </v-col>
-          </v-container>
-        </v-form>
-      </v-row>
-    </v-row>
-
-    <v-row align="center" justify="center" class="notFound" v-if="notFound">
-      <v-col cols="12" md="6">
-        <v-card class="d-flex align-center" height="400">
-          <v-card-text class="flex-grow-1 text-center">
-            <v-icon color="teal darken-4">fas fa-exclamation-circle</v-icon>
-            <h3 class="display-2 font-weight-thin">Rien à afficher</h3>
-            <p>Pour la date suivante : {{picker}}</p>
-            <v-btn color="error" @click="backToCalendar">Retourner</v-btn>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
 
     <div class="table" v-if="showTable">
       <div class="text-center titre">
@@ -114,7 +33,6 @@
         :sort-by="['rank']"
         class="elevation-1"
         :items-per-page="fifteen"
-        
       >
         <template v-slot:top>
           <v-toolbar flat color="white">
@@ -125,9 +43,11 @@
               single-line
               hide-details
             ></v-text-field>
-            <br />
-            <div class="flex-grow-1"></div>
+            <v-spacer></v-spacer>
             <v-dialog persistent v-model="dialog" max-width="500px">
+              <template v-slot:activator="{ on }">
+                <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Add new</v-btn>
+              </template>
               <v-card>
                 <v-card-title>
                   <span class="headline">{{ formTitle }}</span>
@@ -159,10 +79,15 @@
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="picker" readonly label="La date" required></v-text-field>
+                        <v-text-field v-model="picker" readonly label="Le jour" required></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-select v-model="doc" :items="docteur" label="Docteur" required></v-select>
+                        <v-select
+                          v-model="editedItem.docteur"
+                          :items="docteur"
+                          label="Docteur"
+                          required
+                        ></v-select>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -182,7 +107,7 @@
           <v-icon small @click="deleteItem(item)">delete</v-icon>
         </template>
         <template v-slot:no-data>
-          <v-btn color="teal darken-4" class="white--text" @click="initialize">RESET</v-btn>
+          <h2>0 appointment found</h2>
         </template>
       </v-data-table>
       <v-col class="text-center boutonBox" cols="12">
@@ -202,14 +127,12 @@ export default {
   data: () => ({
     dialog: false,
     picker: new Date().toISOString().substr(0, 10),
-    notFound: false,
+    menu: false,
     showTable: false,
-    showFormulaire: false,
     showCalendar: true,
     error: "",
-    value: "",
     search: "",
-    gender: "",
+    zero: false,
     fifteen: 15,
     docteur: [
       "Dr Omar Hassan Houssein",
@@ -248,12 +171,7 @@ export default {
       v => !!v || "E-mail is required",
       v => /.+@.+\..+/.test(v) || "E-mail must be valid"
     ],
-    valid: "",
-    firstname: "",
-    lastname: "",
-    doc: "",
-    tillgTimmar: "",
-    telephone: "",
+
     editedIndex: -1,
     editedItem: {
       nom: "",
@@ -273,7 +191,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "Ajouter" : "Changer";
+      return this.editedIndex === -1 ? "New item" : "Edit item";
     },
     ...mapGetters(["getHours", "ifSuccess", "ifError"])
   },
@@ -320,16 +238,16 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.bookings[this.editedIndex], this.editedItem);
         this.edit();
+      } else {
+        this.bookings.push(this.editedItem);
+        this.add();
       }
     },
 
-    handleErrors() {
-      this.notFound = true;
-      this.showTable = false;
-      this.showCalendar = false;
-    },
+    handleErrors() {},
 
     async loadBookings() {
+      this.showCalendar = false;
       let bookings = await axios
         .get("/reservations", {
           params: {
@@ -338,30 +256,31 @@ export default {
         })
         .catch(e => {
           if (e) {
-            this.handleErrors();
+            this.bookings = [];
+            this.setJour(this.picker);
+            this.loadHours();
+            this.showTable = true;
           }
         });
-
       if (bookings && bookings.status === 200) {
         this.bookings = bookings.data;
         this.showTable = true;
-        this.showCalendar = false;
-        this.notFound = false;
         this.setJour(this.picker);
         this.loadHours();
       }
     },
 
     edit() {
-      this.editItem.heure = this.value;
       this.setId(this.editedItem._id);
       this.setName(this.editedItem.nom);
       this.setNumber(this.editedItem.téléphone);
       this.setGenre(this.editedItem.genre);
       this.setTime(this.editedItem.heure);
       this.setJour(this.picker);
-      this.setdocteur(this.doc);
+      this.setdocteur(this.editedItem.docteur);
       this.changeItem();
+      this.loadHours();
+      this.close();
 
       if (this.ifSuccess) {
         this.close();
@@ -372,36 +291,42 @@ export default {
 
     add() {
       if (
-        this.lastname &&
-        this.firstname &&
-        this.telephone &&
-        this.gender &&
-        this.tillgTimmar &&
+        this.editedItem.nom &&
+        this.editedItem.téléphone &&
+        this.editedItem.genre &&
+        this.editedItem.heure &&
         this.picker &&
-        this.doc
+        this.editedItem.heure
       ) {
-        this.setName(this.lastname);
-        this.setFirstname(this.firstname);
-        this.setNumber(this.telephone);
-        this.setGenre(this.gender);
-        this.setTime(this.tillgTimmar);
-        this.setJour(this.picker);
-        this.setdocteur(this.doc);
-        this.setEmail(this.email);
-        this.register();
+        if (
+          new Date(this.picker).getDate() === new Date().getDate() ||
+          new Date(this.picker).getTime() > new Date().getTime()
+        ) {
+          if (
+            new Date(this.picker).getDay() === 5 ||
+            new Date(this.picker).getDay() === 6
+          ) {
+            alert("Pas de consultation pendant les weekends");
+          } else {
+            this.setName(this.editedItem.nom);
+            this.setNumber(this.editedItem.téléphone);
+            this.setGenre(this.editedItem.genre);
+            this.setTime(this.editedItem.heure);
+            this.setJour(this.picker);
+            this.setdocteur(this.editedItem.docteur);
+            this.register();
+            this.loadHours();
+            this.close();
 
-        if (this.ifSuccess) {
-          this.lastname = "";
-          this.firstname = "";
-          this.telephone = "";
-          this.gender = "";
-          this.tillgTimmar = "";
-          this.doc = "";
-          this.email = "";
-          this.getBookings();
-          alert(`Succesfully inserted a new appointment`);
-        } else if (this.ifError) {
-          alert("there was an error");
+            if (this.ifSuccess) {
+              this.loadBookings();
+              alert(`Succesfully inserted a new appointment`);
+            } else if (this.ifError) {
+              alert("there was an error");
+            }
+          }
+        } else {
+          alert("La date choissie est passee");
         }
       } else {
         alert("All fields must be filled");
@@ -454,27 +379,9 @@ export default {
       }
     },
 
-    async getBookings() {
-      let booking = await axios
-        .get("/reservations", {
-          params: {
-            date: this.picker
-          }
-        })
-        .catch
-        // handle 404
-        ();
-
-      if (booking && booking.status === 200) {
-        this.setJour(this.picker);
-        this.loadHours();
-      }
-    },
     backToCalendar() {
-      this.showTable = false;
-      this.notFound = false;
       this.showCalendar = true;
-      this.showFormulaire = false;
+      this.showTable = false;
     }
   }
 };

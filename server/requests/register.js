@@ -23,6 +23,7 @@ async function loadTider() {
 }
 
 router.post("/", async function(req, res) {
+  console.log(req.body);
   let nom;
   let doc;
   if (!req.body.prenom) {

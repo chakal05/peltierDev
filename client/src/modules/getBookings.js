@@ -92,7 +92,6 @@ const mutations = {
   async register() {
     let sendData = await axios
       .post("/register", {
-        prenom: state.prenom,
         nom: state.nom,
         telephone: state.telephone,
         genre: state.sexe,
