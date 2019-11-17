@@ -4,86 +4,147 @@
       <h1 class="display-2 font-weight-thin mb-4">Entrez vos coordonnées</h1>
     </div>
 
-    <v-row align="center" justify="center">
-      <v-form ref="form" lazy-validation v-model="valid" class="elevation-5">
-        <v-toolbar color="teal darken-4" dark>
-          <v-toolbar-title>Formulaire</v-toolbar-title>
-        </v-toolbar>
-        <v-row>
-          <v-col cols="12" md="6">
-            <v-text-field v-model="firstname" :rules="nameRules" label="Prénom" required></v-text-field>
-          </v-col>
-          <v-col cols="12" md="6">
-            <v-text-field v-model="name" :rules="nameRules" label="Nom" required></v-text-field>
-          </v-col>
-          <v-col cols="12" >
-            <v-text-field
-              v-model="telephone"
-              :counter="8"
-              :rules="telephoneRules"
-              label="Télephone"
-              required
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" md="6">
-            <v-select
-              :items="genre"
-              :rules="[v => !!v || 'Entrez votre genre pour continuer']"
-              v-model="gender"
-              label="Genre"
-              required
-            ></v-select>
-          </v-col>
-          <v-col cols="12" sm="6" >
-            <v-dialog
-              ref="dialog"
-              v-model="modal"
-              :return-value.sync="date"
-              persistent
-              width="290px"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field v-model="date" label="Date" prepend-icon="event" readonly v-on="on"></v-text-field>
-              </template>
-              <v-date-picker color="teal darken-4" v-model="date" scrollable>
-                <v-spacer></v-spacer>
-                <v-btn text color="teal darken-4" @click="modal = false">Cancel</v-btn>
-                <v-btn text color="teal darken-4" @click="$refs.dialog.save(date)">OK</v-btn>
-              </v-date-picker>
-            </v-dialog>
-          </v-col>
-        </v-row>
+    <v-stepper v-model="e1">
+      <v-stepper-header>
+        <v-stepper-step color="teal darken-4" :complete="e1 >1" step="1">Name of step 1</v-stepper-step>
 
-        <v-col class="text-center boutonBox" cols="12">
-          <v-btn
-            :disabled="!valid"
-            color="teal darken-4"
-            class="white--text mr-4"
-            @click="validate"
-          >Valider</v-btn>
+        <v-divider></v-divider>
 
-          <v-btn color="error" class="mr-4" @click="reset">Retourner</v-btn>
-        </v-col>
-      </v-form>
-    </v-row>
+        <v-stepper-step color="teal darken-4" :complete="e1 > 2" step="2">Name of step 2</v-stepper-step>
+
+        <v-divider></v-divider>
+
+        <v-stepper-step color="teal darken-4" step="3">Name of step 3</v-stepper-step>
+      </v-stepper-header>
+
+      <v-stepper-items>
+        <v-stepper-content step="1">
+          <v-card class="mb-12" height="400px">
+            <br />
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="firstname"
+                  :rules="nameRules"
+                  :counter="10"
+                  label="First name"
+                  required
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="lastname"
+                  :rules="nameRules"
+                  :counter="10"
+                  label="Last name"
+                  required
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" md="12">
+                <v-text-field
+                  v-model="telephone"
+                  :rules="telephoneRules"
+                  label="Telephone"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-select
+                  :items="genre"
+                  :rules="[v => !!v || 'Entrez votre genre pour continuer']"
+                  v-model="gender"
+                  label="Genre"
+                  required
+                ></v-select>
+              </v-col>
+
+              <v-col cols="12" md="6">
+                <v-dialog
+                  ref="dialog"
+                  v-model="modal"
+                  :return-value.sync="date"
+                  persistent
+                  width="290px"
+                >
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      v-model="date"
+                      label="Date"
+                      prepend-icon="event"
+                      readonly
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker color="teal darken-4" v-model="date" scrollable>
+                    <v-spacer></v-spacer>
+                    <v-btn text color="teal darken-4" @click="modal = false">Cancel</v-btn>
+                    <v-btn text color="teal darken-4" @click="$refs.dialog.save(date)">OK</v-btn>
+                  </v-date-picker>
+                </v-dialog>
+              </v-col>
+            </v-row>
+          </v-card>
+
+          <v-btn color="teal darken-4" class="white--text" @click="validate">Continue</v-btn>
+
+          <v-btn text>Cancel</v-btn>
+        </v-stepper-content>
+
+        <v-stepper-content step="2">
+          <v-card class="mb-12" height="400px">
+            <v-item-group>
+              <v-row align="center" justify="center">
+                <v-col v-for="(hour,index) in getHours" :key="index" cols="12" md="4">
+                  <v-item v-slot:default="{ active, toggle }">
+                    <v-card
+                      :color="active ? 'teal darken-4' : 'teal lighten-1'"
+                      class="d-flex align-center"
+                      height="71"
+                      @click="toggle"
+                    >
+                      <v-card-title @click="getTime" class="white--text">{{ hour }}</v-card-title>
+                    </v-card>
+                  </v-item>
+                </v-col>
+              </v-row>
+            </v-item-group>
+          </v-card>
+
+          <v-btn color="teal darken-4" class="white--text" @click="chooseTime">Continue</v-btn>
+
+          <v-btn text>Cancel</v-btn>
+        </v-stepper-content>
+
+        <v-stepper-content step="3">
+          <v-card class="mb-12" height="400px"></v-card>
+
+          <v-btn color="teal darken-4" class="white--text" @click="e1 = 1">Continue</v-btn>
+
+          <v-btn text>Cancel</v-btn>
+        </v-stepper-content>
+      </v-stepper-items>
+    </v-stepper>
   </v-container>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 
 export default {
   data: () => ({
-    row: null,
-    valid: true,
-    name: "",
+    e1: 0,
+    lastname: "",
     firstname: "",
     date: new Date().toISOString().substr(0, 10),
     modal: false,
     genre: ["Homme", "Femme"],
     gender: "",
+    time: "",
     telephone: null,
     nameRules: [
       v => !!v || "Le nom est requis",
@@ -98,16 +159,22 @@ export default {
     ]
   }),
 
+  computed: {
+    ...mapGetters(["getHours"])
+  },
+
   methods: {
     ...mapMutations([
       "setName",
       "setFirstname",
       "setNumber",
       "setGenre",
-      "toHomeView",
       "setJour",
+      "setTime",
       "toHours"
     ]),
+
+    ...mapActions(["loadHours"]),
 
     getDate() {
       // Get today'date and compare it to the picked date.
@@ -131,18 +198,54 @@ export default {
     },
 
     validate() {
-      if (this.$refs.form.validate()) {
-        this.setName(this.name);
-        this.setFirstname(this.firstname);
-        this.setNumber(this.telephone);
-        this.setGenre(this.gender);
-        this.setJour(this.date);
-        this.toHours();
+      if (
+        this.lastname &&
+        this.firstname &&
+        this.telephone &&
+        this.gender &&
+        this.date
+      ) {
+        if (
+          new Date(this.date).getDate() === new Date().getDate() ||
+          new Date(this.date).getTime() > new Date().getTime()
+        ) {
+          if (
+            new Date(this.date).getDay() === 5 ||
+            new Date(this.date).getDay() === 6
+          ) {
+            alert("Weekends reserved for emergency");
+          } else {
+            this.setName(this.lastname);
+            this.setFirstname(this.firstname);
+            this.setNumber(this.telephone);
+            this.setGenre(this.gender);
+            this.setJour(this.date);
+            this.loadHours();
+            this.e1 = 2;
+          }
+        } else {
+          alert("Choosen time is past");
+        }
+      } else {
+        alert(`All fields must be filled`);
       }
     },
-    reset() {
-      this.$refs.form.reset();
-      this.toHomeView();
+
+    chooseTime() {
+      if (this.time) {
+        this.e1 = 3;
+      }
+    },
+
+    getTime(event) {
+      this.time = "";
+      let item = event.target.innerText;
+      if (item) {
+        this.time = item;
+        this.setTime(this.time);
+      } else {
+        this.el = 2;
+      }
     }
   }
 };
@@ -150,46 +253,31 @@ export default {
 
 <style lang='scss' scoped>
 .container {
-  margin-top: 5rem;
+  margin-top: 6rem;
 
   @media (max-width: 800px) {
     margin-top: 3rem;
   }
 
   .titre {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
 
-  .row {
-    .v-form {
-      background-color: #fff;
-      width: 50% !important;
+  .v-stepper {
+    width: 70%;
+    margin: 0 auto;
 
-      .v-toolbar {
-        margin-bottom: 1rem;
-      }
-
-      .v-text-field {
-        width: 95%;
-        margin: auto;
-      }
-
-      .radioCercles {
-        margin-top: 1rem;
-        margin-left: 1.2rem;
-
-        .v-radio {
-          margin: 0.5rem;
-        }
-      }
-
-      .boutonBox {
-        margin-bottom: 1rem;
-        margin-top: 2rem;
-
-        .v-btn {
-          margin: 0.5rem;
+    .v-card {
+      .v-item-group {
+        .v-row {
+          .col {
+            .v-card {
+              width: 30%;
+              .v-card__title{
+               width: 100%;
+              }
+            }
+          }
         }
       }
     }

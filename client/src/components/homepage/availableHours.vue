@@ -15,7 +15,7 @@
                 height="71"
                 @click="toggle"
               >
-                <v-card-title @click="getTime" class="white--text">{{ hour }}</v-card-title>
+                <v-card-title @click="getTime" class="white--text">{{ hour }} </v-card-title>
               </v-card>
             </v-item>
           </v-col>

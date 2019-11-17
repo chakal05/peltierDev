@@ -47,7 +47,17 @@
                       <v-text-field v-model="editedItem.username" label="Username"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field type="password" v-model="editedItem.password" label="Password"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.password"
+                        :append-icon="show1 ? 'visibility' : 'visibility_off'"
+                        :rules="[rules.required, rules.min]"
+                        :type="show1 ? 'text' : 'password'"
+                        name="input-10-1"
+                        label="Password"
+                        hint="At least x characters"
+                        counter
+                        @click:append="show1 = !show1"
+                      ></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -66,14 +76,8 @@
         <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
         <v-icon small @click="deleteItem(item)">delete</v-icon>
       </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
-      </template>
+      <template v-slot:no-data></template>
     </v-data-table>
-    <br />
-    <v-col class="text-center" cols="12">
-      <v-btn color="teal darken-4" class="white--text mr-4">Retrouver</v-btn>
-    </v-col>
   </v-container>
 </template>
 
@@ -114,6 +118,13 @@ export default {
       telephone: 0,
       username: 0,
       password: 0
+    },
+    show1: false,
+    password: "Password",
+    rules: {
+      required: value => !!value || "Required.",
+      min: v => v.length >= 3 || "Min 3 characters",
+      emailMatch: () => "The email and password you entered don't match"
     }
   }),
 
@@ -148,10 +159,10 @@ export default {
 
     deleteItem(item) {
       const index = this.getDoctorsList.indexOf(item);
-      this.indexToDel =  this.getDoctorsList[index];
+      this.indexToDel = this.getDoctorsList[index];
       confirm("Are you sure you want to delete this item?") &&
         this.getDoctorsList.splice(index, 1);
-        this.supprDoc();
+      this.supprDoc();
     },
 
     close() {

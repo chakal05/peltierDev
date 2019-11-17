@@ -7,8 +7,6 @@ const bodyParser = require("body-parser");
 
 const reservations = require("./requests/reservations");
 const login = require("./requests/login");
-const loadHours = require("./requests/loadHours");
-const register = require("./requests/register");
 const doctors = require("./requests/doctors");
 
 // Middleware
@@ -18,8 +16,6 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use("/reservations", reservations);
 app.use("/login", login);
-app.use("/loadHours", loadHours);
-app.use("/register", register);
 app.use("/doctors", doctors);
 //// Static folder
 //app.use(express.static(__dirname + "/public/"));

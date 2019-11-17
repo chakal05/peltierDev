@@ -15,7 +15,7 @@
             class="mt-4"
           ></v-date-picker>
           <v-col class="text-center" cols="12">
-            <v-btn color="teal darken-4" class="white--text mr-4" @click="loadBookings">Retrouver</v-btn>
+            <v-btn color="teal darken-4" class="white--text mr-4" @click="loadBookings">SEARCH</v-btn>
           </v-col>
         </v-col>
       </v-row>
@@ -57,16 +57,16 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.nom" label="Nom" required></v-text-field>
+                        <v-text-field v-model="editedItem.nom" label="Name" required></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-select :items="genre" v-model="editedItem.genre" label="Genre" required></v-select>
+                        <v-select :items="genre" v-model="editedItem.genre" label="Gender" required></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="editedItem.téléphone"
                           :counter="8"
-                          label="Téléphone"
+                          label="Telephone"
                           required
                         ></v-text-field>
                       </v-col>
@@ -74,18 +74,18 @@
                         <v-select
                           :items="getHours"
                           v-model="editedItem.heure"
-                          label="Heure"
+                          label="Time"
                           required
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="picker" readonly label="Le jour" required></v-text-field>
+                        <v-text-field v-model="picker" readonly label="Day" required></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-select
                           v-model="editedItem.docteur"
                           :items="docteur"
-                          label="Docteur"
+                          label="Doctor"
                           required
                         ></v-select>
                       </v-col>
@@ -95,8 +95,8 @@
 
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
-                  <v-btn color="error" @click="close">Annuler</v-btn>
-                  <v-btn color="teal darken-4" class="white--text" @click="save">Enregistrer</v-btn>
+                  <v-btn color="teal darken-4" text @click="close">Cancel</v-btn>
+                  <v-btn color="teal darken-4" text @click="save">Save</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -111,7 +111,7 @@
         </template>
       </v-data-table>
       <v-col class="text-center boutonBox" cols="12">
-        <v-btn color="teal darken-4" class="white--text mr-4" @click="backToCalendar">Retourner</v-btn>
+        <v-btn color="teal darken-4" class="white--text mr-4" @click="backToCalendar">Previous</v-btn>
       </v-col>
     </div>
   </v-container>
@@ -140,18 +140,18 @@ export default {
       "Dr Moussa Moussa Ali"
     ],
     indexToDel: null,
-    genre: [`Homme`, `Femme`],
+    genre: [`Man`, `Woman`],
     headers: [
       {
-        text: "Nom",
+        text: "Name",
         align: "left",
         sortable: false,
         value: "nom"
       },
-      { text: "Genre", value: "genre" },
-      { text: "Téléphone", value: "téléphone" },
-      { text: "Heure", value: "heure" },
-      { text: "Docteur", value: "docteur" },
+      { text: "Gender", value: "genre" },
+      { text: "Telephone", value: "téléphone" },
+      { text: "Time", value: "heure" },
+      { text: "Doctor", value: "docteur" },
       { text: "Actions", value: "action", sortable: false }
     ],
     bookings: [],
@@ -222,8 +222,10 @@ export default {
       this.indexToDel = this.bookings[index];
 
       confirm("Are you sure you want to delete this item?") &&
-        this.bookings.splice(index, 1);
-      this.delItem();
+        this.setId(this.indexToDel._id);
+      this.SupprItem();
+      this.loadHours();
+      this.bookings.splice(index, 1);
     },
 
     close() {
@@ -236,10 +238,8 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.bookings[this.editedIndex], this.editedItem);
         this.edit();
       } else {
-        this.bookings.push(this.editedItem);
         this.add();
       }
     },
@@ -271,6 +271,7 @@ export default {
     },
 
     edit() {
+      Object.assign(this.bookings[this.editedIndex], this.editedItem);
       this.setId(this.editedItem._id);
       this.setName(this.editedItem.nom);
       this.setNumber(this.editedItem.téléphone);
@@ -306,8 +307,10 @@ export default {
             new Date(this.picker).getDay() === 5 ||
             new Date(this.picker).getDay() === 6
           ) {
-            alert("Pas de consultation pendant les weekends");
+            alert("Weekends reserved for emergency");
+            this.close();
           } else {
+            this.bookings.push(this.editedItem);
             this.setName(this.editedItem.nom);
             this.setNumber(this.editedItem.téléphone);
             this.setGenre(this.editedItem.genre);
@@ -321,21 +324,19 @@ export default {
             if (this.ifSuccess) {
               this.loadBookings();
               alert(`Succesfully inserted a new appointment`);
+              this.close();
             } else if (this.ifError) {
               alert("there was an error");
+              this.close();
             }
           }
         } else {
-          alert("La date choissie est passee");
+          alert("Choosen time is past");
+          this.close();
         }
       } else {
         alert("All fields must be filled");
       }
-    },
-
-    delItem() {
-      this.setId(this.indexToDel._id);
-      this.SupprItem();
     },
 
     ...mapMutations([
@@ -348,36 +349,9 @@ export default {
       "setJour",
       "setTime",
       "setdocteur",
-      "setId",
-      "register",
-      "changeItem",
-      "SupprItem"
+      "setId"
     ]),
-    ...mapActions(["loadHours"]),
-
-    showForm() {
-      if (this.picker) {
-        if (
-          new Date(this.picker).getDate() === new Date().getDate() ||
-          new Date(this.picker).getTime() > new Date().getTime()
-        ) {
-          if (
-            new Date(this.picker).getDay() === 5 ||
-            new Date(this.picker).getDay() === 6
-          ) {
-            alert("Pas de consultation pendant les weekends");
-          } else {
-            this.showFormulaire = true;
-            this.showTable = false;
-            this.notFound = false;
-            this.showCalendar = false;
-            this.getBookings();
-          }
-        } else {
-          alert("La date choissie est passee");
-        }
-      }
-    },
+    ...mapActions(["loadHours", "register", "changeItem", "SupprItem"]),
 
     backToCalendar() {
       this.showCalendar = true;

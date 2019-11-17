@@ -1,73 +1,122 @@
 const express = require("express");
 let router = express.Router();
-const mongo = require("mongodb").MongoClient;
-const url = "mongodb://localhost:27017/";
-async function checkUser() {
-  const connection = await mongo.connect(url, { useNewUrlParser: true });
-  return connection.db("peltier").collection("bookings");
+var mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost/peltier", { useNewUrlParser: true });
+
+// 'useFindAndModify' set to false
+mongoose.set("useFindAndModify", false);
+//Connection to db
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+
+// Schema
+
+const bookingSchema = new mongoose.Schema({
+  nom: String,
+  prénom: String,
+  téléphone: Number,
+  genre: String,
+  date: String,
+  heure: String,
+  docteur: String,
+  rank: Number
+});
+
+async function loadTider() {
+  let booking = mongoose.model("booking", bookingSchema);
+  return booking;
 }
-
-
 
 // get bookings
 
 router.get("/", async function(req, res) {
   let date = req.query.date;
-  let query = await checkUser();
-  let search = await query.find({ date: date }).toArray();
-  if (search.length > 0) {
-    res.send(search).end();
+  let query = await loadTider();
+
+  if (req.query.matter === `hours`) {
+    await query.find({ date: date }, (error, booking) => {
+      let timmars = [];
+
+      if (error) return res.status(500).send(error);
+      booking.forEach(element => {
+        timmars.push(element.heure);
+      });
+
+      return res.status(200).send(timmars);
+    });
   } else {
-    res.sendStatus(404).end();
+    await query.find({ date: date }, (error, booking) => {
+      if (error) return res.status(500).send(error);
+      return res.status(200).send(booking);
+    });
+  }
+});
+
+// Add a new appointment
+
+router.post("/", async function(req, res) {
+  let nom;
+  let doc;
+  if (!req.body.prenom) {
+    nom = req.body.nom;
+  } else {
+    nom = req.body.prenom + " " + req.body.nom;
+  }
+
+  if (req.body.docteur) {
+    doc = req.body.docteur;
+  } else {
+    doc = "toAssign";
+  }
+
+  const nyTid = {
+    nom: nom,
+    téléphone: req.body.telephone,
+    genre: req.body.genre,
+    date: req.body.date,
+    heure: req.body.time,
+    docteur: doc,
+    rank: req.body.rank
+  };
+
+  let connexion = await loadTider();
+  let post = new connexion(nyTid);
+
+  if (post.save()) {
+    res.status(200).send(`Message from reservation.js: inserted one row`);
   }
 });
 
 // Edit item
 
 router.put("/", async function(req, res) {
-  // get ObjectID from mongo for the query
+  let query = await loadTider();
+  await query.findByIdAndUpdate(
+    req.body.id,
+    req.body,
+    { new: true },
 
-  let ObjectID = require("mongodb").ObjectID;
-
-  let query = await checkUser();
-
-  await query.updateOne(
-    { _id: ObjectID(req.body.id) },
-    {
-      $set: {
-        nom: req.body.nom,
-        téléphone: req.body.telephone,
-        genre: req.body.genre,
-        heure: req.body.time,
-        docteur: req.body.docteur,
-        rank: req.body.rank
-      }
-    },
-    function(err, data) {
-      if (err) throw err;
-      if (data.modifiedCount === 1) {
-        res.status(200).send();
-        console.log("modified one item");
-      }
+    err => {
+      if (err) return res.status(500).send(err);
+      return res
+        .status(200)
+        .send(`Message from reservation.js: modified one row `);
     }
   );
 });
 
 // Delete item
-router.post("/", async function(req, res) {
-  let id = req.body.item;
 
-  // get ObjectID from mongo for the query
+router.delete("/", async function(req, res) {
+  id = req.body.id;
+  let query = await loadTider();
+  query.findByIdAndRemove(id, (err, doc) => {
+    if (err) return res.status(500).send(err);
 
-  let ObjectID = require("mongodb").ObjectID;
-  let query = await checkUser();
-
-  query.deleteOne({ _id: ObjectID(id) }, function(err, data) {
-    if (err) throw err;
-    if (data.deletedCount === 1) {
-      console.log("deleted one item");
-      res.status(200).send();
-    }
+    return res
+      .status(200)
+      .send(`Message from reservations.js: deleted one item `);
   });
 });
 
