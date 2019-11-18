@@ -14,10 +14,12 @@ const router = new Router({
    },
 
     {
-      path: '/dashboard',
+      path: '/admin',
       name: 'admin',
       component: admin
-    }
+    },
+
+    
     
   ]
 })

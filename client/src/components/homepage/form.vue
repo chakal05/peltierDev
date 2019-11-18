@@ -4,17 +4,27 @@
       <h1 class="display-2 font-weight-thin mb-4">Entrez vos coordonnées</h1>
     </div>
 
+    <v-alert
+      v-if="success"
+      class="mx-auto text-center font-weight-bold"
+      max-width="800"
+      type="teal"
+    >
+      Votre rendez-vous a été enregistré. Vous serez automatiquement
+      redirigé vers la page d'acceuil. Merci et Bienvenue !
+    </v-alert>
+
     <v-stepper v-model="e1">
       <v-stepper-header>
-        <v-stepper-step color="teal darken-4" :complete="e1 >1" step="1">Name of step 1</v-stepper-step>
+        <v-stepper-step color="teal darken-4" :complete="e1 >1" step="1">Enter your information</v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step color="teal darken-4" :complete="e1 > 2" step="2">Name of step 2</v-stepper-step>
+        <v-stepper-step color="teal darken-4" :complete="e1 > 2" step="2">Choose a time</v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step color="teal darken-4" step="3">Name of step 3</v-stepper-step>
+        <v-stepper-step color="teal darken-4" step="3">Control and submit</v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
@@ -92,7 +102,7 @@
 
           <v-btn color="teal darken-4" class="white--text" @click="validate">Continue</v-btn>
 
-          <v-btn text>Cancel</v-btn>
+          <v-btn text @click="reset">Cancel</v-btn>
         </v-stepper-content>
 
         <v-stepper-content step="2">
@@ -102,12 +112,18 @@
                 <v-col v-for="(hour,index) in getHours" :key="index" cols="12" md="4">
                   <v-item v-slot:default="{ active, toggle }">
                     <v-card
-                      :color="active ? 'teal darken-4' : 'teal lighten-1'"
+                      :color="active ? 'teal darken-4' : 'teal darken-1'"
                       class="d-flex align-center"
                       height="71"
-                      @click="toggle"
+                      v-on="{click: [getTime, toggle]}"
                     >
-                      <v-card-title @click="getTime" class="white--text">{{ hour }}</v-card-title>
+                      <v-card-title class="white--text">{{ hour }}</v-card-title>
+                      <v-scroll-y-transition>
+                        <div
+                          v-if="active"
+                          class="display-1 flex-grow-1 text-center white--text"
+                        >Picked</div>
+                      </v-scroll-y-transition>
                     </v-card>
                   </v-item>
                 </v-col>
@@ -117,15 +133,29 @@
 
           <v-btn color="teal darken-4" class="white--text" @click="chooseTime">Continue</v-btn>
 
-          <v-btn text>Cancel</v-btn>
+          <v-btn text @click="reset">Cancel</v-btn>
         </v-stepper-content>
 
         <v-stepper-content step="3">
-          <v-card class="mb-12" height="400px"></v-card>
+          <v-card class="mb-12" align="center" height="450px">
+            <v-card-text>
+              <div>Full Name</div>
+              <p class="display-1 font-weight-thin text--primary">{{getFirstname + ' ' + getName }}</p>
+              <p>Telephone</p>
+              <div class="display-1 font-weight-thin text--primary">{{ getPhone }}</div>
+              <p>Gender</p>
+              <div class="display-1 font-weight-thin text--primary">{{ getGenre }}</div>
 
-          <v-btn color="teal darken-4" class="white--text" @click="e1 = 1">Continue</v-btn>
+              <p>Day</p>
+              <div class="display-1 font-weight-thin text--primary">{{ getJour }}</div>
+              <p>Hour</p>
+              <div class="display-1 font-weight-thin text--primary">{{ getHeure }}</div>
+            </v-card-text>
+          </v-card>
 
-          <v-btn text>Cancel</v-btn>
+          <v-btn color="teal darken-4" class="white--text" @click="submitForm">Submit</v-btn>
+
+          <v-btn text @click="reset">Cancel</v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -146,6 +176,7 @@ export default {
     gender: "",
     time: "",
     telephone: null,
+    success: false,
     nameRules: [
       v => !!v || "Le nom est requis",
       v => isNaN(v) || "Le nom ne doit contenir aucun chiffre"
@@ -160,7 +191,15 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(["getHours"])
+    ...mapGetters([
+      "getHours",
+      "getName",
+      "getFirstname",
+      "getPhone",
+      "getGenre",
+      "getJour",
+      "getHeure"
+    ])
   },
 
   methods: {
@@ -174,7 +213,7 @@ export default {
       "toHours"
     ]),
 
-    ...mapActions(["loadHours"]),
+    ...mapActions(["loadHours", "register"]),
 
     getDate() {
       // Get today'date and compare it to the picked date.
@@ -246,6 +285,25 @@ export default {
       } else {
         this.el = 2;
       }
+    },
+
+    submitForm() {
+      this.el = 1;
+      this.register();
+
+      this.success = true;
+      setTimeout(() => {
+        location.reload();
+      }, 5000);
+    },
+
+    reset() {
+      this.e1 = 1;
+      this.firstname = "";
+      this.lastname = "";
+      this.telephone = "";
+      this.time = "";
+      this.gender = "";
     }
   }
 };
@@ -272,9 +330,8 @@ export default {
         .v-row {
           .col {
             .v-card {
-              width: 30%;
-              .v-card__title{
-               width: 100%;
+              .v-card__title {
+                width: 100%;
               }
             }
           }

@@ -115,7 +115,6 @@
 </template>
 
 <script>
-// todo responsiveness between ipad and ipad Pro
 
 import { mapMutations } from "vuex";
 export default {

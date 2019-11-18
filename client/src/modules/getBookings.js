@@ -40,10 +40,7 @@ const mutations = {
 
   setJour: (state, jour) => (state.jour = jour),
 
-  setTime: (state, hour) => {
-    state.heure = hour;
-    alert(state.heure);
-  },
+  setTime: (state, hour) => (state.heure = hour),
 
   setHours: (state, available) => (state.dispoHours = available),
 
@@ -82,7 +79,6 @@ const mutations = {
       } else if (state.heure === "18:00") {
         rank = 13;
       }
-      // return rank;
     }
 
     return rank;
@@ -154,7 +150,6 @@ const actions = {
 
     if (sendData && sendData.status === 200) {
       state.success = true;
-      alert(sendData.data);
     }
   },
 
@@ -182,7 +177,6 @@ const actions = {
 
     if (sendData && sendData.status === 200) {
       state.success = true;
-      alert(sendData.data);
     }
   },
 
@@ -197,7 +191,6 @@ const actions = {
 
     if (sendData && sendData.status === 200) {
       state.success = true;
-      alert(sendData.data);
     }
   }
 };
