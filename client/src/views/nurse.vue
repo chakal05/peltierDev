@@ -17,33 +17,33 @@
         </div>
 
         <v-list>
-          <v-list-item @click="showDashboard">
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>dashboard</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>Tableau de bord</v-list-item-title>
+              <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item @click="showDoctors">
+          <v-list-item>
             <v-list-item-icon>
-              <v-icon>fas fa-user-md</v-icon>
+              <v-icon>fas fa-user</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>Doctors</v-list-item-title>
+              <v-list-item-title>Patient</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
-          <v-list-item @click="showBookings">
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>schedule</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title> Appointment </v-list-item-title>
+              <v-list-item-title>Appoitment</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -77,9 +77,7 @@
         <v-container fill-height>
           <v-layout justify-center align-center>
             <v-flex>
-              <dashboard v-if="getDashboard"></dashboard>
-              <bookings v-if="getBookings"></bookings>
-              <doctors v-if="getDoctors"></doctors>
+              <dashboard></dashboard>
             </v-flex>
           </v-layout>
         </v-container>
@@ -89,26 +87,21 @@
 </template>
 
 <script>
-import dashboard from "../components/admin/dashboard";
-import bookings from "../components/admin/bookings";
-import doctors from "../components/admin/doctors";
-import { mapGetters, mapMutations } from "vuex";
+import dashboard from '../components/nurse/dashboard'
 export default {
   components: {
-    dashboard,
-    doctors,
-    bookings
+    dashboard
   },
 
   computed: {
-    ...mapGetters(["getDashboard", "getBookings", "getDoctors"])
+    //
   },
   data: () => ({
     drawer: null
   }),
 
   methods: {
-    ...mapMutations(["showDashboard", "showBookings", "showDoctors"])
+    //
   }
 };
 </script>
