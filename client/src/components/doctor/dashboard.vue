@@ -28,7 +28,7 @@
               :color="active ? 'grey darken-4' : ''"
               class="d-flex align-center"
               height="200"
-              @click="showBookings"
+              @click="toggle"
             >
               <v-card-text class="display-3 flex-grow-1 text-center" v-if="!active">
                 <v-icon>fas fa-calendar-alt</v-icon>
@@ -49,9 +49,9 @@
             >
               <v-card-text class="display-3 flex-grow-1 text-center" v-if="!active">
                 <v-icon>fas fa-stethoscope</v-icon>
-                <h3 class="display-2 font-weight-thin">Prescription</h3>
+                <h3 class="display-2 font-weight-thin ">Prescription</h3>
               </v-card-text>
-              <div v-if="active" class="display-3 flex-grow-1 white--text text-center">Coming soon</div>
+              <div v-if="active" class="display-2 flex-grow-1 white--text text-center">Coming soon</div>
             </v-card>
           </v-item>
         </v-col>
@@ -115,10 +115,10 @@
 import { mapGetters, mapMutations } from "vuex";
 export default {
   computed: {
-    //...mapGetters(["getDashboard", "getBookings", "getDoctors"])
+    ...mapGetters(["getDashboard", "getBookings", "getDoctors"])
   },
   methods: {
- //   ...mapMutations(["showDashboard", "showBookings", "showDoctors"])
+ ...mapMutations(["showDashboard", "showBookings", "showDoctors"])
   }
 };
 </script>

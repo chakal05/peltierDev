@@ -15,7 +15,7 @@
             class="mt-4"
           ></v-date-picker>
           <v-col class="text-center" cols="12">
-            <v-btn color="teal darken-4" class="white--text mr-4" @click="loadBookings">SEARCH</v-btn>
+            <v-btn color="teal darken-4" class="white--text mr-4" @click="load">SEARCH</v-btn>
           </v-col>
         </v-col>
       </v-row>
@@ -28,7 +28,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="bookings"
+        :items="getAppointments"
         :search="search"
         :sort-by="['rank']"
         class="elevation-1"
@@ -46,7 +46,7 @@
             <v-spacer></v-spacer>
             <v-dialog persistent v-model="dialog" max-width="500px">
               <template v-slot:activator="{ on }">
-                <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Add new</v-btn>
+                <v-btn color="teal darken-4" dark class="mb-2" v-on="on" @click="editItem">Add new</v-btn>
               </template>
               <v-card>
                 <v-card-title>
@@ -57,7 +57,12 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="editedItem.nom" label="Name" required></v-text-field>
+                        <v-text-field
+                          v-model="editedItem.nom"
+                          label="Name"
+                          :rules="nameRules"
+                          required
+                        ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-select :items="genre" v-model="editedItem.genre" label="Gender" required></v-select>
@@ -67,6 +72,7 @@
                           v-model="editedItem.téléphone"
                           :counter="8"
                           label="Telephone"
+                          :rules="telephoneRules"
                           required
                         ></v-text-field>
                       </v-col>
@@ -118,10 +124,10 @@
 </template>
 
 <script>
-//TODO Make sure no field is sent empty
+//TODO  'npm config set ignore-scripts false' was run. Make sure everything
+// TODO run smoothly at the end
 
 import { mapGetters, mapMutations, mapActions } from "vuex";
-import axios from "axios";
 
 export default {
   data: () => ({
@@ -141,6 +147,7 @@ export default {
     ],
     indexToDel: null,
     genre: [`Man`, `Woman`],
+    bookings: [],
     headers: [
       {
         text: "Name",
@@ -154,24 +161,15 @@ export default {
       { text: "Doctor", value: "docteur" },
       { text: "Actions", value: "action", sortable: false }
     ],
-    bookings: [],
     nameRules: [
       v => !!v || "Le nom est requis",
-      v => isNaN(v) || "Le nom ne doit contenir aucun chiffre"
+      v => isNaN(v) || "Names should not contain numbers"
     ],
     telephoneRules: [
-      v => !!v || "Le numéro de téléphone est requis",
-      v =>
-        (v && v.length <= 8) ||
-        "Le numéro de téléphone doit avoir 8 caractere au max",
-      v => !isNaN(v) || "Le numéro de téléphone doit etre numerique"
+      v => !!v || "A phone number is required ",
+      v => (v && v.length <= 8) || "Phone number should contain 8 numbers max",
+      v => !isNaN(v) || "The phone number should only contain numeric values"
     ],
-    email: "",
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
-    ],
-
     editedIndex: -1,
     editedItem: {
       nom: "",
@@ -193,7 +191,7 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New item" : "Edit item";
     },
-    ...mapGetters(["getHours", "ifSuccess", "ifError"])
+    ...mapGetters(["getAppointments", "getHours", "ifSuccess", "ifError"])
   },
 
   watch: {
@@ -202,30 +200,22 @@ export default {
     }
   },
 
-  created() {
-    this.initialize();
-  },
-
   methods: {
-    initialize() {
-      this.bookings = [];
-    },
-
     editItem(item) {
-      this.editedIndex = this.bookings.indexOf(item);
+      this.editedIndex = this.getAppointments.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
+      this.loadHours(this.picker);
     },
 
     deleteItem(item) {
-      const index = this.bookings.indexOf(item);
-      this.indexToDel = this.bookings[index];
+      const index = this.getAppointments.indexOf(item);
+      this.indexToDel = this.getAppointments[index];
 
       confirm("Are you sure you want to delete this item?") &&
         this.setId(this.indexToDel._id);
       this.SupprItem();
-      this.loadHours();
-      this.bookings.splice(index, 1);
+      this.getAppointments.splice(index, 1);
     },
 
     close() {
@@ -244,49 +234,32 @@ export default {
       }
     },
 
-    handleErrors() {},
-
-    async loadBookings() {
+    load() {
       this.showCalendar = false;
-      let bookings = await axios
-        .get("/reservations", {
-          params: {
-            date: this.picker
-          }
-        })
-        .catch(e => {
-          if (e) {
-            this.bookings = [];
-            this.setJour(this.picker);
-            this.loadHours();
-            this.showTable = true;
-          }
-        });
-      if (bookings && bookings.status === 200) {
-        this.bookings = bookings.data;
-        this.showTable = true;
-        this.setJour(this.picker);
-        this.loadHours();
-      }
+      this.loadBookings([this.picker, "admin"]);
+      this.showTable = true;
     },
 
     edit() {
-      Object.assign(this.bookings[this.editedIndex], this.editedItem);
-      this.setId(this.editedItem._id);
-      this.setName(this.editedItem.nom);
-      this.setNumber(this.editedItem.téléphone);
-      this.setGenre(this.editedItem.genre);
-      this.setTime(this.editedItem.heure);
-      this.setJour(this.picker);
-      this.setdocteur(this.editedItem.docteur);
-      this.changeItem();
-      this.loadHours();
-      this.close();
-
-      if (this.ifSuccess) {
+      if (this.editedItem.heure === "Fully booked") {
+        alert("We are fully booked for this day, please choose another day");
+      } else {
+        Object.assign(this.getAppointments[this.editedIndex], this.editedItem);
+        this.setId(this.editedItem._id);
+        this.setName(this.editedItem.nom);
+        this.setNumber(this.editedItem.téléphone);
+        this.setGenre(this.editedItem.genre);
+        this.setTime(this.editedItem.heure);
+        this.setJour(this.picker);
+        this.setdocteur(this.editedItem.docteur);
+        this.changeItem();
         this.close();
-      } else if (this.ifError) {
-        this.handleErrors();
+
+        if (this.ifSuccess) {
+          this.close();
+        } else if (this.ifError) {
+          this.close();
+        }
       }
     },
 
@@ -309,6 +282,10 @@ export default {
           ) {
             alert("Weekends reserved for emergency");
             this.close();
+          } else if (this.editedItem.heure === "Fully booked") {
+            alert(
+              "We are fully booked for this day, please choose another day"
+            );
           } else {
             this.bookings.push(this.editedItem);
             this.setName(this.editedItem.nom);
@@ -318,11 +295,8 @@ export default {
             this.setJour(this.picker);
             this.setdocteur(this.editedItem.docteur);
             this.register();
-            this.loadHours();
             this.close();
-
             if (this.ifSuccess) {
-              this.loadBookings();
               alert(`Succesfully inserted a new appointment`);
               this.close();
             } else if (this.ifError) {
@@ -345,13 +319,18 @@ export default {
       "setFirstname",
       "setNumber",
       "setGenre",
-      "setEmail",
       "setJour",
       "setTime",
       "setdocteur",
       "setId"
     ]),
-    ...mapActions(["loadHours", "register", "changeItem", "SupprItem"]),
+    ...mapActions([
+      "loadBookings",
+      "loadHours",
+      "register",
+      "changeItem",
+      "SupprItem"
+    ]),
 
     backToCalendar() {
       this.showCalendar = true;

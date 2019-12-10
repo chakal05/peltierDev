@@ -31,11 +31,13 @@ async function loadTider() {
 // get bookings
 
 router.get("/", async function(req, res) {
-  let date = req.query.date;
+
+  console.log(req.query);
+
   let query = await loadTider();
 
-  if (req.query.matter === `hours`) {
-    await query.find({ date: date }, (error, booking) => {
+  if (req.query.date[1] === `hours`) {
+    await query.find({ date: req.query.date[0] }, (error, booking) => {
       let timmars = [];
 
       if (error) return res.status(500).send(error);
@@ -45,9 +47,12 @@ router.get("/", async function(req, res) {
 
       return res.status(200).send(timmars);
     });
-  } else {
-    await query.find({ date: date }, (error, booking) => {
+  } else if (req.query.date[1] === "admin") {
+    await query.find({ date: req.query.date[0] }, (error, booking) => {
       if (error) return res.status(500).send(error);
+      console.log(
+        booking.length + " bookings sent back for the " + req.query.date[0]
+      );
       return res.status(200).send(booking);
     });
   }
@@ -56,13 +61,9 @@ router.get("/", async function(req, res) {
 // Add a new appointment
 
 router.post("/", async function(req, res) {
-  let nom;
+  console.log(req.body);
+
   let doc;
-  if (!req.body.prenom) {
-    nom = req.body.nom;
-  } else {
-    nom = req.body.prenom + " " + req.body.nom;
-  }
 
   if (req.body.docteur) {
     doc = req.body.docteur;
@@ -71,7 +72,7 @@ router.post("/", async function(req, res) {
   }
 
   const nyTid = {
-    nom: nom,
+    nom: req.body.nom,
     téléphone: req.body.telephone,
     genre: req.body.genre,
     date: req.body.date,
@@ -91,19 +92,16 @@ router.post("/", async function(req, res) {
 // Edit item
 
 router.put("/", async function(req, res) {
-  let query = await loadTider();
-  await query.findByIdAndUpdate(
-    req.body.id,
-    req.body,
-    { new: true },
 
-    err => {
-      if (err) return res.status(500).send(err);
-      return res
-        .status(200)
-        .send(`Message from reservation.js: modified one row `);
-    }
-  );
+  console.log(req.body);
+
+  let query = await loadTider();
+  await query.findByIdAndUpdate(req.body.id, req.body, { new: true }, err => {
+    if (err) return res.status(500).send(err);
+    return res
+      .status(200)
+      .send(`Message from reservation.js: modified one row `);
+  });
 });
 
 // Delete item

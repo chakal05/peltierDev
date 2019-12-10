@@ -11,8 +11,11 @@ const state = {
   heure: null,
   docteur: null,
   dispoHours: [],
+  appointments: [],
   success: false,
-  error: false
+  error: false,
+  rank: null,
+  profil: "admin"
 };
 
 const getters = {
@@ -24,12 +27,42 @@ const getters = {
   getJour: state => state.jour,
   getHeure: state => state.heure,
   getHours: state => state.dispoHours,
+  getAppointments: state => state.appointments,
   getDocteur: state => state.docteur,
   ifSuccess: state => state.success,
   ifError: state => state.error
 };
 
 const mutations = {
+  setBokingInfo(state, { nom, prenom, number, sexe, jour, hour, doctor }) {
+    state.nom = nom;
+    state.prenom = prenom;
+    state.telephone = number;
+    state.sexe = sexe;
+    state.jour = jour;
+    state.heure = hour;
+    state.docteur = doctor;
+
+    const baseHours = [
+      "08:30",
+      "09:00",
+      "09:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30",
+      "12:00",
+      "16:30",
+      "17:00",
+      "17:30",
+      "18:00"
+    ];
+
+    if (state.heure) {
+      state.rank = baseHours.indexOf(state.heure);
+    }
+  },
+
   setName: (state, nom) => (state.nom = nom),
 
   setFirstname: (state, prenom) => (state.prenom = prenom),
@@ -44,61 +77,71 @@ const mutations = {
 
   setHours: (state, available) => (state.dispoHours = available),
 
+  setAppointments: (state, bookings) => (state.appointments = bookings),
+
   setId: (state, inputId) => (state.id = inputId),
 
   setdocteur: (state, docteur) => (state.docteur = docteur),
 
   setRank: () => {
-    let rank;
+    // Display appointments in ascending order
+
+    const baseHours = [
+      "08:30",
+      "09:00",
+      "09:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30",
+      "12:00",
+      "16:30",
+      "17:00",
+      "17:30",
+      "18:00"
+    ];
 
     if (state.heure) {
-      if (state.heure === "8:30") {
-        rank = 1;
-      } else if (state.heure === "9:00") {
-        rank = 2;
-      } else if (state.heure === "9:30") {
-        rank = 3;
-      } else if (state.heure === "10:00") {
-        rank = 4;
-      } else if (state.heure === "10:30") {
-        rank = 5;
-      } else if (state.heure === "11:00") {
-        rank = 6;
-      } else if (state.heure === "11:30") {
-        rank = 7;
-      } else if (state.heure === "12:00") {
-        rank = 8;
-      } else if (state.heure === "16:00") {
-        rank = 9;
-      } else if (state.heure === "16:30") {
-        rank = 10;
-      } else if (state.heure === "17:00") {
-        rank = 11;
-      } else if (state.heure === "17:30") {
-        rank = 12;
-      } else if (state.heure === "18:00") {
-        rank = 13;
-      }
+      state.rank = baseHours.indexOf(state.heure);
     }
-
-    return rank;
   }
 };
 
 const actions = {
-  // retrieve hours
+  // Retrieve bookings
 
-  async loadHours({ commit }) {
+  async loadBookings({ commit }, picker) {
+    const response = await axios
+      .get("/reservations", {
+        params: { date: picker }
+      })
+      .catch(error => {
+        if (error) {
+          state.error = true;
+          state.bookings = [];
+          mutations.setJour(picker);
+          this.loadHours(picker);
+        }
+      });
+
+    if (response.data) {
+      commit("setAppointments", response.data);
+    }
+  },
+
+  // Retrieve booked hours
+
+  async loadHours({ commit }, day) {
     const response = await axios.get("/reservations", {
-      params: { date: state.jour, matter: `hours` }
+      params: { date: [day, `hours`] }
     });
 
     // Default hours
 
     const baseHours = [
-      "8:30",
-      "9:00",
-      "9:30",
+      "08:30",
+      "09:00",
+      "09:30",
       "10:00",
       "10:30",
       "11:00",
@@ -112,12 +155,15 @@ const actions = {
 
     if (!response.data[0]) {
       // No reservations for that day, send default hours
+
       commit("setHours", baseHours);
     } else {
       // if there are reservations for that day, display available hours
+
       let displayHours = _.difference(baseHours, response.data);
       if (!displayHours[0]) {
         //if fully booked
+
         let full = ["Fully booked"];
         commit("setHours", full);
       } else {
@@ -134,6 +180,10 @@ const actions = {
       name = state.nom;
     }
 
+    if (state.heure) {
+      mutations.setRank();
+    }
+
     let sendData = await axios
       .post("/reservations", {
         nom: name,
@@ -142,7 +192,7 @@ const actions = {
         date: state.jour,
         time: state.heure,
         docteur: state.docteur,
-        rank: mutations.setRank()
+        rank: state.rank
       })
       .catch(() => {
         state.error = true;
@@ -161,6 +211,10 @@ const actions = {
       name = state.nom;
     }
 
+    if (state.heure) {
+      mutations.setRank();
+    }
+
     let sendData = await axios
       .put("/reservations", {
         id: state.id,
@@ -169,7 +223,7 @@ const actions = {
         genre: state.sexe,
         heure: state.heure,
         docteur: state.docteur,
-        rank: mutations.setRank()
+        rank: state.rank
       })
       .catch(() => {
         state.error = true;

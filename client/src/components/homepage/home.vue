@@ -65,29 +65,32 @@
               <v-card color="teal darken-3" dark>
                 <v-card-text class="white--text">
                   <div class="headline mb-2">
-                    <v-toolbar-title>Les consultations</v-toolbar-title>
+                    <v-toolbar-title>Consultations </v-toolbar-title>
                   </div>Les consultations dure 30 minutes par patients afin de pouvoir recevoir le plus de patients possible. Nous vous recommandons fortement donc, d'arriver un quart d'heure en avance pour éviter les surprises. Si vous n'etes pas en place à l'heure, votre consultation sera occtroyé au patient suivant sur la liste.
                 </v-card-text>
                 <v-card-actions>
                   <v-col class="text-center" cols="12">
-                    <v-btn color="white" class="black--text" @click="toFormulaire">Consultation</v-btn>
+                    <v-btn color="white" class="black--text" @click="toFormulaire">Appointment</v-btn>
 
                     <v-dialog v-model="dialog" persistent max-width="600px">
                       <template v-slot:activator="{ on }">
-                        <v-btn color="white" class="black--text" v-on="on">Administration</v-btn>
+                        <v-btn color="white" class="black--text" v-on="on">Personal</v-btn>
                       </template>
                       <v-card>
                         <v-card-title>
-                          <span class="headline">Administration</span>
+                          <span class="headline">Personal</span>
                         </v-card-title>
                         <v-card-text>
                           <v-container>
                             <v-row>
-                              <v-col cols="12">
-                                <v-text-field label="Email" required></v-text-field>
+                              <v-col cols="12" md="6">
+                                <v-text-field label="Username" required></v-text-field>
                               </v-col>
-                              <v-col cols="12">
+                              <v-col cols="12" md="6">
                                 <v-text-field label="Password" type="password" required></v-text-field>
+                              </v-col>
+                              <v-col class="d-flex" cols="12" md='12'>
+                                <v-select :items="profil" label="Profil"></v-select>
                               </v-col>
                             </v-row>
                           </v-container>
@@ -115,11 +118,11 @@
 </template>
 
 <script>
-
 import { mapMutations } from "vuex";
 export default {
   data: () => ({
-    dialog : false
+    dialog: false,
+    profil: ["Admin", "Docteur", "Nurse", "patient"]
   }),
   computed: {
     //

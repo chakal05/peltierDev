@@ -179,14 +179,12 @@ export default {
     success: false,
     nameRules: [
       v => !!v || "Le nom est requis",
-      v => isNaN(v) || "Le nom ne doit contenir aucun chiffre"
+      v => isNaN(v) || "Names should not contain numbers"
     ],
     telephoneRules: [
-      v => !!v || "Le numéro de téléphone est requis",
-      v =>
-        (v && v.length >= 8) ||
-        "Le numéro de téléphone doit avoir 8 caractere au minimum",
-      v => !isNaN(v) || "Le numéro de téléphone doit etre numerique"
+      v => !!v || "A phone number is required ",
+      v => (v && v.length <= 8) || "Phone number should contain 8 numbers max",
+      v => !isNaN(v) || "The phone number should only contain numeric values"
     ]
   }),
 
@@ -259,7 +257,7 @@ export default {
             this.setNumber(this.telephone);
             this.setGenre(this.gender);
             this.setJour(this.date);
-            this.loadHours();
+            this.loadHours(this.date);
             this.e1 = 2;
           }
         } else {

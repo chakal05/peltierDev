@@ -2,8 +2,8 @@ import Vuex from "vuex";
 import Vue from "vue";
 import nextPrev from "../modules/showHideHome";
 import showComp from "../modules/showHideAdmin";
-import bookings from "../modules/getBookings";
-import doctors from "../modules/getDoctors";
+import bookings from "../modules/appointment";
+import personel from "../modules/getPersonel";
 // Load Vuex
 Vue.use(Vuex);
 
@@ -14,6 +14,6 @@ export default new Vuex.Store({
     nextPrev,
     showComp,
     bookings,
-    doctors
+    personel
   }
 });

@@ -6,7 +6,7 @@
     <br />
     <v-data-table
       :headers="headers"
-      :items="getDoctorsList"
+      :items="getPersonelList"
       :search="search"
       sort-by="name"
       class="elevation-1"
@@ -100,10 +100,8 @@ export default {
       { text: "Departement", value: "departement" },
       { text: "Telephone", value: "telephone" },
       { text: "Username", value: "username" },
-      // { text: "Password", value: "password" },
       { text: "Actions", value: "action", sortable: false }
     ],
-    doctorsList: [],
     editedIndex: -1,
     editedItem: {
       name: "",
@@ -132,7 +130,7 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-    ...mapGetters(["getDoctorsList", "success"])
+    ...mapGetters(["getPersonelList", "success"])
   },
 
   watch: {
@@ -142,26 +140,26 @@ export default {
   },
 
   created() {
-    this.loadDoctors();
+    this.loadPersonel('doctor');
     this.initialize();
   },
 
   methods: {
     initialize() {
-      this.doctorsList = [];
+      this.getPersonelList = [];
     },
 
     editItem(item) {
-      this.editedIndex = this.getDoctorsList.indexOf(item);
+      this.editedIndex = this.getPersonelList.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.getDoctorsList.indexOf(item);
-      this.indexToDel = this.getDoctorsList[index];
+      const index = this.getPersonelList.indexOf(item);
+      this.indexToDel = this.getPersonelList[index];
       confirm("Are you sure you want to delete this item?") &&
-        this.getDoctorsList.splice(index, 1);
+        this.getPersonelList.splice(index, 1);
       this.supprDoc();
     },
 
@@ -175,10 +173,10 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.getDoctorsList[this.editedIndex], this.editedItem);
+        Object.assign(this.getPersonelList[this.editedIndex], this.editedItem);
         this.edit();
       } else {
-        this.getDoctorsList.push(this.editedItem);
+        this.getPersonelList.push(this.editedItem);
         this.add();
       }
       this.close();
@@ -192,16 +190,16 @@ export default {
         this.editedItem.username &&
         this.editedItem.password
       ) {
-        this.setDoctorName(this.editedItem.name);
+        this.setPersonelName(this.editedItem.name);
         this.setDepartement(this.editedItem.departement);
-        this.setDoctorTelephone(this.editedItem.telephone);
-        this.setDoctorUsername(this.editedItem.username);
-        this.setDoctorPassword(this.editedItem.password);
+        this.setPersonelTelephone(this.editedItem.telephone);
+        this.setPersonelUsername(this.editedItem.username);
+        this.setPersonelPassword(this.editedItem.password);
         this.addDoctor();
 
         if (this.success) {
           // todo find a way to update component
-          //this.$forceUpdate();
+        
         }
       } else {
         alert(`All fields must be filled`);
@@ -209,29 +207,29 @@ export default {
     },
 
     edit() {
-      this.setDoctorId(this.editedItem._id);
-      this.setDoctorName(this.editedItem.name);
+      this.setPersonelId(this.editedItem._id);
+      this.setPersonelName(this.editedItem.name);
       this.setDepartement(this.editedItem.departement);
-      this.setDoctorTelephone(this.editedItem.telephone);
-      this.setDoctorUsername(this.editedItem.username);
-      this.setDoctorPassword(this.editedItem.password);
+      this.setPersonelTelephone(this.editedItem.telephone);
+      this.setPersonelUsername(this.editedItem.username);
+      this.setPersonelPassword(this.editedItem.password);
       this.editDoctor();
     },
 
     supprDoc() {
-      this.setDoctorId(this.indexToDel);
+      this.setPersonelId(this.indexToDel);
       this.deleteDoctor();
     },
 
     ...mapMutations([
-      "setDoctorName",
+      "setPersonelName",
       "setDepartement",
-      "setDoctorTelephone",
-      "setDoctorUsername",
-      "setDoctorPassword",
-      "setDoctorId"
+      "setPersonelTelephone",
+      "setPersonelUsername",
+      "setPersonelPassword",
+      "setPersonelId"
     ]),
-    ...mapActions(["loadDoctors", "addDoctor", "editDoctor", "deleteDoctor"])
+    ...mapActions(["loadPersonel", "addDoctor", "editDoctor", "deleteDoctor"])
   }
 };
 </script>
