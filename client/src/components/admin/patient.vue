@@ -1,12 +1,12 @@
 <template>
   <v-container>
     <div class="text-center">
-      <h2 class="display-2 font-weight-thin mb-4">Doctors list</h2>
+      <h2 class="display-2 font-weight-thin mb-4">Patients list</h2>
     </div>
     <br />
     <v-data-table
       :headers="headers"
-      :items="getPersonelList"
+      :items="getPatientsList"
       :search="search"
       sort-by="name"
       class="elevation-1"
@@ -36,9 +36,6 @@
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field :rules="nameRules" v-model="editedItem.name" label="Name"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.departement" label="Departement"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
@@ -122,6 +119,7 @@
   </v-container>
 </template>
 
+
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 
@@ -140,7 +138,6 @@ export default {
         sortable: false,
         value: "name"
       },
-      { text: "Departement", value: "departement" },
       { text: "Telephone", value: "telephone" },
       { text: "Email", value: "email" },
       { text: "Adresse", value: "adresse" },
@@ -198,7 +195,7 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-    ...mapGetters(["getPersonelList"])
+    ...mapGetters(["getPatientsList"])
   },
 
   watch: {
@@ -211,27 +208,27 @@ export default {
   },
 
   created() {
-    this.loadPersonel("doctor");
+    this.loadPatients("patient");
     this.initialize();
   },
 
   methods: {
     initialize() {
-      this.getPersonelList = [];
+      this.getPatientsList = [];
     },
 
     editItem(item) {
-      this.editedIndex = this.getPersonelList.indexOf(item);
+      this.editedIndex = this.getPatientsList.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.getPersonelList.indexOf(item);
-      this.indexToDel = this.getPersonelList[index];
+      const index = this.getPatientsList.indexOf(item);
+      this.indexToDel = this.getPatientsList[index];
       confirm("Are you sure you want to delete this item?") &&
-        this.getPersonelList.splice(index, 1);
-      this.supprDoc();
+        this.getPatientsList.splice(index, 1);
+      this.supprPatient();
     },
 
     birth(date) {
@@ -249,10 +246,10 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.getPersonelList[this.editedIndex], this.editedItem);
+        Object.assign(this.getPatientsList[this.editedIndex], this.editedItem);
         this.edit();
       } else {
-        this.getPersonelList.push(this.editedItem);
+        this.getPatientsList.push(this.editedItem);
         this.add();
       }
       this.close();
@@ -261,7 +258,6 @@ export default {
     add() {
       if (
         this.editedItem.name &&
-        this.editedItem.departement &&
         this.editedItem.telephone &&
         this.editedItem.username &&
         this.editedItem.password &&
@@ -270,17 +266,16 @@ export default {
         this.editedItem.birthdate &&
         this.editedItem.email
       ) {
-        this.setPersonelName(this.editedItem.name);
-        this.setPersonelEmail(this.editedItem.email);
-        this.setPersonelAdresse(this.editedItem.adresse);
-        this.setPersonelCity(this.editedItem.city);
-        this.setPersonelBirth(this.date);
-        this.setDepartement(this.editedItem.departement);
-        this.setPersonelTelephone(this.editedItem.telephone);
-        this.setPersonelUsername(this.editedItem.username);
-        this.setPersonelPassword(this.editedItem.password);
-        this.setPersonelProfil("doctor");
-        this.addPersonel();
+        this.setPatientName(this.editedItem.name);
+        this.setPatientEmail(this.editedItem.email);
+        this.setPatientAdresse(this.editedItem.adresse);
+        this.setPatientCity(this.editedItem.city);
+        this.setPatientBirth(this.date);
+        this.setPatientTelephone(this.editedItem.telephone);
+        this.setPatientUsername(this.editedItem.username);
+        this.setPatientPassword(this.editedItem.password);
+        this.setPatientProfil("patient");
+        this.addPatient();
 
         if (this.success) {
           // todo find a way to update component
@@ -291,42 +286,40 @@ export default {
     },
 
     edit() {
-      this.setPersonelId(this.editedItem._id);
-      this.setPersonelName(this.editedItem.name);
-      this.setPersonelEmail(this.editedItem.email);
-      this.setPersonelAdresse(this.editedItem.adresse);
-      this.setPersonelCity(this.editedItem.city);
-      this.setPersonelBirth(this.editedItem.birthdate);
-      this.setDepartement(this.editedItem.departement);
-      this.setPersonelTelephone(this.editedItem.telephone);
-      this.setPersonelUsername(this.editedItem.username);
-      this.setPersonelPassword(this.editedItem.password);
-      this.editPersonel();
+      this.setPatientId(this.editedItem._id);
+      this.setPatientName(this.editedItem.name);
+      this.setPatientEmail(this.editedItem.email);
+      this.setPatientAdresse(this.editedItem.adresse);
+      this.setPatientCity(this.editedItem.city);
+      this.setPatientBirth(this.editedItem.birthdate);
+      this.setPatientTelephone(this.editedItem.telephone);
+      this.setPatientUsername(this.editedItem.username);
+      this.setPatientPassword(this.editedItem.password);
+      this.editPatient();
     },
 
-    supprDoc() {
-      this.setPersonelId(this.indexToDel);
-      this.deletePersonel();
+    supprPatient() {
+      this.setPatientId(this.indexToDel);
+      this.deletePatient();
     },
 
     ...mapMutations([
-      "setPersonelName",
-      "setDepartement",
-      "setPersonelTelephone",
-      "setPersonelUsername",
-      "setPersonelPassword",
-      "setPersonelId",
-      "setPersonelProfil",
-      "setPersonelEmail",
-      "setPersonelAdresse",
-      "setPersonelCity",
-      "setPersonelBirth"
+      "setPatientName",
+      "setPatientTelephone",
+      "setPatientUsername",
+      "setPatientPassword",
+      "setPatientId",
+      "setPatientProfil",
+      "setPatientEmail",
+      "setPatientAdresse",
+      "setPatientCity",
+      "setPatientBirth"
     ]),
     ...mapActions([
-      "loadPersonel",
-      "addPersonel",
-      "editPersonel",
-      "deletePersonel"
+      "loadPatients",
+      "addPatient",
+      "editPatient",
+      "deletePatient"
     ])
   }
 };

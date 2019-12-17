@@ -287,7 +287,7 @@ export default {
               "We are fully booked for this day, please choose another day"
             );
           } else {
-            this.bookings.push(this.editedItem);
+            this.getAppointments.push(this.editedItem);
             this.setName(this.editedItem.nom);
             this.setNumber(this.editedItem.téléphone);
             this.setGenre(this.editedItem.genre);

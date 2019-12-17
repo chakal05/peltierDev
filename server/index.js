@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const reservations = require("./requests/reservations");
 const login = require("./requests/login");
 const personel = require("./requests/personel");
+const patients = require("./requests/patient");
 
 // Middleware
 
@@ -17,6 +18,7 @@ app.use(cors());
 app.use("/reservations", reservations);
 app.use("/login", login);
 app.use("/personel", personel);
+app.use("/patient", patients);
 //// Static folder
 //app.use(express.static(__dirname + "/public/"));
 //// SPA

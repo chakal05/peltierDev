@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="text-center">
-      <h2 class="display-2 font-weight-thin mb-4">Doctors list</h2>
+      <h2 class="display-2 font-weight-thin mb-4">Nurses list</h2>
     </div>
     <br />
     <v-data-table
@@ -211,7 +211,7 @@ export default {
   },
 
   created() {
-    this.loadPersonel("doctor");
+    this.loadPersonel("nurse");
     this.initialize();
   },
 
@@ -279,7 +279,7 @@ export default {
         this.setPersonelTelephone(this.editedItem.telephone);
         this.setPersonelUsername(this.editedItem.username);
         this.setPersonelPassword(this.editedItem.password);
-        this.setPersonelProfil("doctor");
+        this.setPersonelProfil("nurse");
         this.addPersonel();
 
         if (this.success) {

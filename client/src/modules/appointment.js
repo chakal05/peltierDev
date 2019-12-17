@@ -34,77 +34,49 @@ const getters = {
 };
 
 const mutations = {
-  setBokingInfo(state, { nom, prenom, number, sexe, jour, hour, doctor }) {
-    state.nom = nom;
-    state.prenom = prenom;
-    state.telephone = number;
-    state.sexe = sexe;
-    state.jour = jour;
-    state.heure = hour;
-    state.docteur = doctor;
-
-    const baseHours = [
-      "08:30",
-      "09:00",
-      "09:30",
-      "10:00",
-      "10:30",
-      "11:00",
-      "11:30",
-      "12:00",
-      "16:30",
-      "17:00",
-      "17:30",
-      "18:00"
-    ];
-
-    if (state.heure) {
-      state.rank = baseHours.indexOf(state.heure);
-    }
-  },
-
+ 
   setName: (state, nom) => (state.nom = nom),
-
+  
   setFirstname: (state, prenom) => (state.prenom = prenom),
-
+  
   setNumber: (state, telephone) => (state.telephone = telephone),
-
+  
   setGenre: (state, sexe) => (state.sexe = sexe),
-
+  
   setJour: (state, jour) => (state.jour = jour),
-
+  
   setTime: (state, hour) => (state.heure = hour),
 
   setHours: (state, available) => (state.dispoHours = available),
 
   setAppointments: (state, bookings) => (state.appointments = bookings),
 
-  setId: (state, inputId) => (state.id = inputId),
-
-  setdocteur: (state, docteur) => (state.docteur = docteur),
-
-  setRank: () => {
-    // Display appointments in ascending order
-
-    const baseHours = [
-      "08:30",
-      "09:00",
-      "09:30",
-      "10:00",
-      "10:30",
-      "11:00",
-      "11:30",
-      "12:00",
-      "16:30",
-      "17:00",
-      "17:30",
-      "18:00"
-    ];
-
-    if (state.heure) {
-      state.rank = baseHours.indexOf(state.heure);
-    }
-  }
+   setId: (state, inputId) => (state.id = inputId),
+  
+   setdocteur: (state, docteur) => (state.docteur = docteur),
+  
+   setRank: () => {
+     // Display appointments in ascending order
+  
+     const baseHours = [
+       "08:30",
+       "09:00",
+       "09:30",
+       "10:00",
+       "10:30",
+       "11:00",
+       "11:30",
+       "12:00",
+       "16:30",
+       "17:00",
+       "17:30",
+       "18:00"
+     ];
+  
+     if (state.heure) {
+       state.rank = baseHours.indexOf(state.heure);
+     }
+   }
 };
 
 const actions = {
@@ -172,6 +144,7 @@ const actions = {
     }
   },
 
+  // Add an appointment to dB
   async register() {
     let name;
     if (state.prenom) {
@@ -200,8 +173,11 @@ const actions = {
 
     if (sendData && sendData.status === 200) {
       state.success = true;
+      alert(sendData.data);
     }
   },
+
+  // Edit appointment
 
   async changeItem() {
     let name;
@@ -233,6 +209,8 @@ const actions = {
       state.success = true;
     }
   },
+
+  // Delete an appointment from dB
 
   async SupprItem() {
     let sendData = await axios

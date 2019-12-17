@@ -12,9 +12,8 @@ db.on("error", console.error.bind(console, "connection error:"));
 
 // Personel schema
 
-const personelSchema = new mongoose.Schema({
+const patientSchema = new mongoose.Schema({
   name: String,
-  departement: String,
   telephone: Number,
   email: String,
   adresse: String,
@@ -25,9 +24,9 @@ const personelSchema = new mongoose.Schema({
   profil: String
 });
 
-async function loadPersonel() {
-  let personel = mongoose.model("personel", personelSchema);
-  return personel;
+async function loadPatients() {
+  let patient = mongoose.model("patient", patientSchema);
+  return patient;
 }
 
 // add personel
@@ -35,9 +34,9 @@ async function loadPersonel() {
 router.post("/", async function(req, res) {
   console.log(req.body);
   
-  const query = await loadPersonel();
-  const newPersonel = new query(req.body);
-  newPersonel.save(err => {
+  const query = await loadPatients();
+  const newPatient = new query(req.body);
+  newPatient.save(err => {
     if (err) return res.status(500).send(err);
     return res.status(200).send(`Message from db: Inserted a new row`);
   });
@@ -48,18 +47,18 @@ router.post("/", async function(req, res) {
 router.get("/", async function(req, res) {
   console.log(req.query);
 
-  let query = await loadPersonel();
-  await query.find({ profil: req.query.profil }, (error, personelList) => {
+  let query = await loadPatients();
+  await query.find({ profil: req.query.profil }, (error, patientsList) => {
     if (error) return res.status(500).send(error);
-    console.log(personelList);
-    return res.status(200).send(personelList);
+    console.log(patientsList);
+    return res.status(200).send(patientsList);
   });
 });
 
 // Edit personel
 
 router.put("/", async function(req, res) {
-  let query = await loadPersonel();
+  let query = await loadPatients();
   await query.findByIdAndUpdate(
     req.body.id,
     req.body,
@@ -77,7 +76,7 @@ router.put("/", async function(req, res) {
 router.delete("/", async function(req, res) {
 console.log(req.body);
   id = req.body._id;
-  let query = await loadPersonel();
+  let query = await loadPatients();
   query.findByIdAndRemove(id, (err, doc) => {
     if (err) return res.status(500).send(err);
     return res.status(200).send(`Deleted one item`);
