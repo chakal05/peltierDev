@@ -55,7 +55,7 @@ router.get("/", async function(req, res) {
       );
       return res.status(200).send(booking);
     });
-  }
+  } 
 });
 
 // Add a new appointment

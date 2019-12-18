@@ -21,6 +21,7 @@ const patientSchema = new mongoose.Schema({
   birthdate: String,
   username: String,
   password: String,
+  doctor: String,
   profil: String
 });
 
@@ -45,12 +46,11 @@ router.post("/", async function(req, res) {
 // get personel list
 
 router.get("/", async function(req, res) {
-  console.log(req.query);
-
+  
   let query = await loadPatients();
   await query.find({ profil: req.query.profil }, (error, patientsList) => {
     if (error) return res.status(500).send(error);
-    console.log(patientsList);
+    console.log(patientsList.length);
     return res.status(200).send(patientsList);
   });
 });
@@ -58,6 +58,7 @@ router.get("/", async function(req, res) {
 // Edit personel
 
 router.put("/", async function(req, res) {
+
   let query = await loadPatients();
   await query.findByIdAndUpdate(
     req.body.id,

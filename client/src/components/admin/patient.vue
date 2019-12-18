@@ -82,6 +82,14 @@
                       </v-menu>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
+                      <v-select
+                        v-model="editedItem.doctor"
+                        :items="doctors"
+                        label="Doctor"
+                        required
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
                       <v-text-field v-model="editedItem.username" label="Username"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
@@ -131,6 +139,12 @@ export default {
     indexToDel: null,
     date: null,
     menu: false,
+    doctors: [
+      "Assign doctor   --",
+      "Dr Omar Hassan Houssein",
+      "Dr Hodan Farah Nour",
+      "Dr Moussa Moussa Ali"
+    ],
     headers: [
       {
         text: "Name",
@@ -143,6 +157,7 @@ export default {
       { text: "Adresse", value: "adresse" },
       { text: "City", value: "city" },
       { text: "Birthdate", value: "birthdate" },
+      { text: "Doctor", value: "doctor" },
       { text: "Username", value: "username" },
       { text: "Actions", value: "action", sortable: false }
     ],
@@ -274,6 +289,7 @@ export default {
         this.setPatientTelephone(this.editedItem.telephone);
         this.setPatientUsername(this.editedItem.username);
         this.setPatientPassword(this.editedItem.password);
+        this.setPatientDoctor(this.editedItem.doctor);
         this.setPatientProfil("patient");
         this.addPatient();
 
@@ -295,6 +311,7 @@ export default {
       this.setPatientTelephone(this.editedItem.telephone);
       this.setPatientUsername(this.editedItem.username);
       this.setPatientPassword(this.editedItem.password);
+      this.setPatientDoctor(this.editedItem.doctor);
       this.setPatientProfil("patient");
       this.editPatient();
     },
@@ -314,7 +331,8 @@ export default {
       "setPatientEmail",
       "setPatientAdresse",
       "setPatientCity",
-      "setPatientBirth"
+      "setPatientBirth",
+      "setPatientDoctor"
     ]),
     ...mapActions([
       "loadPatients",

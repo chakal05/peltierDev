@@ -11,6 +11,7 @@ const state = {
   patientBirthdate: null,
   patientUsername: null,
   patientPassword: null,
+  patientDoctor: null,
   patientList: [],
   profil: null,
   error: false,
@@ -28,6 +29,7 @@ const getters = {
   getPatientId: state => state.patientId,
   getPatientEmail : state => state.patientEmail,
   getPatientAdresse: state => state.patientAdresse,
+  getPatientDoctor: state => state.patientDoctor
   
 };
 
@@ -43,7 +45,8 @@ const mutations = {
   setPatientCity: (state, city) => (state.patientCity = city),
   setPatientSexe : (state, genre) => (state.patientSexe = genre),
   setPatientBirth : (state, birth) => (state.patientBirthdate = birth),
-  setPatientProfil: (state, profil) => (state.profil = profil)
+  setPatientProfil: (state, profil) => (state.profil = profil),
+  setPatientDoctor: (state, doc) => (state.patientDoctor = doc)
 };
 
 const actions = {
@@ -70,6 +73,7 @@ const actions = {
         birthdate: state.patientBirthdate,
         username: state.patientUsername,
         password: state.patientPassword,
+        doctor: state.patientDoctor,
         profil: state.profil
       })
       .catch(() => {
@@ -96,6 +100,7 @@ const actions = {
         birthdate: state.patientBirthdate,
         username: state.patientUsername,
         password: state.patientPassword,
+        doctor: state.patientDoctor,
         profil: state.profil
       })
       .catch(() => {
