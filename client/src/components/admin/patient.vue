@@ -24,7 +24,7 @@
           <v-spacer></v-spacer>
           <v-dialog persistent v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Add doctor</v-btn>
+              <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Add patient</v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -233,7 +233,7 @@ export default {
 
     birth(date) {
       this.$refs.menu.save(date);
-      if(date) this.editedItem.birthdate = date;
+      if (date) this.editedItem.birthdate = date;
     },
 
     close() {
@@ -270,7 +270,7 @@ export default {
         this.setPatientEmail(this.editedItem.email);
         this.setPatientAdresse(this.editedItem.adresse);
         this.setPatientCity(this.editedItem.city);
-        this.setPatientBirth(this.date);
+        this.setPatientBirth(this.editedItem.birthdate);
         this.setPatientTelephone(this.editedItem.telephone);
         this.setPatientUsername(this.editedItem.username);
         this.setPatientPassword(this.editedItem.password);
@@ -295,6 +295,7 @@ export default {
       this.setPatientTelephone(this.editedItem.telephone);
       this.setPatientUsername(this.editedItem.username);
       this.setPatientPassword(this.editedItem.password);
+      this.setPatientProfil("patient");
       this.editPatient();
     },
 
