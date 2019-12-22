@@ -12,6 +12,7 @@ const state = {
   personelUsername: null,
   personelPassword: null,
   personelList: [],
+  userFound: true,
   profil: null,
   error: false,
   success: false
@@ -20,23 +21,23 @@ const state = {
 // Todo delete later when unnecessary
 
 const getters = {
- // getPersonelName: state => state.personelName,
- // getDepartement: state => state.departement,
- // getPersonelTelephone: state => state.personelTelephone,
- // getPersonelUsername: state => state.personelUsername,
- // getPersonelPassword: state => state.personelPassword,
+  // getPersonelName: state => state.personelName,
+  // getDepartement: state => state.departement,
+  // getPersonelTelephone: state => state.personelTelephone,
+  // getPersonelUsername: state => state.personelUsername,
+  // getPersonelPassword: state => state.personelPassword,
   getPersonelList: state => state.personelList,
- // getPersonelId: state => state.personelId,
- // getPersonelProfil: state => state.profil
+  // getPersonelId: state => state.personelId,
+  // getPersonelProfil: state => state.profil
+  ifUserFound: state => state.userFound
 };
 
 const mutations = {
   setPersonelEmail: (state, email) => (state.personelEmail = email),
   setPersonelAdresse: (state, adresse) => (state.personelAdresse = adresse),
   setPersonelCity: (state, city) => (state.personelCity = city),
-  setPersonelBirth : (state, birth ) => {
+  setPersonelBirth: (state, birth) => {
     state.personelBirth = birth;
-    alert(state.personelBirth);
   },
   setPersonel: (state, personel) => (state.personelList = personel),
   setPersonelName: (state, name) => (state.personelName = name),
@@ -45,7 +46,8 @@ const mutations = {
   setPersonelUsername: (state, username) => (state.personelUsername = username),
   setPersonelPassword: (state, pass) => (state.personelPassword = pass),
   setPersonelId: (state, id) => (state.personelId = id),
-  setPersonelProfil: (state, profil) => (state.profil = profil)
+  setPersonelProfil: (state, profil) => (state.profil = profil),
+  setUserIsFound: (state, userFound) => (state.userFound = userFound)
 };
 
 const actions = {
@@ -56,6 +58,23 @@ const actions = {
 
     if (response && response.data) {
       commit("setPersonel", response.data);
+    }
+  },
+
+  async logPersonel() {
+    let sendData = await axios
+      .post("/personel", {
+        username: state.personelUsername,
+        password: state.personelPassword,
+        profil: state.profil,
+        flag: "log"
+      })
+      .catch(() => {
+        state.error = true;
+      });
+
+    if (sendData && sendData.status === 200) {
+      state.userFound = true;
     }
   },
 
@@ -99,7 +118,7 @@ const actions = {
         email: state.personelEmail,
         birthdate: state.personelBirth,
         username: state.personelUsername,
-        password: state.personelPassword,
+        password: state.personelPassword
       })
       .catch(() => {
         state.error = true;

@@ -34,17 +34,28 @@ async function loadPersonel() {
 
 router.post("/", async function(req, res) {
   console.log(req.body);
+
+  if(req.body.flag === 'log'){
+    let query = await loadPersonel();
+    await query.findOne({ profil: req.body.username, password:req.body.password, profil: req.body.profil }, (error, persone) => {
+      if (error) return res.status(500).send(error);
+      console.log(persone);
+      return res.status(200).send(persone);
+    })
+  }else{
+    const query = await loadPersonel();
+    const newPersonel = new query(req.body);
+    newPersonel.save(err => {
+      if (err) return res.status(500).send(err);
+      return res.status(200).send(`Message from db: Inserted a new row`);
+    })
+  }
   
-  const query = await loadPersonel();
-  const newPersonel = new query(req.body);
-  newPersonel.save(err => {
-    if (err) return res.status(500).send(err);
-    return res.status(200).send(`Message from db: Inserted a new row`);
-  });
+ ;
 });
 
 // get personel list
-
+ 
 router.get("/", async function(req, res) {
   console.log(req.query);
 

@@ -16,6 +16,6 @@ export default new Vuex.Store({
     showComp,
     bookings,
     personel,
-    patients
+    patients,
   }
 });

@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 // Routers
 
 const reservations = require("./requests/reservations");
-const login = require("./requests/login");
 const personel = require("./requests/personel");
 const patients = require("./requests/patient");
 
@@ -16,7 +15,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/reservations", reservations);
-app.use("/login", login);
 app.use("/personel", personel);
 app.use("/patient", patients);
 //// Static folder

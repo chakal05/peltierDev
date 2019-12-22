@@ -89,6 +89,7 @@
 <script>
 import dashboard from '../components/nurse/dashboard'
 export default {
+  name: 'nurse',
   components: {
     dashboard
   },

@@ -23,13 +23,13 @@
             </v-list-item-icon>
 
             <v-list-item-content>
-              <v-list-item-title>Dashboard </v-list-item-title>
+              <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
           <v-list-item>
             <v-list-item-icon>
-             <v-icon>fas fa-calendar-alt</v-icon>
+              <v-icon>fas fa-calendar-alt</v-icon>
             </v-list-item-icon>
 
             <v-list-item-content>
@@ -87,8 +87,9 @@
 </template>
 
 <script>
-import dashboard from '../components/patient/dashboard'
+import dashboard from "../components/patient/dashboard";
 export default {
+  name: "patient",
   components: {
     dashboard
   },

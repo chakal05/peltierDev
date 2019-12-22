@@ -119,6 +119,7 @@ import nurses from "../components/admin/nurses";
 import patients from "../components/admin/patient";
 import { mapGetters, mapMutations } from "vuex";
 export default {
+  name: 'admin',
   components: {
     dashboard,
     doctors,

@@ -65,7 +65,7 @@
               <v-card color="teal darken-3" dark>
                 <v-card-text class="white--text">
                   <div class="headline mb-2">
-                    <v-toolbar-title>Consultations </v-toolbar-title>
+                    <v-toolbar-title>Consultations</v-toolbar-title>
                   </div>Les consultations dure 30 minutes par patients afin de pouvoir recevoir le plus de patients possible. Nous vous recommandons fortement donc, d'arriver un quart d'heure en avance pour éviter les surprises. Si vous n'etes pas en place à l'heure, votre consultation sera occtroyé au patient suivant sur la liste.
                 </v-card-text>
                 <v-card-actions>
@@ -84,25 +84,26 @@
                           <v-container>
                             <v-row>
                               <v-col cols="12" md="6">
-                                <v-text-field label="Username" required></v-text-field>
+                                <v-text-field label="Username" v-model="userName" required></v-text-field>
                               </v-col>
                               <v-col cols="12" md="6">
-                                <v-text-field label="Password" type="password" required></v-text-field>
+                                <v-text-field
+                                  label="Password"
+                                  v-model="pass"
+                                  type="password"
+                                  required
+                                ></v-text-field>
                               </v-col>
-                              <v-col class="d-flex" cols="12" md='12'>
-                                <v-select :items="profil" label="Profil"></v-select>
+                              <v-col class="d-flex" cols="12" md="12">
+                                <v-select :items="profils" v-model="profil" label="Profil"></v-select>
                               </v-col>
                             </v-row>
                           </v-container>
                         </v-card-text>
                         <v-card-actions>
                           <div class="flex-grow-1"></div>
-                          <v-btn
-                            color="teal darken-4"
-                            class="white--text"
-                            @click="dialog = false"
-                          >Valider</v-btn>
-                          <v-btn color="error" @click="dialog = false">Annuler</v-btn>
+                          <v-btn color="teal darken-4" class="white--text" @click="save">Validate</v-btn>
+                          <v-btn color="error" @click="dialog = false">Cancel</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
@@ -118,18 +119,41 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   data: () => ({
     dialog: false,
-    profil: ["Admin", "Docteur", "Nurse", "patient"]
+    profils: ["admin", "doctor", "nurse", "patient"],
+    userName: "",
+    pass: "",
+    profil: ""
   }),
   computed: {
-    //
+    ...mapGetters(["ifUserFound"])
   },
 
   methods: {
-    ...mapMutations(["toFormulaire", "toHomeView"])
+    save() {
+      if (this.userName && this.pass && this.profil) {
+        this.setPersonelUsername(this.userName);
+        this.setPersonelPassword(this.pass);
+        this.setPersonelProfil(this.profil);
+        this.logPersonel();
+        this.dialog = false;
+
+        this.$router.push("patient");
+      } else {
+        alert("All fields are required");
+      }
+    },
+    ...mapMutations([
+      "toFormulaire",
+      "toHomeView",
+      "setPersonelUsername",
+      "setPersonelPassword",
+      "setPersonelProfil"
+    ]),
+    ...mapActions(["logPersonel"])
   }
 };
 </script>

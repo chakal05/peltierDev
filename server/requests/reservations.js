@@ -68,7 +68,7 @@ router.post("/", async function(req, res) {
   if (req.body.docteur) {
     doc = req.body.docteur;
   } else {
-    doc = "toAssign";
+    doc = "Assign Doctor";
   }
 
   const nyTid = {

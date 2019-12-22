@@ -51,11 +51,11 @@ const mutations = {
 
   setAppointments: (state, bookings) => (state.appointments = bookings),
 
-   setId: (state, inputId) => (state.id = inputId),
+  setId: (state, inputId) => (state.id = inputId),
   
-   setdocteur: (state, docteur) => (state.docteur = docteur),
+  setdocteur: (state, docteur) => (state.docteur = docteur),
   
-   setRank: () => {
+  setRank: () => {
      // Display appointments in ascending order
   
      const baseHours = [
