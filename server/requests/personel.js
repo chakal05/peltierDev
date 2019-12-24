@@ -18,7 +18,7 @@ const personelSchema = new mongoose.Schema({
   telephone: Number,
   email: String,
   adresse: String,
-  city : String,
+  city: String,
   birthdate: String,
   username: String,
   password: String,
@@ -33,29 +33,32 @@ async function loadPersonel() {
 // add personel
 
 router.post("/", async function(req, res) {
-  console.log(req.body);
-
-  if(req.body.flag === 'log'){
+  if (req.body.flag === "log") {
     let query = await loadPersonel();
-    await query.findOne({ profil: req.body.username, password:req.body.password, profil: req.body.profil }, (error, persone) => {
-      if (error) return res.status(500).send(error);
-      console.log(persone);
-      return res.status(200).send(persone);
-    })
-  }else{
+    await query.findOne(
+      {
+        profil: req.body.username,
+        password: req.body.password,
+        profil: req.body.profil
+      },
+      (error, persone) => {
+        if (error) return res.status(500).send(error);
+        else console.log(persone);
+        return res.status(200).send(persone);
+      }
+    );
+  } else {
     const query = await loadPersonel();
     const newPersonel = new query(req.body);
     newPersonel.save(err => {
       if (err) return res.status(500).send(err);
       return res.status(200).send(`Message from db: Inserted a new row`);
-    })
+    });
   }
-  
- ;
 });
 
 // get personel list
- 
+
 router.get("/", async function(req, res) {
   console.log(req.query);
 
@@ -78,7 +81,7 @@ router.put("/", async function(req, res) {
 
     err => {
       if (err) return res.status(500).send(err);
-      return res.status(200).send('Edited one item from server/personel');
+      return res.status(200).send("Edited one item from server/personel");
     }
   );
 });
@@ -86,7 +89,7 @@ router.put("/", async function(req, res) {
 // delete personel
 
 router.delete("/", async function(req, res) {
-console.log(req.body);
+  console.log(req.body);
   id = req.body._id;
   let query = await loadPersonel();
   query.findByIdAndRemove(id, (err, doc) => {

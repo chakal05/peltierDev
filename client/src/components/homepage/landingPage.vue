@@ -119,7 +119,8 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from "vuex";
+import { mapMutations } from "vuex";
+import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
@@ -129,31 +130,44 @@ export default {
     profil: ""
   }),
   computed: {
-    ...mapGetters(["ifUserFound"])
+    //
   },
 
   methods: {
-    save() {
+    async save() {
       if (this.userName && this.pass && this.profil) {
-        this.setPersonelUsername(this.userName);
-        this.setPersonelPassword(this.pass);
-        this.setPersonelProfil(this.profil);
-        this.logPersonel();
-        this.dialog = false;
+        let sendData = await axios
+          .post("/personel", {
+            username: this.userName,
+            password: this.pass,
+            profil: this.profil,
+            flag: "log"
+          })
+          .catch((err) => {
+            alert(err);
+          });
 
-        this.$router.push("patient");
+        if (sendData.status === 200) {
+          this.setIfUserFound(true);
+
+          const userID = sendData.data._id;
+
+          if (sendData.data.profil === "admin") {
+            return this.$router.push({ name: "admin", params: { userID } });
+          } else if (sendData.data.profil === "doctor") {
+            return this.$router.push({ name: "doctor", params: { userID } });
+          } else if(sendData.data.profil === "nurse"){
+            return this.$router.push({ name: "nurse", params: { userID } });
+          }
+        } else {
+          alert(sendData.data);
+        }
       } else {
         alert("All fields are required");
       }
     },
-    ...mapMutations([
-      "toFormulaire",
-      "toHomeView",
-      "setPersonelUsername",
-      "setPersonelPassword",
-      "setPersonelProfil"
-    ]),
-    ...mapActions(["logPersonel"])
+
+    ...mapMutations(["toFormulaire", "toHomeView", "setIfUserFound"])
   }
 };
 </script>

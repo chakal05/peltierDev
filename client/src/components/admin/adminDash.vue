@@ -218,6 +218,7 @@
 <script>
 import { mapMutations } from "vuex";
 export default {
+  name: 'adminDash',
   methods: {
     ...mapMutations([
       "showDashboard",

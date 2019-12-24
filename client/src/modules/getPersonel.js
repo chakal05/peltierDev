@@ -12,7 +12,7 @@ const state = {
   personelUsername: null,
   personelPassword: null,
   personelList: [],
-  userFound: true,
+  userFound: false,
   profil: null,
   error: false,
   success: false
@@ -36,9 +36,7 @@ const mutations = {
   setPersonelEmail: (state, email) => (state.personelEmail = email),
   setPersonelAdresse: (state, adresse) => (state.personelAdresse = adresse),
   setPersonelCity: (state, city) => (state.personelCity = city),
-  setPersonelBirth: (state, birth) => {
-    state.personelBirth = birth;
-  },
+  setPersonelBirth: (state, birth) => (state.personelBirth = birth),
   setPersonel: (state, personel) => (state.personelList = personel),
   setPersonelName: (state, name) => (state.personelName = name),
   setDepartement: (state, departement) => (state.departement = departement),
@@ -47,7 +45,7 @@ const mutations = {
   setPersonelPassword: (state, pass) => (state.personelPassword = pass),
   setPersonelId: (state, id) => (state.personelId = id),
   setPersonelProfil: (state, profil) => (state.profil = profil),
-  setUserIsFound: (state, userFound) => (state.userFound = userFound)
+  setIfUserFound :(state, found)=> (state.userFound = found)
 };
 
 const actions = {
@@ -61,22 +59,7 @@ const actions = {
     }
   },
 
-  async logPersonel() {
-    let sendData = await axios
-      .post("/personel", {
-        username: state.personelUsername,
-        password: state.personelPassword,
-        profil: state.profil,
-        flag: "log"
-      })
-      .catch(() => {
-        state.error = true;
-      });
-
-    if (sendData && sendData.status === 200) {
-      state.userFound = true;
-    }
-  },
+  
 
   // Add new personel
 

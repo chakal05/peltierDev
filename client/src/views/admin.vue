@@ -17,7 +17,8 @@
         </div>
 
         <v-list>
-          <v-list-item @click="showDashboard">
+          <v-list-item>
+          <router-link  to='/admin/adminDash'>
             <v-list-item-icon>
               <v-icon>dashboard</v-icon>
             </v-list-item-icon>
@@ -25,6 +26,7 @@
             <v-list-item-content>
               <v-list-item-title>Dashboard </v-list-item-title>
             </v-list-item-content>
+          </router-link>
           </v-list-item>
 
           <v-list-item @click="showDoctors">
@@ -98,11 +100,16 @@
         <v-container fill-height>
           <v-layout justify-center align-center>
             <v-flex>
+              <!--
               <dashboard v-if="getDashboard"></dashboard>
               <bookings v-if="getBookings"></bookings>
               <doctors v-if="getDoctors"></doctors>
               <nurses v-if="getNurses"></nurses>
               <patients v-if="getPatients"></patients>
+              -->
+
+              <router-view/>
+              
             </v-flex>
           </v-layout>
         </v-container>
@@ -112,20 +119,20 @@
 </template>
 
 <script>
-import dashboard from "../components/admin/dashboard";
-import bookings from "../components/admin/bookings";
-import doctors from "../components/admin/doctors";
-import nurses from "../components/admin/nurses";
-import patients from "../components/admin/patient";
+//import dashboard from "../components/admin/adminDash";
+//import bookings from "../components/admin/bookings";
+//import doctors from "../components/admin/doctors";
+//import nurses from "../components/admin/nurses";
+//import patients from "../components/admin/patient";
 import { mapGetters, mapMutations } from "vuex";
 export default {
   name: 'admin',
   components: {
-    dashboard,
-    doctors,
-    bookings,
-    nurses,
-    patients
+   // dashboard,
+   // doctors,
+   // bookings,
+   // nurses,
+   // patients
   },
 
   computed: {
