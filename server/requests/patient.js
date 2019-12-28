@@ -34,13 +34,31 @@ async function loadPatients() {
 
 router.post("/", async function(req, res) {
   console.log(req.body);
-  
-  const query = await loadPatients();
+  if(req.body.flag === 'log'){
+    let query = await loadPatients();
+    await query.findOne(
+      {
+        username: req.body.username,
+        password: req.body.password,
+        profil: req.body.profil
+      },
+      (error, persone) => {
+        if (error) return res.status(500).send(error);
+        else console.log(persone);
+        return res.status(200).send(persone);
+      }
+    );
+  }else{
+    const query = await loadPatients();
   const newPatient = new query(req.body);
   newPatient.save(err => {
     if (err) return res.status(500).send(err);
     return res.status(200).send(`Message from db: Inserted a new row`);
   });
+  }
+
+  
+  
 });
 
 // get personel list

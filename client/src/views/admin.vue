@@ -18,62 +18,58 @@
 
         <v-list>
           <v-list-item>
-          <router-link  to='/admin/adminDash'>
             <v-list-item-icon>
               <v-icon>dashboard</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-content>
-              <v-list-item-title>Dashboard </v-list-item-title>
-            </v-list-item-content>
-          </router-link>
+            <router-link to="/admin/adminDash">
+              <v-list-item-title>Dashboard</v-list-item-title>
+            </router-link>
           </v-list-item>
 
-          <v-list-item @click="showDoctors">
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>fas fa-user-md</v-icon>
             </v-list-item-icon>
-
-            <v-list-item-content>
+            <router-link to="/admin/adminDoc">
               <v-list-item-title>Doctors</v-list-item-title>
-            </v-list-item-content>
+            </router-link>
           </v-list-item>
 
-          <v-list-item @click="showNurses">
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>fas fa-plus-square</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-content>
-              <v-list-item-title>Nurses </v-list-item-title>
-            </v-list-item-content>
+            <router-link to="/admin/adminNurse">
+              <v-list-item-title>Nurses</v-list-item-title>
+            </router-link>
           </v-list-item>
 
-          <v-list-item @click="showBookings">
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>schedule</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-content>
-              <v-list-item-title> Appointment </v-list-item-title>
-            </v-list-item-content>
+            <router-link to="/admin/bookings">
+              <v-list-item-title>Appointments</v-list-item-title>
+            </router-link>
           </v-list-item>
 
-
-          <v-list-item @click="showPatients">
+          <v-list-item>
             <v-list-item-icon>
-              <v-icon>fas fa-user </v-icon>
+              <v-icon>fas fa-user</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-content>
-              <v-list-item-title> Patients </v-list-item-title>
-            </v-list-item-content>
+            <router-link to="/admin/patient">
+              <v-list-item-title>Patients</v-list-item-title>
+            </router-link>
           </v-list-item>
         </v-list>
 
         <template v-slot:append>
           <div class="pa-2">
-            <v-btn color="white" light block>Logout</v-btn>
+            <v-btn color="white" @click="logout" light block>Logout</v-btn>
           </div>
         </template>
       </v-navigation-drawer>
@@ -88,28 +84,35 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon>
-          <v-icon>mdi-bell</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>account_circle</v-icon>
-        </v-btn>
+        <v-badge color="teal darken-4">
+          <template v-slot:badge>
+            <a href="#">
+              <span>4</span>
+            </a>
+          </template>
+          <a href="#">
+            <v-icon>mdi-bell</v-icon>
+          </a>
+        </v-badge>
+        <v-badge color="orange">
+          <template v-slot:badge>
+            <router-link to="/admin/messages">
+              <span>6</span>
+            </router-link>
+          </template>
+          <router-link to="/admin/messages">
+            <v-icon>mdi-email</v-icon>
+          </router-link>
+        </v-badge>
+
+        <v-btn> {{ getName }} </v-btn>
       </v-app-bar>
 
       <v-content>
         <v-container fill-height>
           <v-layout justify-center align-center>
             <v-flex>
-              <!--
-              <dashboard v-if="getDashboard"></dashboard>
-              <bookings v-if="getBookings"></bookings>
-              <doctors v-if="getDoctors"></doctors>
-              <nurses v-if="getNurses"></nurses>
-              <patients v-if="getPatients"></patients>
-              -->
-
-              <router-view/>
-              
+              <router-view />
             </v-flex>
           </v-layout>
         </v-container>
@@ -119,37 +122,42 @@
 </template>
 
 <script>
-//import dashboard from "../components/admin/adminDash";
-//import bookings from "../components/admin/bookings";
-//import doctors from "../components/admin/doctors";
-//import nurses from "../components/admin/nurses";
-//import patients from "../components/admin/patient";
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters } from "vuex";
 export default {
-  name: 'admin',
+  name: "admin",
   components: {
-   // dashboard,
-   // doctors,
-   // bookings,
-   // nurses,
-   // patients
+   //
   },
 
-  computed: {
-    ...mapGetters(["getDashboard", "getBookings", "getDoctors", "getNurses", "getPatients"])
-  },
+  computed: { ...mapGetters([
+      "getName",
+      "getAdresse",
+      "getTelephone",
+      "getCity",
+      "getBirthdate",
+      "getUsername",
+      "getPassword"
+    ])},
   data: () => ({
-    drawer: null
+    drawer: null,
+    show: true
   }),
 
   methods: {
-    ...mapMutations(["showDashboard", "showBookings", "showDoctors", "showNurses", "showPatients"])
+    logout() {
+      this.$router.replace("/");
+    }
   }
 };
 </script>
 
 <style  lang='scss' scoped>
 .container {
+  a {
+    text-decoration: none;
+    color: white;
+  }
+
   .v-application--wrap {
     .v-navigation-drawer {
       .logo-gris {
@@ -194,6 +202,26 @@ export default {
         .v-icon {
           font-size: 3rem;
           margin-left: 0rem;
+        }
+      }
+
+      .v-badge {
+        margin: 1.5rem !important;
+
+        .v-icon {
+          margin-right: -0.7rem;
+        }
+      }
+
+      .v-avatar {
+        margin-left: 1rem;
+        margin-top: -0.5rem;
+        a {
+          img {
+            height: 3rem;
+            width: 3rem;
+            border-radius: 50%;
+          }
         }
       }
     }

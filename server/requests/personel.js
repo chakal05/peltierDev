@@ -11,7 +11,8 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 
 // Personel schema
-
+//TODO bcrypt the passwords before putting them in db and 
+//TODO and decrypt when retrieved => security
 const personelSchema = new mongoose.Schema({
   name: String,
   departement: String,
@@ -33,11 +34,12 @@ async function loadPersonel() {
 // add personel
 
 router.post("/", async function(req, res) {
+  console.log(req.body);
   if (req.body.flag === "log") {
     let query = await loadPersonel();
     await query.findOne(
       {
-        profil: req.body.username,
+        username: req.body.username,
         password: req.body.password,
         profil: req.body.profil
       },

@@ -12,7 +12,6 @@ const state = {
   personelUsername: null,
   personelPassword: null,
   personelList: [],
-  userFound: false,
   profil: null,
   error: false,
   success: false
@@ -29,7 +28,7 @@ const getters = {
   getPersonelList: state => state.personelList,
   // getPersonelId: state => state.personelId,
   // getPersonelProfil: state => state.profil
-  ifUserFound: state => state.userFound
+ 
 };
 
 const mutations = {
@@ -45,8 +44,7 @@ const mutations = {
   setPersonelPassword: (state, pass) => (state.personelPassword = pass),
   setPersonelId: (state, id) => (state.personelId = id),
   setPersonelProfil: (state, profil) => (state.profil = profil),
-  setIfUserFound :(state, found)=> (state.userFound = found)
-};
+ };
 
 const actions = {
   // retrieve doctors

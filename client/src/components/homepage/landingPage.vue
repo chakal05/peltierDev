@@ -81,24 +81,32 @@
                           <span class="headline">Personal</span>
                         </v-card-title>
                         <v-card-text>
-                          <v-container>
-                            <v-row>
-                              <v-col cols="12" md="6">
-                                <v-text-field label="Username" v-model="userName" required></v-text-field>
-                              </v-col>
-                              <v-col cols="12" md="6">
-                                <v-text-field
-                                  label="Password"
-                                  v-model="pass"
-                                  type="password"
-                                  required
-                                ></v-text-field>
-                              </v-col>
-                              <v-col class="d-flex" cols="12" md="12">
-                                <v-select :items="profils" v-model="profil" label="Profil"></v-select>
-                              </v-col>
-                            </v-row>
-                          </v-container>
+                          <v-form>
+                            <v-container>
+                              <v-row>
+                                <v-col cols="12" md="6">
+                                  <v-text-field
+                                    label="Username"
+                                    autocomplete="username"
+                                    v-model="userName"
+                                    required
+                                  ></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                  <v-text-field
+                                    label="Password"
+                                    v-model="pass"
+                                    type="password"
+                                    autocomplete="current-password"
+                                    required
+                                  ></v-text-field>
+                                </v-col>
+                                <v-col class="d-flex" cols="12" md="12">
+                                  <v-select :items="profils" v-model="profil" label="Profil"></v-select>
+                                </v-col>
+                              </v-row>
+                            </v-container>
+                          </v-form>
                         </v-card-text>
                         <v-card-actions>
                           <div class="flex-grow-1"></div>
@@ -136,38 +144,75 @@ export default {
   methods: {
     async save() {
       if (this.userName && this.pass && this.profil) {
-        let sendData = await axios
-          .post("/personel", {
-            username: this.userName,
-            password: this.pass,
-            profil: this.profil,
-            flag: "log"
-          })
-          .catch((err) => {
-            alert(err);
-          });
+        if (this.profil === "patient") {
+          let sendData = await axios
+            .post("/patient", {
+              username: this.userName,
+              password: this.pass,
+              profil: this.profil,
+              flag: "log"
+            })
+            .catch(err => {
+              alert(err);
+            });
 
-        if (sendData.status === 200) {
-          this.setIfUserFound(true);
+          if (sendData.status === 200) {
+            this.setIfUserFound(true);
 
-          const userID = sendData.data._id;
+            const userID = sendData.data._id;
 
-          if (sendData.data.profil === "admin") {
-            return this.$router.push({ name: "admin", params: { userID } });
-          } else if (sendData.data.profil === "doctor") {
-            return this.$router.push({ name: "doctor", params: { userID } });
-          } else if(sendData.data.profil === "nurse"){
-            return this.$router.push({ name: "nurse", params: { userID } });
+            if (sendData.data.profil === "patient") {
+              return this.$router.push({ name: "patient", params: { userID } });
+            }
           }
         } else {
-          alert(sendData.data);
+          let sendData = await axios
+            .post("/personel", {
+              username: this.userName,
+              password: this.pass,
+              profil: this.profil,
+              flag: "log"
+            })
+            .catch(err => {
+              alert(err);
+            });
+
+          if (sendData.status === 200) {
+            this.setIfUserFound(true);
+            this.setName(sendData.data.name);
+            this.setAdresse(sendData.data.adresse);
+            this.setBirthdate(sendData.data.birthdate);
+            this.setCity(sendData.data.city);
+            this.setTelephone(sendData.data.telephone);
+            this.setUsername(sendData.data.username);
+            this.setPassword(sendData.data.username);
+            const userID = sendData.data._id;
+
+            if (sendData.data.profil === "admin") {
+              return this.$router.push({ path: "admin/adminDash" });
+            } else if (sendData.data.profil === "doctor") {
+              return this.$router.push({ name: "doctor", params: { userID } });
+            } else if (sendData.data.profil === "nurse") {
+              return this.$router.push({ name: "nurse", params: { userID } });
+            }
+          }
         }
       } else {
         alert("All fields are required");
       }
     },
-
-    ...mapMutations(["toFormulaire", "toHomeView", "setIfUserFound"])
+    ...mapMutations([
+      "toFormulaire",
+      "toHomeView",
+      "setIfUserFound",
+      "setName",
+      "setAdresse",
+      "setBirthdate",
+      "setCity",
+      "setTelephone",
+      "setUsername",
+      "setPassword"
+    ])
   }
 };
 </script>
