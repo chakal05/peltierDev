@@ -12,9 +12,6 @@ import messages from "../components/messages.vue";
 import bookings from "../components/bookings.vue";
 import patientList from "../components/admin/patient.vue";
 
-// Import the file where the state variable exist
-
-import Store from "../modules/loginUser";
 Vue.use(Router);
 
 const router = new Router({
@@ -99,7 +96,7 @@ const router = new Router({
 // ? If token doest exist, redirect to homepage
  router.beforeEach((to, from, next) => {
    if (to.matched.some(record => record.meta.requiresAuth)) {
-     if (!Store.state.userFound) {
+     if (!localStorage.getItem('accesToken')) {
         router.replace("/");
      } else {
        next();

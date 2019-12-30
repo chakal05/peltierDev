@@ -105,7 +105,7 @@
           </router-link>
         </v-badge>
 
-        <v-btn> {{ getName }} </v-btn>
+        <v-btn> {{ getTokenName }} </v-btn>
       </v-app-bar>
 
       <v-content>
@@ -130,13 +130,7 @@ export default {
   },
 
   computed: { ...mapGetters([
-      "getName",
-      "getAdresse",
-      "getTelephone",
-      "getCity",
-      "getBirthdate",
-      "getUsername",
-      "getPassword"
+      "getTokenName"
     ])},
   data: () => ({
     drawer: null,

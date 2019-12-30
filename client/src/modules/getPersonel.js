@@ -25,10 +25,9 @@ const getters = {
   // getPersonelTelephone: state => state.personelTelephone,
   // getPersonelUsername: state => state.personelUsername,
   // getPersonelPassword: state => state.personelPassword,
-  getPersonelList: state => state.personelList,
+  getPersonelList: state => state.personelList
   // getPersonelId: state => state.personelId,
   // getPersonelProfil: state => state.profil
- 
 };
 
 const mutations = {
@@ -43,8 +42,8 @@ const mutations = {
   setPersonelUsername: (state, username) => (state.personelUsername = username),
   setPersonelPassword: (state, pass) => (state.personelPassword = pass),
   setPersonelId: (state, id) => (state.personelId = id),
-  setPersonelProfil: (state, profil) => (state.profil = profil),
- };
+  setPersonelProfil: (state, profil) => (state.profil = profil)
+};
 
 const actions = {
   // retrieve doctors
@@ -57,24 +56,26 @@ const actions = {
     }
   },
 
-  
-
   // Add new personel
 
   async addPersonel() {
     let sendData = await axios
-      .post("/personel", {
-        name: state.personelName,
-        departement: state.departement,
-        telephone: state.personelTelephone,
-        adresse: state.personelAdresse,
-        city: state.personelCity,
-        email: state.personelEmail,
-        birthdate: state.personelBirth,
-        username: state.personelUsername,
-        password: state.personelPassword,
-        profil: state.profil
-      })
+      .post(
+        "/personel",
+        { headers: { Authorization: `Bearer: ${jwt}` } },
+        {
+          name: state.personelName,
+          departement: state.departement,
+          telephone: state.personelTelephone,
+          adresse: state.personelAdresse,
+          city: state.personelCity,
+          email: state.personelEmail,
+          birthdate: state.personelBirth,
+          username: state.personelUsername,
+          password: state.personelPassword,
+          profil: state.profil
+        }
+      )
       .catch(() => {
         state.error = true;
       });
