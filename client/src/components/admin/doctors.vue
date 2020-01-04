@@ -84,10 +84,8 @@
                         ></v-date-picker>
                       </v-menu>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.username" label="Username"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
+
+                      <v-col>
                       <v-text-field
                         v-model="editedItem.password"
                         :append-icon="show1 ? 'visibility' : 'visibility_off'"
@@ -146,7 +144,6 @@ export default {
       { text: "Adresse", value: "adresse" },
       { text: "City", value: "city" },
       { text: "Birthdate", value: "birthdate" },
-      { text: "Username", value: "username" },
       { text: "Actions", value: "action", sortable: false }
     ],
     editedIndex: -1,
@@ -158,7 +155,6 @@ export default {
       city: "",
       email: "",
       birthdate: "",
-      username: "",
       password: ""
     },
     defaultItem: {
@@ -169,7 +165,6 @@ export default {
       city: "",
       email: "",
       birthdate: "",
-      username: "",
       password: ""
     },
     show1: false,
@@ -263,7 +258,6 @@ export default {
         this.editedItem.name &&
         this.editedItem.departement &&
         this.editedItem.telephone &&
-        this.editedItem.username &&
         this.editedItem.password &&
         this.editedItem.adresse &&
         this.editedItem.city &&
@@ -277,8 +271,7 @@ export default {
         this.setPersonelBirth(this.date);
         this.setDepartement(this.editedItem.departement);
         this.setPersonelTelephone(this.editedItem.telephone);
-        this.setPersonelUsername(this.editedItem.username);
-        this.setPersonelPassword(this.editedItem.password);
+       this.setPersonelPassword(this.editedItem.password);
         this.setPersonelProfil("doctor");
         this.addPersonel();
 
@@ -299,8 +292,7 @@ export default {
       this.setPersonelBirth(this.editedItem.birthdate);
       this.setDepartement(this.editedItem.departement);
       this.setPersonelTelephone(this.editedItem.telephone);
-      this.setPersonelUsername(this.editedItem.username);
-      this.setPersonelPassword(this.editedItem.password);
+     this.setPersonelPassword(this.editedItem.password);
       this.editPersonel();
     },
 
@@ -313,7 +305,6 @@ export default {
       "setPersonelName",
       "setDepartement",
       "setPersonelTelephone",
-      "setPersonelUsername",
       "setPersonelPassword",
       "setPersonelId",
       "setPersonelProfil",

@@ -69,7 +69,7 @@
 
         <template v-slot:append>
           <div class="pa-2">
-            <v-btn color="white" @click="logout" light block>Logout</v-btn>
+            <v-btn color="white" @click="logOut" light block>Logout</v-btn>
           </div>
         </template>
       </v-navigation-drawer>
@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "admin",
   components: {
@@ -138,9 +138,7 @@ export default {
   }),
 
   methods: {
-    logout() {
-      this.$router.replace("/");
-    }
+    ...mapMutations(['logOut'])
   }
 };
 </script>

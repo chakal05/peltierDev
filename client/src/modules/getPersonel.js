@@ -9,7 +9,6 @@ const state = {
   personelCity: null,
   personelBirth: null,
   personelTelephone: null,
-  personelUsername: null,
   personelPassword: null,
   personelList: [],
   profil: null,
@@ -39,8 +38,7 @@ const mutations = {
   setPersonelName: (state, name) => (state.personelName = name),
   setDepartement: (state, departement) => (state.departement = departement),
   setPersonelTelephone: (state, tel) => (state.personelTelephone = tel),
-  setPersonelUsername: (state, username) => (state.personelUsername = username),
-  setPersonelPassword: (state, pass) => (state.personelPassword = pass),
+ setPersonelPassword: (state, pass) => (state.personelPassword = pass),
   setPersonelId: (state, id) => (state.personelId = id),
   setPersonelProfil: (state, profil) => (state.profil = profil)
 };
@@ -49,7 +47,11 @@ const actions = {
   // retrieve doctors
 
   async loadPersonel({ commit }, profil) {
-    const response = await axios.get("/personel", { params: { profil } });
+    let response = await axios.get("/personel", {
+      params: {
+        profil
+      }
+    });
 
     if (response && response.data) {
       commit("setPersonel", response.data);
@@ -62,7 +64,6 @@ const actions = {
     let sendData = await axios
       .post(
         "/personel",
-        { headers: { Authorization: `Bearer: ${jwt}` } },
         {
           name: state.personelName,
           departement: state.departement,
@@ -71,7 +72,6 @@ const actions = {
           city: state.personelCity,
           email: state.personelEmail,
           birthdate: state.personelBirth,
-          username: state.personelUsername,
           password: state.personelPassword,
           profil: state.profil
         }
@@ -99,7 +99,6 @@ const actions = {
         city: state.personelCity,
         email: state.personelEmail,
         birthdate: state.personelBirth,
-        username: state.personelUsername,
         password: state.personelPassword
       })
       .catch(() => {

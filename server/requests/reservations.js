@@ -31,9 +31,8 @@ async function loadTider() {
 // get bookings
 
 router.get("/", async function(req, res) {
-
-  console.log(req.query);
-
+ 
+    
   let query = await loadTider();
 
   if (req.query.date[1] === `hours`) {
@@ -50,12 +49,11 @@ router.get("/", async function(req, res) {
   } else if (req.query.date[1] === "admin") {
     await query.find({ date: req.query.date[0] }, (error, booking) => {
       if (error) return res.status(500).send(error);
-      console.log(
-        booking.length + " bookings sent back for the " + req.query.date[0]
-      );
+      
       return res.status(200).send(booking);
     });
-  } 
+  }
+ 
 });
 
 // Add a new appointment

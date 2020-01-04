@@ -10,7 +10,7 @@ mongoose.set("useFindAndModify", false);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 
-// Personel schema
+// Message schema
 
 const messageSchema = new mongoose.Schema({
   conversationId: Number,
@@ -26,7 +26,7 @@ async function loadPatients() {
   return message;
 }
 
-// add personel
+// add Message
 
 router.post("/", async function(req, res) {
   console.log(req.body);
@@ -35,16 +35,16 @@ router.post("/", async function(req, res) {
 // get personel list
 
 router.get("/", async function(req, res) {
-  console.log(req.query);
+  if (req) console.log(req.headers.authorization);
 });
 
-// Edit personel
+// Edit Message
 
 router.put("/", async function(req, res) {
   console.log(req.body);
 });
 
-// delete personel
+// delete Message
 
 router.delete("/", async function(req, res) {
   console.log(req.body);

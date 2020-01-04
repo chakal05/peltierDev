@@ -14,8 +14,11 @@ async function checkUser() {
 
 router.post("/", async function(req, res) {
   if (req.body.profil !== "patient") {
+
     let query = await checkUser();
-    let result = await query.findOne({ username: req.body.username });
+
+    let result = await query.findOne({email: req.body.email});
+  
     if (result) {
       let check = bcrypt.compareSync(req.body.password, result.password);
 

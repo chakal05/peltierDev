@@ -35,29 +35,26 @@ async function loadPersonel() {
 // add personel
 
 router.post("/", async function(req, res) {
- 
-    const query = await loadPersonel();
-    let hashedPass = bcrypt.hashSync(req.body.password, salt);
-    const newPersone = {
-      name: req.body.name,
-      departement: req.body.departement,
-      telephone: req.body.telephone,
-      email: req.body.email,
-      adresse: req.body.adresse,
-      city: req.body.city,
-      birthdate: req.body.birthdate,
-      username: req.body.name,
-      password: hashedPass,
-      profil: req.body.profil
-      
-    };
-
-    const newPersonel = new query(newPersone);
-    newPersonel.save(err => {
-      if (err) return res.status(500).send(err);
-      return res.status(200).send(`Message from db: Inserted a new row`);
-    });
   
+  const query = await loadPersonel();
+  let hashedPass = bcrypt.hashSync(req.body.password, salt);
+  const newPersone = {
+    name: req.body.name,
+    departement: req.body.departement,
+    telephone: req.body.telephone,
+    email: req.body.email,
+    adresse: req.body.adresse,
+    city: req.body.city,
+    birthdate: req.body.birthdate,
+    password: hashedPass,
+    profil: req.body.profil
+  };
+
+  const newPersonel = new query(newPersone);
+  newPersonel.save(err => {
+    if (err) return res.status(500).send(err);
+    return res.status(200).send(`Message from db: Inserted a new row`);
+  });
 });
 
 // get personel list
@@ -83,7 +80,6 @@ router.put("/", async function(req, res) {
     adresse: req.body.adresse,
     city: req.body.city,
     birthdate: req.body.birthdate,
-    username: req.body.name,
     password: hashedPass
   };
   await query.findByIdAndUpdate(
