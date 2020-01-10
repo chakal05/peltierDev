@@ -16,17 +16,15 @@ const messages = require("./requests/messages");
 const login = require("./requests/login");
 
 // Middleware
-
+  
 app.use(function(req, res, next) {
   if (login && !req.headers.authorization) {
-    // Provide token
+    //provide token
     next();
   } else if (!login && !req.headers.authorization) {
     res.status(403).json({ message: "Unauthorized" });
-    console.log("Unauthorized user");
-  } else {
-       next();
-  }
+    console.log("Unauthorized");
+  } 
 });
 app.use("/reservations", reservations);
 app.use("/personel", personel);
@@ -41,4 +39,4 @@ app.use("/login", login);
 //
 
 const port = process.env.port || 5000;
-app.listen(port, () => console.log("app running on port 5000"));
+app.listen(port, () => console.log("APP RUNNING ON PORT 5000"));

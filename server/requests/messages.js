@@ -21,7 +21,7 @@ const messageSchema = new mongoose.Schema({
   userToRead: String
 });
 
-async function loadPatients() {
+async function loadMessages() {
   let message = mongoose.model("message", messageSchema);
   return message;
 }
@@ -35,7 +35,9 @@ router.post("/", async function(req, res) {
 // get personel list
 
 router.get("/", async function(req, res) {
-  if (req) console.log(req.headers.authorization);
+  console.log(req.query);
+  let query = await loadMessages();
+  
 });
 
 // Edit Message

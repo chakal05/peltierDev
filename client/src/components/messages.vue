@@ -2,13 +2,24 @@
   <v-data-table
     :headers="headers"
     :items="desserts"
+    :search="search"
     sort-by="carbs"
     class="elevation-1"
   >
-      <template v-slot:top>
-        
+    <template v-slot:top>
       <v-toolbar flat color="white">
+        <v-text-field
+          v-model="search"
+          append-icon="search"
+          label="Rechercher"
+          single-line
+          hide-details
+        ></v-text-field>
+        <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
+          <template v-slot:activator="{ on }">
+            <v-btn color="teal darken-4" dark class="mb-2" v-on="on" @click="editItem">New Message</v-btn>
+          </template>
           <v-card>
             <v-card-title>
               <span class="headline">{{ formTitle }}</span>
@@ -18,32 +29,18 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.name"
-                      label="Dessert name"
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.calories"
-                      label="Calories"
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.fat"
-                      label="Fat (g)"
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="editedItem.carbs"
-                      label="Carbs (g)"
-                    ></v-text-field>
+                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                   
-                  </v-col>
+                  <v-col cols="12" sm="6" md="4"></v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -58,12 +55,8 @@
       </v-toolbar>
     </template>
     <template v-slot:item.action="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)">
-        edit
-      </v-icon>
-      <v-icon small @click="deleteItem(item)">
-        delete
-      </v-icon>
+      <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
+      <v-icon small @click="deleteItem(item)">delete</v-icon>
     </template>
     <template v-slot:no-data>
       <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -72,9 +65,11 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
+    search: "",
     headers: [
       {
         text: "Messages",
@@ -117,6 +112,7 @@ export default {
 
   created() {
     this.initialize();
+    this.loadMessages();
   },
 
   methods: {
@@ -184,11 +180,23 @@ export default {
         }
       ];
     },
-     getColor (carbs) {
-        if (carbs === 0) return 'red'
-        else if (carbs  > 0) return 'orange'
-        else return 'green'
-      },
+    getColor(carbs) {
+      if (carbs === 0) return "red";
+      else if (carbs > 0) return "orange";
+      else return "green";
+    },
+
+    // Get messages
+
+    async loadMessages() {
+      let response = await axios
+        .get("/messages", {
+          params: {
+            id: localStorage.getItem("tokenUserId")
+          }
+        })
+        .catch(e => alert(e));
+    },
 
     editItem(item) {
       this.editedIndex = this.desserts.indexOf(item);

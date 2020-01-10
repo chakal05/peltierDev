@@ -45,7 +45,7 @@ const mutations = {
 
 const actions = {
   // retrieve doctors
-
+ 
   async loadPersonel({ commit }, profil) {
     let response = await axios.get("/personel", {
       params: {

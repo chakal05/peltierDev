@@ -137,7 +137,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import axios from "axios";
 export default {
   data: () => ({
@@ -148,64 +148,32 @@ export default {
     profil: ""
   }),
   computed: {
-    ...mapGetters(["getTokenProfil"])
+    ...mapGetters(["getTokenUserProfil"])
   },
 
   methods: {
-    parseJwt(token) {
-      var base64Url = token.split(".")[1];
-      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      var jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split("")
-          .map(function(c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      );
-
-      return JSON.parse(jsonPayload);
-    },
-
     async save() {
       if (this.email && this.pass && this.profil) {
-        let sendData = await axios
-          .post("/login", {
-            email: this.email,
-            password: this.pass,
-            profil: this.profil
-          })
-          .catch(err => {
-            alert(err);
-          });
-        if (sendData.status === 200) {
-          const token = sendData.data.accesToken;
-          localStorage.setItem("accesToken", token);
-          this.setToken(token);
-          const decoded = this.parseJwt(token);
-          console.log(decoded);
-          this.setTokenName(decoded.name);
-          this.setHeaders();
-          
-          if (decoded.profil === "admin") {
-            return this.$router.push({ name: "adminDash" });
-          } else if (decoded.profil === "doctor") {
-            return this.$router.push({ name: "doctor" });
-          } else if (decoded.profil === "nurse") {
-            return this.$router.push({ name: "nurse" });
-          }
-        }
+        let payload = {
+          email: this.email,
+          password: this.pass,
+          profil: this.profil
+        };
+        this.logUser(payload);
+        this.setHeaders();
       } else {
         alert("All fields are required");
       }
     },
     ...mapMutations([
       "toFormulaire",
-      "toHomeView",
       "setToken",
-      "setTokenName",
+      "toHomeView",
+      "setUserInfo",
       "setHeaders"
-    ])
+    ]),
+
+    ...mapActions(["logUser"])
   }
 };
 </script>

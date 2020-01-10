@@ -1,9 +1,10 @@
 import Vue from "vue";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
-import Vuetify from 'vuetify/lib'
+import Vuetify from "vuetify/lib";
 import router from "./Router/index";
 import store from "./Store/index";
+
 Vue.use(router);
 Vue.use(Vuetify);
 

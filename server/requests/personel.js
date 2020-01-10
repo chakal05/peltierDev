@@ -24,7 +24,7 @@ const personelSchema = new mongoose.Schema({
   birthdate: String,
   username: String,
   password: String,
-  profil: String
+  profil: String 
 });
 
 async function loadPersonel() {

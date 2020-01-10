@@ -85,7 +85,7 @@
                       </v-menu>
                     </v-col>
 
-                      <v-col>
+                    <v-col>
                       <v-text-field
                         v-model="editedItem.password"
                         :append-icon="show1 ? 'visibility' : 'visibility_off'"
@@ -193,7 +193,15 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-    ...mapGetters(["getPersonelList"])
+    ...mapGetters({ theList: "getPersonelList" }),
+    getPersonelList: {
+      get() {
+        return this.theList;
+      },
+      set(list) {
+        return list;
+      }
+    }
   },
 
   watch: {
@@ -231,7 +239,7 @@ export default {
 
     birth(date) {
       this.$refs.menu.save(date);
-      if(date) this.editedItem.birthdate = date;
+      if (date) this.editedItem.birthdate = date;
     },
 
     close() {
@@ -271,7 +279,7 @@ export default {
         this.setPersonelBirth(this.date);
         this.setDepartement(this.editedItem.departement);
         this.setPersonelTelephone(this.editedItem.telephone);
-       this.setPersonelPassword(this.editedItem.password);
+        this.setPersonelPassword(this.editedItem.password);
         this.setPersonelProfil("doctor");
         this.addPersonel();
 
@@ -292,7 +300,7 @@ export default {
       this.setPersonelBirth(this.editedItem.birthdate);
       this.setDepartement(this.editedItem.departement);
       this.setPersonelTelephone(this.editedItem.telephone);
-     this.setPersonelPassword(this.editedItem.password);
+      this.setPersonelPassword(this.editedItem.password);
       this.editPersonel();
     },
 

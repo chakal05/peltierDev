@@ -11,7 +11,7 @@
       sort-by="name"
       class="elevation-1"
       :items-per-page="fifteen"
-    >
+    > 
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-text-field
@@ -98,7 +98,7 @@
                         hint="At least x characters"
                         counter
                         @click:append="show1 = !show1"
-                      ></v-text-field> 
+                      ></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -195,7 +195,15 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-    ...mapGetters(["getPersonelList"])
+  ...mapGetters({ theList: "getPersonelList" }),
+    getPersonelList: {
+      get() {
+        return this.theList;
+      },
+      set(list) {
+        return list;
+      }
+    }
   },
 
   watch: {
@@ -233,7 +241,7 @@ export default {
 
     birth(date) {
       this.$refs.menu.save(date);
-      if(date) this.editedItem.birthdate = date;
+      if (date) this.editedItem.birthdate = date;
     },
 
     close() {

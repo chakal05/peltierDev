@@ -11,7 +11,7 @@ import patientView from "../views/patient.vue";
 import messages from "../components/messages.vue";
 import bookings from "../components/bookings.vue";
 import patientList from "../components/admin/patient.vue";
-
+import axios from "axios";
 Vue.use(Router);
 
 const router = new Router({
@@ -93,17 +93,18 @@ const router = new Router({
   ]
 });
 
-
 // ? If token doest exist, redirect to homepage
- router.beforeEach((to, from, next) => {
-   if (to.matched.some(record => record.meta.requiresAuth)) {
-     if (!localStorage.getItem('accesToken')) {
-        router.replace("/");
-     } else {
-       next();
-     }
-   } else {
-     next();
-   }
- });
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!localStorage.getItem("accesToken")) {
+      next("/");
+    } else {
+      if (from.path !== to.path) {
+        next();
+      }
+    }
+  } else {
+    next();
+  }
+});
 export default router;

@@ -69,7 +69,8 @@
 
         <template v-slot:append>
           <div class="pa-2">
-            <v-btn color="white" @click="logOut" light block>Logout</v-btn>
+              <v-btn color="white" @click="logOut" light block>Logout</v-btn>
+           
           </div>
         </template>
       </v-navigation-drawer>
@@ -105,7 +106,7 @@
           </router-link>
         </v-badge>
 
-        <v-btn> {{ getTokenName }} </v-btn>
+        <v-btn>{{ userName }}</v-btn>
       </v-app-bar>
 
       <v-content>
@@ -126,19 +127,18 @@ import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "admin",
   components: {
-   //
+    //
   },
 
-  computed: { ...mapGetters([
-      "getTokenName"
-    ])},
+  computed: {},
   data: () => ({
     drawer: null,
-    show: true
+    show: true,
+    userName: localStorage.getItem("tokenUserName")
   }),
 
   methods: {
-    ...mapMutations(['logOut'])
+    ...mapMutations(["logOut"])
   }
 };
 </script>

@@ -1,3 +1,5 @@
+// TODO move this file in booking.vue
+
 import axios from "axios";
 import { _ } from "vue-underscore";
 
@@ -34,17 +36,16 @@ const getters = {
 };
 
 const mutations = {
- 
   setName: (state, nom) => (state.nom = nom),
-  
+
   setFirstname: (state, prenom) => (state.prenom = prenom),
-  
+
   setNumber: (state, telephone) => (state.telephone = telephone),
-  
+
   setGenre: (state, sexe) => (state.sexe = sexe),
-  
+
   setJour: (state, jour) => (state.jour = jour),
-  
+
   setTime: (state, hour) => (state.heure = hour),
 
   setHours: (state, available) => (state.dispoHours = available),
@@ -52,31 +53,31 @@ const mutations = {
   setAppointments: (state, bookings) => (state.appointments = bookings),
 
   setId: (state, inputId) => (state.id = inputId),
-  
+
   setdocteur: (state, docteur) => (state.docteur = docteur),
-  
+
   setRank: () => {
-     // Display appointments in ascending order
-  
-     const baseHours = [
-       "08:30",
-       "09:00",
-       "09:30",
-       "10:00",
-       "10:30",
-       "11:00",
-       "11:30",
-       "12:00",
-       "16:30",
-       "17:00",
-       "17:30",
-       "18:00"
-     ];
-  
-     if (state.heure) {
-       state.rank = baseHours.indexOf(state.heure);
-     }
-   }
+    // Display appointments in ascending order
+
+    const baseHours = [
+      "08:30",
+      "09:00",
+      "09:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30",
+      "12:00",
+      "16:30",
+      "17:00",
+      "17:30",
+      "18:00"
+    ];
+
+    if (state.heure) {
+      state.rank = baseHours.indexOf(state.heure);
+    }
+  }
 };
 
 const actions = {
