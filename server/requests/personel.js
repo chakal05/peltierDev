@@ -1,7 +1,10 @@
 const express = require("express");
 let router = express.Router();
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/peltier", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/peltier", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(15);
 // 'useFindAndModify' set to false
@@ -24,7 +27,7 @@ const personelSchema = new mongoose.Schema({
   birthdate: String,
   username: String,
   password: String,
-  profil: String 
+  profil: String
 });
 
 async function loadPersonel() {
@@ -35,7 +38,6 @@ async function loadPersonel() {
 // add personel
 
 router.post("/", async function(req, res) {
-  
   const query = await loadPersonel();
   let hashedPass = bcrypt.hashSync(req.body.password, salt);
   const newPersone = {
@@ -61,9 +63,11 @@ router.post("/", async function(req, res) {
 
 router.get("/", async function(req, res) {
   let query = await loadPersonel();
-  await query.find({ profil: req.query.profil }, (error, personelList) => {
+   query.find({ profil: req.query.profil }, (error, personelList) => {
     if (error) return res.status(500).send(error);
     return res.status(200).send(personelList);
+  }).catch(err => {
+    throw err
   });
 });
 

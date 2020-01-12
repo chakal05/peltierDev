@@ -1,7 +1,10 @@
 const express = require("express");
 let router = express.Router();
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/peltier", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/peltier", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 // 'useFindAndModify' set to false
 mongoose.set("useFindAndModify", false);
@@ -17,7 +20,7 @@ const patientSchema = new mongoose.Schema({
   telephone: Number,
   email: String,
   adresse: String,
-  city : String,
+  city: String,
   birthdate: String,
   username: String,
   password: String,
@@ -34,7 +37,7 @@ async function loadPatients() {
 
 router.post("/", async function(req, res) {
   console.log(req.body);
-  if(req.body.flag === 'log'){
+  if (req.body.flag === "log") {
     let query = await loadPatients();
     await query.findOne(
       {
@@ -48,23 +51,19 @@ router.post("/", async function(req, res) {
         return res.status(200).send(persone);
       }
     );
-  }else{
+  } else {
     const query = await loadPatients();
-  const newPatient = new query(req.body);
-  newPatient.save(err => {
-    if (err) return res.status(500).send(err);
-    return res.status(200).send(`Message from db: Inserted a new row`);
-  });
+    const newPatient = new query(req.body);
+    newPatient.save(err => {
+      if (err) return res.status(500).send(err);
+      return res.status(200).send(`Message from db: Inserted a new row`);
+    });
   }
-
-  
-  
 });
 
 // get personel list
 
 router.get("/", async function(req, res) {
-  
   let query = await loadPatients();
   await query.find({ profil: req.query.profil }, (error, patientsList) => {
     if (error) return res.status(500).send(error);
@@ -76,7 +75,6 @@ router.get("/", async function(req, res) {
 // Edit personel
 
 router.put("/", async function(req, res) {
-
   let query = await loadPatients();
   await query.findByIdAndUpdate(
     req.body.id,
@@ -85,7 +83,7 @@ router.put("/", async function(req, res) {
 
     err => {
       if (err) return res.status(500).send(err);
-      return res.status(200).send('Edited one item from server/personel');
+      return res.status(200).send("Edited one item from server/personel");
     }
   );
 });
@@ -93,7 +91,7 @@ router.put("/", async function(req, res) {
 // delete personel
 
 router.delete("/", async function(req, res) {
-console.log(req.body);
+  console.log(req.body);
   id = req.body._id;
   let query = await loadPatients();
   query.findByIdAndRemove(id, (err, doc) => {
@@ -101,6 +99,5 @@ console.log(req.body);
     return res.status(200).send(`Deleted one item`);
   });
 });
-
 
 module.exports = router;

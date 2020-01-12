@@ -32,9 +32,9 @@ const mutations = {
   logOut() {
     localStorage.clear();
     axios.defaults.headers.common["authorization"] = null;
-    // router.push('/') gives me a pending request the second time 
-    // a user tries to log in 
-    location.reload('/');
+    // router.push('/') gives me a pending request the second time
+    // a user tries to log in
+    location.reload("/");
   }
 };
 
@@ -58,7 +58,7 @@ const actions = {
         if (response.status === 200) {
           const token = response.data.accesToken;
           const decoded = mutations.parseJwt(token);
-
+ 
           localStorage.setItem("accesToken", token);
           localStorage.setItem("tokenUserName", decoded.name);
           localStorage.setItem("tokenUserId", decoded._id);
@@ -77,12 +77,12 @@ const actions = {
               router.push("/admin/adminDash");
             }
           }
-        } else if (response.status !== 200) {
-          console.log(response.data.message);
         }
       })
       .catch(err => {
-        throw err;
+        if (err) {
+          alert("something wrong with the credentials");
+        }
       });
   }
 };

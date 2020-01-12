@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+//import { mapGetters, mapMutations } from "vuex";
 export default {
   computed: {
     //...mapGetters(["getDashboard", "getBookings", "getDoctors"])

@@ -1,7 +1,9 @@
 const express = require("express");
 let router = express.Router();
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/peltier", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/peltier", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true});
 
 // 'useFindAndModify' set to false
 mongoose.set("useFindAndModify", false);
@@ -31,8 +33,6 @@ async function loadTider() {
 // get bookings
 
 router.get("/", async function(req, res) {
- 
-    
   let query = await loadTider();
 
   if (req.query.date[1] === `hours`) {
@@ -49,11 +49,10 @@ router.get("/", async function(req, res) {
   } else if (req.query.date[1] === "admin") {
     await query.find({ date: req.query.date[0] }, (error, booking) => {
       if (error) return res.status(500).send(error);
-      
+
       return res.status(200).send(booking);
     });
   }
- 
 });
 
 // Add a new appointment
@@ -90,7 +89,6 @@ router.post("/", async function(req, res) {
 // Edit item
 
 router.put("/", async function(req, res) {
-
   console.log(req.body);
 
   let query = await loadTider();

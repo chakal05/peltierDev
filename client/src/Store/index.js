@@ -18,6 +18,6 @@ export default new Vuex.Store({
     personel,
     patients,
     logUser,
-    appointment
+    appointment,
   }
 });

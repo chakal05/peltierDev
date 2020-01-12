@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="desserts"
+    :items="listOfMessages"
     :search="search"
     sort-by="carbs"
     class="elevation-1"
@@ -16,39 +16,42 @@
           hide-details
         ></v-text-field>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-model="dialog" persistent max-width="500px">
           <template v-slot:activator="{ on }">
             <v-btn color="teal darken-4" dark class="mb-2" v-on="on" @click="editItem">New Message</v-btn>
           </template>
           <v-card>
             <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
+              <span class="headline">New message</span>
             </v-card-title>
-
             <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Dessert name"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.calories" label="Calories"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.fat" label="Fat (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.carbs" label="Carbs (g)"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4"></v-col>
-                </v-row>
-              </v-container>
+              <v-row>
+                <v-col cols="12" md="12">
+                  <v-select
+                    :items="personel"
+                    item-text="name"
+                    item-value="_id"
+                    outlined
+                    v-model="user_to"
+                    label="To"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" md="12">
+                  <v-textarea
+                    outlined
+                    name="input-7-4"
+                    v-model="message"
+                    height="200"
+                    label="Message"
+                  ></v-textarea>
+                </v-col>
+              </v-row>
             </v-card-text>
 
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+              <v-btn color="blue darken-1" text @click="save">Send</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -57,9 +60,6 @@
     <template v-slot:item.action="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
       <v-icon small @click="deleteItem(item)">delete</v-icon>
-    </template>
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
     </template>
   </v-data-table>
 </template>
@@ -70,38 +70,39 @@ export default {
   data: () => ({
     dialog: false,
     search: "",
+    personel: [],
+    user_to: null,
+    message: null,
+    listOfMessages: [],
     headers: [
       {
         text: "Messages",
         align: "left",
         sortable: false,
-        value: "name"
+        value: "message"
       },
-      { text: "From", value: "calories" },
-      { text: "Date", value: "fat" },
-      { text: "Status", value: "carbs" },
+      { text: "From", value: "senderName" },
+      { text: "Date", value: "time" },
+      { text: "Status", value: "userToRead" },
       { text: "Actions", value: "action", sortable: false }
     ],
-    desserts: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      calories: String,
-      fat: String,
-      carbs: 0
+      message: "",
+      from: String,
+      time: String,
+      status: 0
     },
     defaultItem: {
-      name: "",
-      calories: String,
-      fat: String,
-      carbs: 0
+      message: "",
+      from: String,
+      time: String,
+      status: 0
     }
   }),
 
   computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    }
+    //
   },
 
   watch: {
@@ -112,96 +113,42 @@ export default {
 
   created() {
     this.initialize();
-    this.loadMessages();
+     this.loadMessages();
   },
 
   methods: {
-    initialize() {
-      this.desserts = [
-        {
-          name: "loremipsum sd kds;ooe sdfdfksd sdksdksd fjdfdfjwwewe dfjd",
-          calories: "jean Alain",
-          fat: "2018-3-04",
-          carbs: 0
-        },
-        {
-          name: "loremipsum sd kds;ooe sdfdfksd sdksdksd fjdfdfjwwewe dfjd",
-          calories: "jean Alain",
-          fat: "2018-3-04",
-          carbs: 1
-        },
-        {
-          name: "loremipsum sd kds;ooe sdfdfksd sdksdksd fjdfdfjwwewe dfjd",
-          calories: "jean Alain",
-          fat: "2018-3-04",
-          carbs: 0
-        },
-        {
-          name: "loremipsum sd kds;ooe sdfdfksd sdksdksd fjdfdfjwwewe dfjd",
-          calories: "jean Alain",
-          fat: "2018-3-04",
-          carbs: 1
-        },
-        {
-          name: "loremipsum sd kds;ooe sdfdfksd sdksdksd fjdfdfjwwewe dfjd",
-          calories: "jean Alain",
-          fat: "2018-3-04",
-          carbs: "Read"
-        },
-        {
-          name: "loremipsum sd kds;ooe sdfdfksd sdksdksd fjdfdfjwwewe dfjd",
-          calories: "jean Alain",
-          fat: "2018-3-04",
-          carbs: "Read"
-        },
-        {
-          name: "loremipsum sd kds;ooe sdfdfksd sdksdksd fjdfdfjwwewe dfjd",
-          calories: "jean Alain",
-          fat: "2018-3-04",
-          carbs: "Read"
-        },
-        {
-          name: "loremipsum sd kds;ooe sdfdfksd sdksdksd fjdfdfjwwewe dfjd",
-          calories: "jean Alain",
-          fat: "2018-3-04",
-          carbs: "Read"
-        },
-        {
-          name: "loremipsum sd kds;ooe sdfdfksd sdksdksd fjdfdfjwwewe dfjd",
-          calories: "jean Alain",
-          fat: "2018-3-04",
-          carbs: "Read"
-        },
-        {
-          name: "loremipsum sd kds;ooe sdfdfksd sdksdksd fjdfdfjwwewe dfjd",
-          calories: "jean Alain",
-          fat: "2018-3-04",
-          carbs: "Read"
-        }
-      ];
-    },
-    getColor(carbs) {
-      if (carbs === 0) return "red";
-      else if (carbs > 0) return "orange";
-      else return "green";
-    },
+    initialize() {},
 
     // Get messages
 
     async loadMessages() {
-      let response = await axios
+      await axios
         .get("/messages", {
           params: {
-            id: localStorage.getItem("tokenUserId")
+            id: localStorage.getItem("tokenUserId"),
+            data : 'messages'
           }
         })
-        .catch(e => alert(e));
+        .then(response => {
+          this.listOfMessages = response.data;
+        })
+        .catch(err => {throw err})
     },
 
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+    async editItem() {
+      await axios
+        .get("/messages", {
+          params: {
+            id: localStorage.getItem("tokenUserId"),
+            data: "personel"
+          }
+        })
+        .then(response => {
+          this.personel = response.data;
+        })
+        .catch(err => {
+          throw err;
+        });
     },
 
     deleteItem(item) {
@@ -218,16 +165,30 @@ export default {
       }, 300);
     },
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
+    async save() {
+      let date = new Date().toISOString().substring(0, 10);
+      let hour = new Date().getHours();
+      let minute = new Date().getMinutes();
+      let timestamp = `${date} at ${hour}:${minute}`;
+      // Object.assign(this.desserts[this.editedIndex], this.editedItem);
+      await axios
+        .post("/messages", {
+          name: localStorage.getItem('tokenUserName'),
+          to: this.user_to,
+          from: localStorage.getItem("tokenUserId"),
+          time: timestamp,
+          message: this.message,
+          user_to_read: "no"
+        })
+        .then()
+        .catch(err => {
+          throw err;
+        });
       this.close();
     }
   }
 };
 </script>
 
-<style></style>
+<style>
+</style>

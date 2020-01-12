@@ -40,7 +40,6 @@ const router = new Router({
           name: "adminDoc",
           component: adminDoc
         },
-
         {
           path: "adminNurse",
           name: "adminNurse",

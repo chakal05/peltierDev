@@ -8,22 +8,23 @@ const jwt = require("jsonwebtoken");
 //
 
 async function checkUser() {
-  const connection = await Mongo.connect(url, { useNewUrlParser: true });
+  const connection = await Mongo.connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
   return connection.db("peltier").collection("personels");
 }
-   
+
 router.post("/", async function(req, res) {
-  req.body? console.log(req.body): console.log('got no req');
   if (req.body.profil !== "patient") {
     let query = await checkUser();
 
     let result = await query.findOne({
-      email: req.body.email,  
+      email: req.body.email,
       profil: req.body.profil
     });
 
     if (result) {
-
       let check = bcrypt.compareSync(req.body.password, result.password);
 
       if (check) {
@@ -36,7 +37,7 @@ router.post("/", async function(req, res) {
       }
     } else if (result === null) {
       return res.status(503).json({ message: "Email and profil not found" });
-    }
+    } 
   }
 });
 
