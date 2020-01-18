@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/peltier", {
   useNewUrlParser: true,
@@ -17,7 +18,7 @@ db.on("error", console.error.bind(console, "connection error:"));
 // Message schema
 
 const messageSchema = new mongoose.Schema({
-  senderName : String,
+  senderName: String,
   userFrom: String,
   userTo: String,
   message: String,
@@ -53,10 +54,7 @@ async function loadConversations() {
   return conversation;
 }
 
-async function loadPersonel() {
-  let personel = mongoose.model("personel", personelSchema);
-  return personel;
-}
+
 
 // add Message
 
@@ -73,53 +71,40 @@ router.post("/", async function(req, res) {
   let query = await loadMessages();
   const newMessage = new query(payload);
   newMessage.save(err => {
-    if (err) return res.status(500).send(err);
-    return res.status(200).send(`Message from db: Inserted a new row`);
+    if (err) return res.sendStatus(500).send(err);
+    return res.sendStatus(200).send(`Message from db: Inserted a new row`);
   });
 });
 
 // get personel list
 
 router.get("/", async function(req, res) {
-  // Get all personel except the one currently logged in
 
-  if (req.query.data === "personel") {
-    let query = await loadPersonel();
+  const query = await loadMessages();
+  // Get all messages
+
+  if (req.query.data === "messages") {
     query
-      .find(
-        { _id: { $ne: req.query.id } },
-        {
-          departement: 0,
-          telephone: 0,
-          email: 0,
-          adresse: 0,
-          city: 0,
-          birthdate: 0,
-          password: 0
-        },
-        (error, personelList) => {
-          if (error) return res.status(500).send(error);
-          return res.status(200).send(personelList);
-        }
-      )
+      .find({ userTo: req.query.id }, (error, messages) => {
+        if (error) return res.send(error);
+        else return res.send(messages);
+      })
+      .catch(err => {
+        throw err;
+      });
+  } else if (req.query.data === "unread") { 
+    console.log(`unread mess req`); 
+     // Get list of unread messages
+    query
+      .find({ userTo: req.query.id, userToRead: "no" }, (error, messages) => {
+        if (error) return res.send(error);
+        else return res.send(messages.length.toString());
+      })
       .catch(err => {
         throw err;
       });
   }
-
-  // Get all messages
-
-  if (req.query.data === "messages") {
-    let query = await loadMessages();
-    query.find({ userTo: req.query.id }, (error, messages) => {
-      if (error) return res.status(500).send(error);
-      return res.status(200).send(messages);
-     
-    }).catch(err => {
-      throw err;
-    });
-  }
-});
+}); 
 
 // delete Message
 

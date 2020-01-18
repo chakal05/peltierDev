@@ -4,7 +4,6 @@ import nextPrev from "../modules/showHideHome";
 import showComp from "../modules/showHideAdmin";
 import personel from "../modules/getPersonel";
 import patients from "../modules/patients";
-import logUser from '../modules/loginUser';
 import appointment from '../modules/appointment';
 // Load Vuex
 Vue.use(Vuex);
@@ -17,7 +16,6 @@ export default new Vuex.Store({
     showComp,
     personel,
     patients,
-    logUser,
     appointment,
   }
 });

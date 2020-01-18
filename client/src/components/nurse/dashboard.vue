@@ -23,7 +23,7 @@
         </v-col>
 
          <v-col cols="12" md="3">
-          <v-item v-slot:default="{ active, toggle }">
+          <v-item v-slot:default="{ active }">
             <v-card
               :color="active ? 'grey darken-4' : ''"
               class="d-flex align-center"

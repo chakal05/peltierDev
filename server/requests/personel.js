@@ -62,17 +62,42 @@ router.post("/", async function(req, res) {
 // get personel list
 
 router.get("/", async function(req, res) {
-  let query = await loadPersonel();
-   query.find({ profil: req.query.profil }, (error, personelList) => {
-    if (error) return res.status(500).send(error);
-    return res.status(200).send(personelList);
-  }).catch(err => {
-    throw err
-  });
+  const query = await loadPersonel(); 
+  if (req.query.data === "personel") { 
+    query
+      .find(  
+        { _id: { $ne: req.query.id } },
+        {
+          departement: 0,
+          telephone: 0,
+          email: 0,
+          adresse: 0,
+          city: 0,
+          birthdate: 0,
+          password: 0
+        },       
+        (error, personelList) => {        
+          if (error) return res.status(500).send(error);
+          else return res.status(200).send(personelList);
+        }
+      )
+      .catch(err => { 
+        throw err;   
+      });
+  } else {
+    query
+      .find({ profil: req.query.profil }, (error, personelList) => {
+        if (error) return res.status(500).send(error);
+        return res.status(200).send(personelList);
+      })
+      .catch(err => {
+        throw err;
+      });     
+  }
 });
 
 // Edit personel
-
+ 
 router.put("/", async function(req, res) {
   let query = await loadPersonel();
   let hashedPass = bcrypt.hashSync(req.body.password, salt);

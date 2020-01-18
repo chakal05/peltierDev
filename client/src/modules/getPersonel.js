@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import router from "../Router/index";
 const state = {
   personelId: null,
   personelName: null,
@@ -38,44 +38,59 @@ const mutations = {
   setPersonelName: (state, name) => (state.personelName = name),
   setDepartement: (state, departement) => (state.departement = departement),
   setPersonelTelephone: (state, tel) => (state.personelTelephone = tel),
- setPersonelPassword: (state, pass) => (state.personelPassword = pass),
+  setPersonelPassword: (state, pass) => (state.personelPassword = pass),
   setPersonelId: (state, id) => (state.personelId = id),
-  setPersonelProfil: (state, profil) => (state.profil = profil)
+  setPersonelProfil: (state, profil) => (state.profil = profil),
+
+  logOut() {
+    localStorage.clear();
+    axios.defaults.headers.common["authorization"] = null;
+    // router.push('/') gives me a pending request the second time
+    // a user tries to log in
+   // location.reload("/");
+  router.replace("/");
+  }
 };
 
 const actions = {
   // retrieve doctors
- 
+
   async loadPersonel({ commit }, profil) {
-    let response = await axios.get("/personel", {
+     await axios.get('/personel',{
       params: {
         profil
       }
+    }).then(response => {
+      if(response.status === 200){
+        if ( response.data) {
+          commit("setPersonel", response.data);
+        }
+      }
+    }).catch(err =>{
+      if(err === 403){
+        throw err;
+      }
     });
 
-    if (response && response.data) {
-      commit("setPersonel", response.data);
-    }
+
+   
   },
 
   // Add new personel
 
   async addPersonel() {
     let sendData = await axios
-      .post(
-        "/personel",
-        {
-          name: state.personelName,
-          departement: state.departement,
-          telephone: state.personelTelephone,
-          adresse: state.personelAdresse,
-          city: state.personelCity,
-          email: state.personelEmail,
-          birthdate: state.personelBirth,
-          password: state.personelPassword,
-          profil: state.profil
-        }
-      )
+      .post("/personel", {
+        name: state.personelName,
+        departement: state.departement,
+        telephone: state.personelTelephone,
+        adresse: state.personelAdresse,
+        city: state.personelCity,
+        email: state.personelEmail,
+        birthdate: state.personelBirth,
+        password: state.personelPassword,
+        profil: state.profil
+      })
       .catch(() => {
         state.error = true;
       });

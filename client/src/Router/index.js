@@ -11,7 +11,6 @@ import patientView from "../views/patient.vue";
 import messages from "../components/messages.vue";
 import bookings from "../components/bookings.vue";
 import patientList from "../components/admin/patient.vue";
-import axios from "axios";
 Vue.use(Router);
 
 const router = new Router({

@@ -80,8 +80,6 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-col class="text-center" cols="12">
-                    <v-btn color="white" class="black--text" @click="toFormulaire">Appointment</v-btn>
-
                     <v-dialog v-model="dialog" persistent max-width="600px">
                       <template v-slot:activator="{ on }">
                         <v-btn color="white" class="black--text" v-on="on">Personal</v-btn>
@@ -137,7 +135,6 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from "vuex";
 import axios from "axios";
 export default {
   data: () => ({
@@ -148,32 +145,78 @@ export default {
     profil: ""
   }),
   computed: {
-    ...mapGetters(["getTokenUserProfil"])
+    //
   },
 
   methods: {
+    setHeaders: () => {
+      if (localStorage.getItem("accesToken")) {
+        axios.defaults.headers.common["authorization"] = localStorage.getItem(
+          "accesToken"
+        );
+      }
+    },
+    parseJwt(token) {
+      var base64Url = token.split(".")[1];
+      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      var jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map(function(c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+
+      return JSON.parse(jsonPayload);
+    },
+
     async save() {
       if (this.email && this.pass && this.profil) {
-        let payload = {
-          email: this.email,
-          password: this.pass,
-          profil: this.profil
-        };
-        this.logUser(payload);
-        this.setHeaders();
+        await axios
+          .post("/login", {
+            email: this.email,
+            password: this.pass,
+            profil: this.profil
+          })
+          .then(response => {
+            if (response.status === 200) {
+              const token = response.data.accesToken;
+              const decoded = this.parseJwt(token);
+
+              localStorage.setItem("accesToken", token);
+              localStorage.setItem("tokenUserName", decoded.name);
+              localStorage.setItem("tokenUserId", decoded._id);
+              localStorage.setItem("tokenUserProfil", decoded.profil);
+              this.setHeaders();
+              // if (decoded.profil === "admin") {
+              //   if (this.$router.path !== "/admin/adminDash") {
+              //
+              //   }
+              // }
+
+              this.$router.push("/admin/adminDash");
+              //   else if (decoded.profil === "doctor") {
+              //    if (this.$router.path !== "/admin/adminDash") {
+              //      this.$router.push("/admin/adminDash");
+              //    }
+              //  } else if (decoded.profil === "nurse") {
+              //    if (this.$router.path !== "/admin/adminDash") {
+              //      this.$router.push("/admin/adminDash");
+              //
+              //   }
+              //  }
+            }
+          })
+          .catch(err => {
+            if (err) {
+              alert("something wrong with the credentials");
+            }
+          });
       } else {
         alert("All fields are required");
       }
-    },
-    ...mapMutations([
-      "toFormulaire",
-      "setToken",
-      "toHomeView",
-      "setUserInfo",
-      "setHeaders"
-    ]),
-
-    ...mapActions(["logUser"])
+    }
   }
 };
 </script>

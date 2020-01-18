@@ -5,38 +5,47 @@ const bodyParser = require("body-parser");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
-
+app.use(cors({credentials: true, origin: 'http://localhost:8080'}));
 // Routers
+
+const login = require("./requests/login");
+app.use("/login", login);
+
+// Middleware
+//  Check for token for protected routes
+
+app.use(function(req, res, next) {
+  if (!req.headers.authorization) {
+    res.status(403).json({ message: "Unauthorized" });
+  } else {
+    next();
+  }
+});
 
 const reservations = require("./requests/reservations");
 const personel = require("./requests/personel");
 const patients = require("./requests/patient");
 const messages = require("./requests/messages");
-const login = require("./requests/login");
 
-// Middleware
-  
-app.use(function(req, res, next) {
-  if (login && !req.headers.authorization) {
-    //provide token
-    next();
-  } else if (!login && !req.headers.authorization) {
-    res.status(403).json({ message: "Unauthorized" });
-    console.log("Unauthorized");
-  } 
-});
 app.use("/reservations", reservations);
 app.use("/personel", personel);
 app.use("/patient", patients);
 app.use("/messages", messages);
-app.use("/login", login);
+
+
+const port = process.env.port || 4000;
+let server = app.listen(port, () => console.log("APP RUNNING ON PORT 4000"));
+//const socket = require('socket.io')(server);
+//
+//socket.on('connection', (socket) => {
+//  console.log(socket.id);
+//})
+
+
+
 
 // Static folder
 //app.use(express.static(__dirname + "/public/"));
 // SPA
 //app.get(/.*/, (req, res) => res.sendFile(__dirname + "/public/index.html"));
 //
-
-const port = process.env.port || 5000;
-app.listen(port, () => console.log("APP RUNNING ON PORT 5000"));

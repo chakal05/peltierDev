@@ -66,6 +66,7 @@
 
 <script>
 import axios from "axios";
+import socket from 'socket.io-client';
 export default {
   data: () => ({
     dialog: false,
@@ -98,65 +99,59 @@ export default {
       from: String,
       time: String,
       status: 0
-    }
-  }),
+    },
 
+    socket: socket('localhost:5000')
+  }),
   computed: {
     //
   },
-
   watch: {
     dialog(val) {
       val || this.close();
     }
   },
-
   created() {
-    this.initialize();
      this.loadMessages();
   },
-
   methods: {
-    initialize() {},
-
     // Get messages
-
-    async loadMessages() {
-      await axios
-        .get("/messages", {
-          params: {
-            id: localStorage.getItem("tokenUserId"),
-            data : 'messages'
-          }
-        })
-        .then(response => {
-          this.listOfMessages = response.data;
-        })
-        .catch(err => {throw err})
-    },
-
+     async loadMessages() {
+    await axios
+      .get("/messages", {
+        params: {
+          id: localStorage.getItem("tokenUserId"),
+          data: "messages"
+        }
+      })
+      .then(response => {
+        this.listOfMessages = response.data;
+      })
+      .catch(err => {
+        throw err;
+      });
+  },
     async editItem() {
       await axios
-        .get("/messages", {
+        .get("/personel", {
           params: {
             id: localStorage.getItem("tokenUserId"),
             data: "personel"
           }
         })
         .then(response => {
-          this.personel = response.data;
+          //this.personel = response.data;
+console.log(response.data);
         })
         .catch(err => {
           throw err;
         });
     },
-
     deleteItem(item) {
       const index = this.desserts.indexOf(item);
       confirm("Are you sure you want to delete this item?") &&
         this.desserts.splice(index, 1);
     },
-
     close() {
       this.dialog = false;
       setTimeout(() => {
@@ -164,7 +159,6 @@ export default {
         this.editedIndex = -1;
       }, 300);
     },
-
     async save() {
       let date = new Date().toISOString().substring(0, 10);
       let hour = new Date().getHours();
@@ -180,7 +174,12 @@ export default {
           message: this.message,
           user_to_read: "no"
         })
-        .then()
+        .then(response => {
+          if(response.status === 200){
+            this.user_to = null;
+            this.message = null;
+          }
+        })
         .catch(err => {
           throw err;
         });

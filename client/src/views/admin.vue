@@ -69,8 +69,7 @@
 
         <template v-slot:append>
           <div class="pa-2">
-              <v-btn color="white" @click="logOut" light block>Logout</v-btn>
-           
+            <v-btn color="white" @click="logOut" light block>Logout</v-btn>
           </div>
         </template>
       </v-navigation-drawer>
@@ -98,7 +97,7 @@
         <v-badge color="orange">
           <template v-slot:badge>
             <router-link to="/admin/messages">
-              <span>6</span>
+              <span>{{newMessages}}</span>
             </router-link>
           </template>
           <router-link to="/admin/messages">
@@ -124,21 +123,66 @@
 
 <script>
 import { mapMutations } from "vuex";
+import axios from "axios";
 export default {
   name: "admin",
   components: {
     //
   },
+  created() {
+    this.notifyMessages();
+    this.getUnread();
+  },
 
   computed: {},
   data: () => ({
     drawer: null,
+    timer: null,
     show: true,
+    newMessages: null,
     userName: localStorage.getItem("tokenUserName")
   }),
 
   methods: {
-    ...mapMutations(["logOut"])
+    ...mapMutations(["logOut"]),
+
+    getUnread() {
+      this.timer = setInterval( async () => {
+        await axios
+        .get("/messages", {
+          params: {
+            id: localStorage.getItem("tokenUserId"),
+            data: "unread"
+          }
+        })
+        .then(reponse => {
+          this.newMessages = reponse.data;
+        })
+        .catch(err => {
+          throw err;
+        });
+      }, 3000); 
+    },
+
+    async notifyMessages (){
+       await axios
+        .get("/messages", {
+          params: {
+            id: localStorage.getItem("tokenUserId"),
+            data: "unread"
+          }
+        })
+        .then(reponse => {
+          this.newMessages = reponse.data;
+        })
+        .catch(err => {
+          throw err;
+        });
+    }
+  },
+
+  beforeDestroy() {
+    clearInterval(this.timer);
   }
 };
 </script>
