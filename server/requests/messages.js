@@ -21,9 +21,10 @@ const messageSchema = new mongoose.Schema({
   senderName: String,
   userFrom: String,
   userTo: String,
+  headline: String,
   message: String,
   time: String,
-  userToRead: String
+  userToRead: String //Number when db updated
 });
 
 const conversationSchema = new mongoose.Schema({
@@ -54,8 +55,6 @@ async function loadConversations() {
   return conversation;
 }
 
-
-
 // add Message
 
 router.post("/", async function(req, res) {
@@ -63,6 +62,7 @@ router.post("/", async function(req, res) {
     senderName: req.body.name,
     userFrom: req.body.from,
     userTo: req.body.to,
+    headline: req.body.headline,
     message: req.body.message,
     time: req.body.time,
     userToRead: req.body.user_to_read
@@ -79,7 +79,6 @@ router.post("/", async function(req, res) {
 // get personel list
 
 router.get("/", async function(req, res) {
-
   const query = await loadMessages();
   // Get all messages
 
@@ -92,9 +91,9 @@ router.get("/", async function(req, res) {
       .catch(err => {
         throw err;
       });
-  } else if (req.query.data === "unread") { 
-    console.log(`unread mess req`); 
-     // Get list of unread messages
+  } else if (req.query.data === "unread") {
+    console.log(`unread mess req`);
+    // Get list of unread messages
     query
       .find({ userTo: req.query.id, userToRead: "no" }, (error, messages) => {
         if (error) return res.send(error);
@@ -104,12 +103,45 @@ router.get("/", async function(req, res) {
         throw err;
       });
   }
-}); 
+});
+
+router.get("/:id", async function(req, res) {
+  
+  const query = await loadMessages();
+  query
+  .find({ _id: req.query.id }, (error, messages) => {
+    if (error) return res.status(500).send(error);
+    else 
+    console.log(messages);
+    return res.status(200).send(messages);
+  })
+  .catch(err => {
+    throw err;
+  });
+});
+
+router.put("/:id", async function(req, res) {
+  const query = await loadMessages();
+  const update = {
+    userToRead: "yes"
+  };
+  await query.findByIdAndUpdate(
+    req.body.id,
+    update,
+    { new: true, upsert: true }, 
+
+    err => {
+      if (err) return res.status(500).send(err);
+      return res.status(200).send('updated message status');
+    }
+  );
+});
 
 // delete Message
 
 router.delete("/", async function(req, res) {
   console.log(req.body);
 });
-
+ 
 module.exports = router;
+ 

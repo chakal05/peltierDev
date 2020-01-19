@@ -66,7 +66,7 @@ router.get("/", async function(req, res) {
   if (req.query.data === "personel") { 
     query
       .find(  
-        { _id: { $ne: req.query.id } },
+        { _id: { $ne: req.query.id } },    
         {
           departement: 0,
           telephone: 0,

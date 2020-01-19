@@ -130,7 +130,10 @@ export default {
     //
   },
   created() {
+    // get number of unread messages
     this.notifyMessages();
+
+    // get number of unread messages every 3 seconds
     this.getUnread();
   },
 
