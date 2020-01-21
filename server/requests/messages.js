@@ -27,32 +27,10 @@ const messageSchema = new mongoose.Schema({
   userToRead: String //Number when db updated
 });
 
-const conversationSchema = new mongoose.Schema({
-  userOne: String,
-  userTwo: String
-});
-
-const personelSchema = new mongoose.Schema({
-  //name: String
-  //departement: String,
-  //telephone: Number,
-  //email: String,
-  //adresse: String,
-  //city: String,
-  //birthdate: String,
-  //username: String,
-  //password: String,
-  //profil: String
-});
 
 async function loadMessages() {
   let message = mongoose.model("messages", messageSchema);
   return message;
-}
-
-async function loadConversations() {
-  let conversation = mongoose.model("conversations", conversationSchema);
-  return conversation;
 }
 
 // add Message
@@ -106,18 +84,18 @@ router.get("/", async function(req, res) {
 });
 
 router.get("/:id", async function(req, res) {
-  
   const query = await loadMessages();
   query
-  .find({ _id: req.query.id }, (error, messages) => {
-    if (error) return res.status(500).send(error);
-    else 
-    console.log(messages);
-    return res.status(200).send(messages);
-  })
-  .catch(err => {
-    throw err;
-  });
+    .find({ _id: req.query.id }, (error, messages) => {
+      if (error) {
+        return res.status(500).send(error);
+      } else {
+       return res.status(200).send(messages);
+      }
+    })
+    .catch(err => {
+      throw err;
+    });
 });
 
 router.put("/:id", async function(req, res) {
@@ -128,11 +106,11 @@ router.put("/:id", async function(req, res) {
   await query.findByIdAndUpdate(
     req.body.id,
     update,
-    { new: true, upsert: true }, 
+    { new: true, upsert: true },
 
     err => {
       if (err) return res.status(500).send(err);
-      return res.status(200).send('updated message status');
+      return res.status(200).send("updated message status");
     }
   );
 });
@@ -142,6 +120,5 @@ router.put("/:id", async function(req, res) {
 router.delete("/", async function(req, res) {
   console.log(req.body);
 });
- 
+
 module.exports = router;
- 

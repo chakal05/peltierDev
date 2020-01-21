@@ -86,16 +86,6 @@
 
         <v-badge color="teal darken-4">
           <template v-slot:badge>
-            <a href="#">
-              <span>4</span>
-            </a>
-          </template>
-          <a href="#">
-            <v-icon>mdi-bell</v-icon>
-          </a>
-        </v-badge>
-        <v-badge color="orange">
-          <template v-slot:badge>
             <router-link to="/admin/messages">
               <span>{{newMessages}}</span>
             </router-link>
@@ -245,10 +235,10 @@ export default {
       }
 
       .v-badge {
-        margin: 1.5rem !important;
+        margin: 2.5rem !important;
 
         .v-icon {
-          margin-right: -0.7rem;
+          margin-right: -0.5rem;
         }
       }
 
