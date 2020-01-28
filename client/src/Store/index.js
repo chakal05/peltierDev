@@ -5,6 +5,7 @@ import showComp from "../modules/showHideAdmin";
 import personel from "../modules/getPersonel";
 import patients from "../modules/patients";
 import message from '../modules/message';
+import global from '../modules/global'; 
 import appointment from '../modules/appointment';
 // Load Vuex
 Vue.use(Vuex);
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     personel,
     patients,
     appointment,
-    message
+    message,
+    global
   }
 });

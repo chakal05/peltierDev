@@ -154,6 +154,7 @@ export default {
         axios.defaults.headers.common["authorization"] = localStorage.getItem(
           "accesToken"
         );
+
       }
     },
     parseJwt(token) {

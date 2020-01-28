@@ -26,7 +26,7 @@ router.post("/", async function(req, res) {
 
     if (result) {
       let check = bcrypt.compareSync(req.body.password, result.password);
-
+    
       if (check) {
         const accesToken = jwt.sign(result, process.env.ACCESS_TOKEN_SECRET);
         return res.status(200).json({ accesToken: accesToken });

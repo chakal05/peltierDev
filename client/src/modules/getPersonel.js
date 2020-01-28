@@ -1,5 +1,4 @@
 import axios from "axios";
-import router from "../Router/index";
 const state = {
   personelId: null,
   personelName: null,
@@ -42,14 +41,7 @@ const mutations = {
   setPersonelId: (state, id) => (state.personelId = id),
   setPersonelProfil: (state, profil) => (state.profil = profil),
 
-  logOut() {
-    localStorage.clear();
-    axios.defaults.headers.common["authorization"] = null;
-    // router.push('/') gives me a pending request the second time
-    // a user tries to log in
-   // location.reload("/");
-  router.replace("/");
-  }
+ 
 };
 
 const actions = {
