@@ -62,11 +62,11 @@ router.post("/", async function(req, res) {
 // get personel list
 
 router.get("/", async function(req, res) {
-  const query = await loadPersonel(); 
-  if (req.query.data === "personel") { 
+  const query = await loadPersonel();
+  if (req.query.data === "personel") {
     query
-      .find(  
-        { _id: { $ne: req.query.id } },    
+      .find(
+        { _id: { $ne: req.query.id } },
         {
           departement: 0,
           telephone: 0,
@@ -75,14 +75,24 @@ router.get("/", async function(req, res) {
           city: 0,
           birthdate: 0,
           password: 0
-        },       
-        (error, personelList) => {        
+        },
+        (error, personelList) => {
           if (error) return res.status(500).send(error);
           else return res.status(200).send(personelList);
         }
       )
-      .catch(err => { 
-        throw err;   
+      .catch(err => {
+        throw err;
+      });
+  } else if (req.query.data === "receiver") {
+    console.log(req.query);
+    query
+      .find({ _id: req.query.id }, (error, persone) => {
+        if (error) return res.status(500).send(error);
+        return res.status(200).send(persone);
+      })
+      .catch(err => {
+        throw err;
       });
   } else {
     query
@@ -92,12 +102,12 @@ router.get("/", async function(req, res) {
       })
       .catch(err => {
         throw err;
-      });     
+      });
   }
 });
 
 // Edit personel
- 
+
 router.put("/", async function(req, res) {
   let query = await loadPersonel();
   let hashedPass = bcrypt.hashSync(req.body.password, salt);

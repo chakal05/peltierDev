@@ -84,11 +84,9 @@
 
         <v-spacer></v-spacer>
 
-        <v-badge color="teal darken-4">
-          <template v-slot:badge>
-            <router-link to="/admin/messages">
-              <span>{{newMessages}}</span>
-            </router-link>
+        <v-badge  color="teal darken-4">
+          <template  v-slot:badge>
+            <span > {{newMessages}} </span>
           </template>
           <router-link to="/admin/messages">
             <v-icon>mdi-email</v-icon>
@@ -120,11 +118,11 @@ export default {
     //
   },
   created() {
-    // get number of unread messages
-  //  this.notifyMessages();
+    //get number of unread messages
+    this.notifyMessages();
 
     // get number of unread messages every 3 seconds
- //   this.getUnread();
+    this.getUnread();
   },
 
   computed: {},
@@ -140,25 +138,25 @@ export default {
     ...mapMutations(["logOut"]),
 
     getUnread() {
-      this.timer = setInterval( async () => {
+      this.timer = setInterval(async () => {
         await axios
-        .get("/messages", {
-          params: {
-            id: localStorage.getItem("tokenUserId"),
-            data: "unread"
-          }
-        })
-        .then(reponse => {
-          this.newMessages = reponse.data;
-        })
-        .catch(err => {
-          throw err;
-        });
-      }, 3000); 
+          .get("/messages", {
+            params: {
+              id: localStorage.getItem("tokenUserId"),
+              data: "unread"
+            }
+          })
+          .then(reponse => {
+            this.newMessages = reponse.data;
+          })
+          .catch(err => {
+            throw err;
+          });
+      }, 3000);
     },
 
-    async notifyMessages (){
-       await axios
+    async notifyMessages() {
+      await axios
         .get("/messages", {
           params: {
             id: localStorage.getItem("tokenUserId"),
