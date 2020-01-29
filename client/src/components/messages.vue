@@ -17,16 +17,15 @@
           </v-toolbar>
 
           <v-list two-line v-if="!contact">
-            <v-list-item-group v-model="selected" active-class="teal--text">
+            <v-list-item-group v-model="selected" multiple active-class="teal--text">
               <template v-for="(item, index) in items">
                 <v-list-item :key="item._id">
-                  <template v-slot:default="{  }">
                     <v-list-item-content @click="messageDetails(item._id)">
                       <v-list-item-title v-text="item.senderName "></v-list-item-title>
                       <br />
                       <v-list-item-subtitle v-text="item.time"></v-list-item-subtitle>
                     </v-list-item-content>
-                  </template>
+                  
                 </v-list-item>
 
                 <v-divider v-if="index + 1 < items.length" :key="index"></v-divider>
@@ -35,7 +34,7 @@
           </v-list>
 
           <v-list v-if="contact">
-            <v-list-item-group  active-class="teal--text">
+            <v-list-item-group active-class="teal--text">
               <template v-for="(item, index) in personel">
                 <v-list-item :key="item._id">
                   <template v-slot:default="{  }">
@@ -51,7 +50,7 @@
           </v-list>
 
           <div class="text-center">
-            <v-pagination v-model="page" :length="5" color="teal darken-4"></v-pagination>
+            <v-pagination v-model="page" :length="2" color="teal darken-4"></v-pagination>
           </div>
         </v-card>
       </v-col>
@@ -71,7 +70,6 @@
               <div class="subtitle-1 black--text">To: {{item.name || 'me'}}</div>
               <v-divider></v-divider>
               <v-list-item-subtitle class="my-12">{{item.message}}</v-list-item-subtitle>
-
               <br />
               <v-list-item>
                 <p class="subtitle-2 black--text">{{item.time}}</p>
@@ -85,6 +83,7 @@
           <div class="reponse">
             <v-textarea
               outlined
+              v-model="message"
               class="mx-2"
               name="input-7-4"
               label="Enter your message"
@@ -92,7 +91,7 @@
               color="teal darken-4"
               rows="2"
             ></v-textarea>
-            <v-icon color="teal darken-4" class="btnSend">send</v-icon>
+            <v-icon @click="save" color="teal darken-4" class="btnSend">send</v-icon>
           </div>
         </v-card>
       </v-col>
@@ -139,9 +138,10 @@ export default {
           }
         })
         .then(response => {
-          this.items = response.data;
+          this.items = response.data.reverse();
+          this.chat = false;
           this.contact = false;
-          this.items.map(element => {
+          response.data.map(element => {
             if (element.userToRead === "no") {
               this.selected.push(this.items.indexOf(element));
             }
@@ -161,6 +161,7 @@ export default {
         })
         .then(response => {
           this.receivedMessages = response.data;
+          this.user_to = response.data[0].userFrom;
           this.chat = true;
           this.del = true;
           this.updtateMessage(id);
@@ -199,16 +200,17 @@ export default {
     async newMess(id) {
       await axios
         .get("/personel", {
-          params:{
-          id: id,
-          data: 'receiver'
-        }
+          params: {
+            id: id,
+            data: "receiver"
+          }
         })
         .then(response => {
           if (response.status === 200) {
             this.receivedMessages = response.data;
-            this.chat= true;
-             this.del = false;
+            this.user_to = response.data[0]._id;
+            this.chat = true;
+            this.del = false;
           }
         })
         .catch(err => {
@@ -217,7 +219,20 @@ export default {
     },
 
     async deleteMess(id) {
-      alert("message deleted " + id);
+      await axios
+        .post("/messages/:id", {
+          id: id
+        })
+        .then(response => {
+          if (response.status === 200) {
+            this.chat = false;
+            
+            alert(response.data);
+          }
+        })
+        .catch(err => {
+          throw err;
+        });
     },
 
     async save() {
@@ -232,14 +247,14 @@ export default {
           to: this.user_to,
           from: localStorage.getItem("tokenUserId"),
           time: timestamp,
-          headline: this.headline,
           message: this.message,
-          user_to_read: 0 // 0 or 1
+          user_to_read: "no"
         })
         .then(response => {
           if (response.status === 200) {
-            this.user_to = null;
             this.message = null;
+            this.chat = false;
+            alert(response.data);
           }
         })
         .catch(err => {

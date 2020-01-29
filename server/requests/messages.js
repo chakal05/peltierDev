@@ -24,9 +24,8 @@ const messageSchema = new mongoose.Schema({
   headline: String,
   message: String,
   time: String,
-  userToRead: String //Number when db updated
+  userToRead: String
 });
-
 
 async function loadMessages() {
   let message = mongoose.model("messages", messageSchema);
@@ -36,6 +35,7 @@ async function loadMessages() {
 // add Message
 
 router.post("/", async function(req, res) {
+  console.log(req.body);
   let payload = {
     senderName: req.body.name,
     userFrom: req.body.from,
@@ -50,7 +50,7 @@ router.post("/", async function(req, res) {
   const newMessage = new query(payload);
   newMessage.save(err => {
     if (err) return res.sendStatus(500).send(err);
-    return res.sendStatus(200).send(`Message from db: Inserted a new row`);
+    else return res.status(200).send(`Message from db: Inserted a new row`);
   });
 });
 
@@ -70,7 +70,6 @@ router.get("/", async function(req, res) {
         throw err;
       });
   } else if (req.query.data === "unread") {
-    console.log(`unread mess req`);
     // Get list of unread messages
     query
       .find({ userTo: req.query.id, userToRead: "no" }, (error, messages) => {
@@ -90,7 +89,7 @@ router.get("/:id", async function(req, res) {
       if (error) {
         return res.status(500).send(error);
       } else {
-       return res.status(200).send(messages);
+        return res.status(200).send(messages);
       }
     })
     .catch(err => {
@@ -101,7 +100,7 @@ router.get("/:id", async function(req, res) {
 router.put("/:id", async function(req, res) {
   const query = await loadMessages();
   const update = {
-    userToRead: "yes"
+    userToRead: 'yes'
   };
   await query.findByIdAndUpdate(
     req.body.id,
@@ -117,8 +116,14 @@ router.put("/:id", async function(req, res) {
 
 // delete Message
 
-router.delete("/", async function(req, res) {
+router.post("/:id", async function(req, res) {
   console.log(req.body);
+  id = req.body.id;
+  let query = await loadMessages();
+  query.findByIdAndRemove(id, (err, doc) => {
+    if (err) return res.status(500).send(err);
+    return res.status(200).send(`Deleted one item`);
+  });
 });
 
 module.exports = router;
