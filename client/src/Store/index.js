@@ -3,7 +3,6 @@ import Vue from "vue";
 import nextPrev from "../modules/showHideHome";
 import showComp from "../modules/showHideAdmin";
 import personel from "../modules/getPersonel";
-import message from '../modules/message';
 import global from '../modules/global'; 
 import appointment from '../modules/appointment';
 // Load Vuex
@@ -17,7 +16,6 @@ export default new Vuex.Store({
     showComp,
     personel,
     appointment,
-    message,
     global
   }
 });

@@ -1,5 +1,5 @@
 // TODO move this file in booking.vue
-
+/*
 import axios from "axios";
 import { _ } from "vue-underscore";
 
@@ -102,48 +102,7 @@ const actions = {
     }
   },
 
-  // Retrieve booked hours
 
-  async loadHours({ commit }, day) {
-    const response = await axios.get("/reservations", {
-      params: { date: [day, `hours`] }
-    });
-
-    // Default hours
-
-    const baseHours = [
-      "08:30",
-      "09:00",
-      "09:30",
-      "10:00",
-      "10:30",
-      "11:00",
-      "11:30",
-      "12:00",
-      "16:30",
-      "17:00",
-      "17:30",
-      "18:00"
-    ];
-
-    if (!response.data[0]) {
-      // No reservations for that day, send default hours
-
-      commit("setHours", baseHours);
-    } else {
-      // if there are reservations for that day, display available hours
-
-      let displayHours = _.difference(baseHours, response.data);
-      if (!displayHours[0]) {
-        //if fully booked
-
-        let full = ["Fully booked"];
-        commit("setHours", full);
-      } else {
-        commit("setHours", displayHours);
-      }
-    }
-  },
 
   // Add an appointment to dB
   async register() {
@@ -234,3 +193,5 @@ export default {
   mutations,
   actions
 };
+
+*/

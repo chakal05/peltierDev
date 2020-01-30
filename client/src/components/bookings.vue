@@ -58,18 +58,18 @@
                     <v-row>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.nom"
+                          v-model="editedItem.name"
                           label="Name"
                           :rules="nameRules"
                           required
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-select :items="genre" v-model="editedItem.genre" label="Gender" required></v-select>
+                        <v-select :items="genre" v-model="editedItem.sexe" label="Gender" required></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedItem.téléphone"
+                          v-model="editedItem.telephone"
                           :counter="8"
                           label="Telephone"
                           :rules="telephoneRules"
@@ -78,8 +78,8 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-select
-                          :items="getHours"
-                          v-model="editedItem.heure"
+                          :items="dispoHours"
+                          v-model="editedItem.hour"
                           label="Time"
                           required
                         ></v-select>
@@ -89,7 +89,7 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-select
-                          v-model="editedItem.docteur"
+                          v-model="editedItem.doctor"
                           :items="docteur"
                           label="Doctor"
                           required
@@ -98,6 +98,11 @@
                     </v-row>
                   </v-container>
                 </v-card-text>
+
+                <div class="text-center">
+                  <p v-bind:style="{color:'green'}">{{success}}</p>
+                  <p v-bind:style="{color:'red'}">{{error}}</p>
+                </div>
 
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
@@ -126,9 +131,8 @@
 <script>
 //TODO  'npm config set ignore-scripts false' was run. Make sure everything
 // TODO run smoothly at the end
-
-import { mapGetters, mapMutations, mapActions } from "vuex";
-
+import { _ } from "vue-underscore";
+import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
@@ -136,10 +140,12 @@ export default {
     menu: false,
     showTable: false,
     showCalendar: true,
-    error: "",
+    error: null,
+    success: null,
     search: "",
     zero: false,
     fifteen: 15,
+    rank: null,
     docteur: [
       "Assign doctor   --",
       "Dr Omar Hassan Houssein",
@@ -148,18 +154,20 @@ export default {
     ],
     indexToDel: null,
     genre: [`Man`, `Woman`],
-    bookings: [],
+    getAppointments: [],
+    dispoHours: [],
     headers: [
       {
         text: "Name",
         align: "left",
         sortable: false,
-        value: "nom"
+        value: "name"
       },
-      { text: "Gender", value: "genre" },
-      { text: "Telephone", value: "téléphone" },
-      { text: "Time", value: "heure" },
-      { text: "Doctor", value: "docteur" },
+      { text: "Gender", value: "sexe" },
+      { text: "Telephone", value: "telephone" },
+      { text: "Time", value: "hour" },
+      { text: "Doctor", value: "doctor" },
+      { text: "Added by", value: "addedBy" },
       { text: "Actions", value: "action", sortable: false }
     ],
     nameRules: [
@@ -173,26 +181,27 @@ export default {
     ],
     editedIndex: -1,
     editedItem: {
-      nom: "",
-      genre: "",
-      heure: "",
-      téléphone: "",
-      docteur: ""
+      name: "",
+      sexe: "",
+      hour: "",
+      telephone: "",
+      doctor: "",
+      addedBy: ""
     },
     defaultItem: {
-      nom: "",
-      genre: "",
-      heure: "",
-      téléphone: "",
-      docteur: ""
+      name: "",
+      sexe: "",
+      hour: "",
+      telephone: "",
+      doctor: "",
+      addedBy: ""
     }
   }),
 
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New item" : "Edit item";
-    },
-    ...mapGetters(["getAppointments", "getHours", "ifSuccess", "ifError"])
+    }
   },
 
   watch: {
@@ -214,9 +223,8 @@ export default {
       this.indexToDel = this.getAppointments[index];
 
       confirm("Are you sure you want to delete this item?") &&
-        this.setId(this.indexToDel._id);
+        this.getAppointments.splice(index, 1);
       this.SupprItem();
-      this.getAppointments.splice(index, 1);
     },
 
     close() {
@@ -229,49 +237,28 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        this.edit();
+        Object.assign(this.getAppointments[this.editedIndex], this.editedItem);
+        this.changeItem();
       } else {
+        this.getAppointments.push(this.editedItem);
         this.add();
       }
     },
 
     load() {
       this.showCalendar = false;
-      this.loadBookings([this.picker, "admin"]);
+      this.loadBookings(this.picker);
       this.showTable = true;
-    },
-
-    edit() {
-      if (this.editedItem.heure === "Fully booked") {
-        alert("We are fully booked for this day, please choose another day");
-      } else {
-        Object.assign(this.getAppointments[this.editedIndex], this.editedItem);
-        this.setId(this.editedItem._id);
-        this.setName(this.editedItem.nom);
-        this.setNumber(this.editedItem.téléphone);
-        this.setGenre(this.editedItem.genre);
-        this.setTime(this.editedItem.heure);
-        this.setJour(this.picker);
-        this.setdocteur(this.editedItem.docteur);
-        this.changeItem();
-        this.close();
-
-        if (this.ifSuccess) {
-          this.close();
-        } else if (this.ifError) {
-          this.close();
-        }
-      }
     },
 
     add() {
       if (
-        this.editedItem.nom &&
-        this.editedItem.téléphone &&
-        this.editedItem.genre &&
-        this.editedItem.heure &&
+        this.editedItem.name &&
+        this.editedItem.telephone &&
+        this.editedItem.sexe &&
+        this.editedItem.hour &&
         this.picker &&
-        this.editedItem.heure
+        this.editedItem.doctor
       ) {
         if (
           new Date(this.picker).getDate() === new Date().getDate() ||
@@ -283,27 +270,12 @@ export default {
           ) {
             alert("Weekends reserved for emergency");
             this.close();
-          } else if (this.editedItem.heure === "Fully booked") {
+          } else if (this.editedItem.hour === "Fully booked") {
             alert(
               "We are fully booked for this day, please choose another day"
             );
           } else {
-            this.getAppointments.push(this.editedItem);
-            this.setName(this.editedItem.nom);
-            this.setNumber(this.editedItem.téléphone);
-            this.setGenre(this.editedItem.genre);
-            this.setTime(this.editedItem.heure);
-            this.setJour(this.picker);
-            this.setdocteur(this.editedItem.docteur);
             this.register();
-            this.close();
-            if (this.ifSuccess) {
-              alert(`Succesfully inserted a new appointment`);
-              this.close();
-            } else if (this.ifError) {
-              alert("there was an error");
-              this.close();
-            }
           }
         } else {
           alert("Choosen time is past");
@@ -314,25 +286,179 @@ export default {
       }
     },
 
-    ...mapMutations([
-      "setJour",
-      "setName",
-      "setFirstname",
-      "setNumber",
-      "setGenre",
-      "setJour",
-      "setTime",
-      "setdocteur",
-      "setId"
-    ]),
-    ...mapActions([
-      "loadBookings",
-      "loadHours",
-      "register",
-      "changeItem",
-      "SupprItem"
-    ]),
+    // retrieve booked hours of the day
 
+    async loadHours(day) {
+      // Default hours
+
+      const baseHours = [
+        "08:30",
+        "09:00",
+        "09:30",
+        "10:00",
+        "10:30",
+        "11:00",
+        "11:30",
+        "12:00",
+        "16:30",
+        "17:00",
+        "17:30",
+        "18:00"
+      ];
+
+      await axios
+        .get("/reservations", {
+          params: { date: [day, `hours`] }
+        })
+        .then(response => {
+          if (response.data.length < 1) {
+            // No reservations for that day, send default hours
+
+            this.dispoHours = baseHours;
+          } else {
+            // if there are reservations for that day, display available hours
+
+            let displayHours = _.difference(baseHours, response.data);
+            if (displayHours.length < 1) {
+              //if fully booked
+              this.dispoHours.push("Fully booked");
+            } else {
+              this.dispoHours = displayHours;
+            }
+          }
+        })
+        .catch(eroor => {
+          this.error = eroor;
+        });
+    },
+
+    // Add an appointment to dB
+
+    async register() {
+      if (this.editedItem.heure) {
+        this.setRank(this.editItem.heure);
+      }
+
+      await axios
+        .post("/reservations", {
+          name: this.editedItem.name,
+          telephone: this.editedItem.telephone,
+          sexe: this.editedItem.sexe,
+          date: this.picker,
+          time: this.editedItem.hour,
+          doctor: this.editedItem.doctor,
+          rank: this.rank,
+          addedBy: localStorage.getItem("tokenUserName")
+        })
+        .then(response => {
+          if (response && response.status === 200) {
+            this.success = "New appointment saved";
+
+            setInterval(
+              () => {
+                this.success = null;
+              },
+              3000,
+              this.close()
+            );
+          }
+        })
+        .catch(() => {
+          this.error = "There was an error";
+        });
+    },
+
+    // Edit appointment
+
+    async changeItem() {
+      if (this.editedItem.hour) {
+        this.setRank(this.editedItem.hour);
+      }
+
+      await axios
+        .put("/reservations", {
+          id: this.editedItem._id,
+          name: this.editedItem.name,
+          telephone: this.editedItem.telephone,
+          sexe: this.editedItem.sexe,
+          date: this.picker,
+          time: this.editedItem.hour,
+          doctor: this.editedItem.doctor,
+          rank: this.rank,
+          addedBy: localStorage.getItem("tokenUserName")
+        })
+        .then(response => {
+          if (response && response.status === 200) {
+            this.success = "An item was edited";
+            setInterval(() => {
+              this.success = null;
+              this.close();
+            }, 2000);
+          }
+        })
+        .catch(() => {
+          this.error = "There was an error with the editing of the item";
+        });
+    },
+
+    // Delete an appointment from dB
+
+    async SupprItem() {
+      axios
+        .delete("/reservations", {
+          data: { id: this.indexToDel._id }
+        })
+        .then(response => {
+          if (response && response.status === 200) {
+            setInterval(() => {
+              this.success = "An item was deleted";
+              this.close();
+            }, 2000);
+          }
+        })
+        .catch(() => {
+          this.error = "Item could not been deleted";
+        });
+    },
+
+    // Retrieve bookings
+
+    async loadBookings(picker) {
+      await axios
+        .get("/reservations", {
+          params: { date: picker }
+        })
+        .then(response => {
+          this.getAppointments = response.data;
+        })
+        .catch(() => {
+          // if (error) {
+          //   this.getAppointments = [];
+          //   this.loadHours(picker);
+          // }
+        });
+    },
+
+    setRank() {
+      // Display appointments in ascending order
+
+      const baseHours = [
+        "08:30",
+        "09:00",
+        "09:30",
+        "10:00",
+        "10:30",
+        "11:00",
+        "11:30",
+        "12:00",
+        "16:30",
+        "17:00",
+        "17:30",
+        "18:00"
+      ];
+
+      this.rank = baseHours.indexOf(this.editedItem.hour);
+    },
     backToCalendar() {
       this.showCalendar = true;
       this.showTable = false;

@@ -18,54 +18,50 @@ const state = {
 // Todo delete later when unnecessary
 
 const getters = {
-  // getPersonelName: state => state.personelName,
-  // getDepartement: state => state.departement,
-  // getPersonelTelephone: state => state.personelTelephone,
-  // getPersonelUsername: state => state.personelUsername,
-  // getPersonelPassword: state => state.personelPassword,
   getPersonelList: state => state.personelList
-  // getPersonelId: state => state.personelId,
-  // getPersonelProfil: state => state.profil
 };
-
 const mutations = {
-  setPersonelEmail: (state, email) => (state.personelEmail = email),
-  setPersonelAdresse: (state, adresse) => (state.personelAdresse = adresse),
-  setPersonelCity: (state, city) => (state.personelCity = city),
-  setPersonelBirth: (state, birth) => (state.personelBirth = birth),
   setPersonel: (state, personel) => (state.personelList = personel),
-  setPersonelName: (state, name) => (state.personelName = name),
-  setDepartement: (state, departement) => (state.departement = departement),
-  setPersonelTelephone: (state, tel) => (state.personelTelephone = tel),
-  setPersonelPassword: (state, pass) => (state.personelPassword = pass),
-  setPersonelId: (state, id) => (state.personelId = id),
-  setPersonelProfil: (state, profil) => (state.profil = profil),
 
- 
+  setPersonelInfo: (
+    state,
+    { adresse, city, birth, name, departement, tel, pass, email, id, profil }
+  ) => {
+    state.personelAdresse = adresse;
+    state.personelCity = city;
+    state.personelBirth = birth;
+    state.personelName = name;
+    state.personelEmail = email;
+    state.departement = departement;
+    state.personelTelephone = tel;
+    state.personelId = id;
+    state.personelPassword = pass;
+    state.profil = profil;
+  }
 };
 
 const actions = {
   // retrieve doctors
 
   async loadPersonel({ commit }, profil) {
-     await axios.get('/personel',{
-      params: {
-        profil
-      }
-    }).then(response => {
-      if(response.status === 200){
-        if ( response.data) {
-          commit("setPersonel", response.data);
+    await axios
+      .get("/personel", {
+        params: {
+          profil
         }
-      }
-    }).catch(err =>{
-      if(err === 403){
-        throw err;
-      }
-    });
-
-
-   
+      })
+      .then(response => {
+        if (response.status === 200) {
+          if (response.data) {
+            commit("setPersonel", response.data);
+          }
+        }
+      })
+      .catch(err => {
+        if (err === 403) {
+          throw err;
+        }
+      });
   },
 
   // Add new personel
@@ -121,7 +117,7 @@ const actions = {
   async deletePersonel() {
     let sendData = await axios
       .delete("/personel", {
-        data: state.personelId
+        data: { id: state.personelId }
       })
       .catch(() => {
         state.error = true;

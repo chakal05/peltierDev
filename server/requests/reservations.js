@@ -3,7 +3,8 @@ let router = express.Router();
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/peltier", {
   useNewUrlParser: true,
-  useUnifiedTopology: true});
+  useUnifiedTopology: true
+}); 
 
 // 'useFindAndModify' set to false
 mongoose.set("useFindAndModify", false);
@@ -15,14 +16,14 @@ db.on("error", console.error.bind(console, "connection error:"));
 // Schema
 
 const bookingSchema = new mongoose.Schema({
-  nom: String,
-  prénom: String,
-  téléphone: Number,
-  genre: String,
+  name: String,
+  telephone: Number,
+  sexe: String,
   date: String,
-  heure: String,
-  docteur: String,
-  rank: Number
+  hour: String,
+  doctor: String,
+  rank: Number,
+  addedBy: String
 });
 
 async function loadTider() {
@@ -36,6 +37,7 @@ router.get("/", async function(req, res) {
   let query = await loadTider();
 
   if (req.query.date[1] === `hours`) {
+    console.log(req.query);
     await query.find({ date: req.query.date[0] }, (error, booking) => {
       let timmars = [];
 
@@ -46,10 +48,10 @@ router.get("/", async function(req, res) {
 
       return res.status(200).send(timmars);
     });
-  } else if (req.query.date[1] === "admin") {
-    await query.find({ date: req.query.date[0] }, (error, booking) => {
+  } else {
+    await query.find({ date: req.query.date }, (error, booking) => {
       if (error) return res.status(500).send(error);
-
+      else console.log(booking.length);
       return res.status(200).send(booking);
     });
   }
@@ -62,27 +64,28 @@ router.post("/", async function(req, res) {
 
   let doc;
 
-  if (req.body.docteur) {
-    doc = req.body.docteur;
+  if (req.body.doctor) {
+    doc = req.body.doctor;
   } else {
     doc = "Assign Doctor";
   }
 
   const nyTid = {
-    nom: req.body.nom,
-    téléphone: req.body.telephone,
-    genre: req.body.genre,
+    name: req.body.name,
+    telephone: req.body.telephone,
+    sexe: req.body.sexe,
     date: req.body.date,
-    heure: req.body.time,
-    docteur: doc,
-    rank: req.body.rank
+    hour: req.body.time,
+    doctor: doc,
+    rank: req.body.rank,
+    addedBy: req.body.addedBy
   };
 
   let connexion = await loadTider();
   let post = new connexion(nyTid);
 
   if (post.save()) {
-    res.status(200).send(`Message from reservation.js: inserted one row`);
+    res.status(200).send();
   }
 });
 
@@ -90,13 +93,10 @@ router.post("/", async function(req, res) {
 
 router.put("/", async function(req, res) {
   console.log(req.body);
-
   let query = await loadTider();
   await query.findByIdAndUpdate(req.body.id, req.body, { new: true }, err => {
     if (err) return res.status(500).send(err);
-    return res
-      .status(200)
-      .send(`Message from reservation.js: modified one row `);
+    return res.status(200).end();
   });
 });
 
@@ -108,9 +108,7 @@ router.delete("/", async function(req, res) {
   query.findByIdAndRemove(id, (err, doc) => {
     if (err) return res.status(500).send(err);
 
-    return res
-      .status(200)
-      .send(`Message from reservations.js: deleted one item `);
+    return res.status(200).end();
   });
 });
 

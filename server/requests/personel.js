@@ -50,7 +50,7 @@ router.post("/", async function(req, res) {
     birthdate: req.body.birthdate,
     password: hashedPass,
     profil: req.body.profil
-  };
+  }; 
 
   const newPersonel = new query(newPersone);
   newPersonel.save(err => {
@@ -85,7 +85,6 @@ router.get("/", async function(req, res) {
         throw err;
       });
   } else if (req.query.data === "receiver") {
-    console.log(req.query);
     query
       .find({ _id: req.query.id }, (error, persone) => {
         if (error) return res.status(500).send(error);
@@ -136,10 +135,9 @@ router.put("/", async function(req, res) {
 // delete personel
 
 router.delete("/", async function(req, res) {
-  console.log(req.body);
-  id = req.body._id;
+ 
   let query = await loadPersonel();
-  query.findByIdAndRemove(id, (err, doc) => {
+  query.findByIdAndRemove(req.body.id, (err, doc) => {
     if (err) return res.status(500).send(err);
     return res.status(200).send(`Deleted one item`);
   });

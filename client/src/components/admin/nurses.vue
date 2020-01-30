@@ -11,7 +11,7 @@
       sort-by="name"
       class="elevation-1"
       :items-per-page="fifteen"
-    > 
+    >
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-text-field
@@ -24,7 +24,7 @@
           <v-spacer></v-spacer>
           <v-dialog persistent v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Add doctor</v-btn>
+              <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Add nurse</v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -83,9 +83,6 @@
                           @change="birth"
                         ></v-date-picker>
                       </v-menu>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.username" label="Username"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
@@ -195,7 +192,7 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-  ...mapGetters({ theList: "getPersonelList" }),
+    ...mapGetters({ theList: "getPersonelList" }),
     getPersonelList: {
       get() {
         return this.theList;
@@ -274,15 +271,18 @@ export default {
         this.editedItem.birthdate &&
         this.editedItem.email
       ) {
-        this.setPersonelName(this.editedItem.name);
-        this.setPersonelEmail(this.editedItem.email);
-        this.setPersonelAdresse(this.editedItem.adresse);
-        this.setPersonelCity(this.editedItem.city);
-        this.setPersonelBirth(this.date);
-        this.setDepartement(this.editedItem.departement);
-        this.setPersonelTelephone(this.editedItem.telephone);
-        this.setPersonelPassword(this.editedItem.password);
-        this.setPersonelProfil("nurse");
+        this.setPersonelInfo({
+          adresse: this.editedItem.adresse,
+          city: this.editedItem.city,
+          birth: this.date,
+          name: this.editedItem.name,
+          email: this.editedItem.email,
+          departement: this.editedItem.departement,
+          tel: this.editedItem.telephone,
+          pass: this.editedItem.password,
+          id: this.editedItem._id,
+          profil: "nurse"
+        });
         this.addPersonel();
 
         if (this.success) {
@@ -294,35 +294,27 @@ export default {
     },
 
     edit() {
-      this.setPersonelId(this.editedItem._id);
-      this.setPersonelName(this.editedItem.name);
-      this.setPersonelEmail(this.editedItem.email);
-      this.setPersonelAdresse(this.editedItem.adresse);
-      this.setPersonelCity(this.editedItem.city);
-      this.setPersonelBirth(this.editedItem.birthdate);
-      this.setDepartement(this.editedItem.departement);
-      this.setPersonelTelephone(this.editedItem.telephone);
-      this.setPersonelPassword(this.editedItem.password);
+      this.setPersonelInfo({
+        adresse: this.editedItem.adresse,
+        city: this.editedItem.city,
+        birth: this.date,
+        name: this.editedItem.name,
+        email: this.editedItem.email,
+        departement: this.editedItem.departement,
+        tel: this.editedItem.telephone,
+        pass: this.editedItem.password,
+        id: this.editedItem._id,
+        profil: "nurse"
+      });
       this.editPersonel();
     },
 
     supprDoc() {
-      this.setPersonelId(this.indexToDel);
+      this.setPersonelInfo({ id: this.indexToDel._id });
       this.deletePersonel();
     },
 
-    ...mapMutations([
-      "setPersonelName",
-      "setDepartement",
-      "setPersonelTelephone",
-      "setPersonelPassword",
-      "setPersonelId",
-      "setPersonelProfil",
-      "setPersonelEmail",
-      "setPersonelAdresse",
-      "setPersonelCity",
-      "setPersonelBirth"
-    ]),
+    ...mapMutations(["setPersonelInfo"]),
     ...mapActions([
       "loadPersonel",
       "addPersonel",
