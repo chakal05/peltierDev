@@ -89,22 +89,7 @@
                         required
                       ></v-select>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.username" label="Username"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.password"
-                        :append-icon="show1 ? 'visibility' : 'visibility_off'"
-                        :rules="[rules.required, rules.min]"
-                        :type="show1 ? 'text' : 'password'"
-                        name="input-10-1"
-                        label="Password"
-                        hint="At least x characters"
-                        counter
-                        @click:append="show1 = !show1"
-                      ></v-text-field>
-                    </v-col>
+                  
                   </v-row>
                 </v-container>
               </v-card-text>
@@ -129,8 +114,7 @@
 
 
 <script>
-import { mapGetters, mapActions, mapMutations } from "vuex";
-
+import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
@@ -157,8 +141,7 @@ export default {
       { text: "Adresse", value: "adresse" },
       { text: "City", value: "city" },
       { text: "Birthdate", value: "birthdate" },
-      { text: "Doctor", value: "doctor" },
-      { text: "Username", value: "username" },
+      { text: "added by", value: "addedBy" },
       { text: "Actions", value: "action", sortable: false }
     ],
     editedIndex: -1,
@@ -170,8 +153,6 @@ export default {
       city: "",
       email: "",
       birthdate: "",
-      username: "",
-      password: ""
     },
     defaultItem: {
       name: "",
@@ -181,11 +162,9 @@ export default {
       city: "",
       email: "",
       birthdate: "",
-      username: "",
-      password: ""
     },
     show1: false,
-    password: "Password",
+    getPatientsList: [],
     rules: {
       required: value => !!value || "Required.",
       min: v => v.length >= 3 || "Min 3 characters",
@@ -209,8 +188,7 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    },
-    ...mapGetters(["getPatientsList"])
+    }
   },
 
   watch: {
@@ -270,76 +248,94 @@ export default {
       this.close();
     },
 
-    add() {
+    // retrieve patients
+
+    async loadPatients() {
+      const response = await axios.get("/patient", {
+        params: {
+          profil: "patient"
+        }
+      });
+
+      if (response && response.data) {
+        this.getPatientsList = response.data;
+      }
+    },
+
+    //add patients
+
+    async add() {
       if (
         this.editedItem.name &&
         this.editedItem.telephone &&
-        this.editedItem.username &&
-        this.editedItem.password &&
         this.editedItem.adresse &&
         this.editedItem.city &&
         this.editedItem.birthdate &&
         this.editedItem.email
       ) {
-        this.setPatientName(this.editedItem.name);
-        this.setPatientEmail(this.editedItem.email);
-        this.setPatientAdresse(this.editedItem.adresse);
-        this.setPatientCity(this.editedItem.city);
-        this.setPatientBirth(this.editedItem.birthdate);
-        this.setPatientTelephone(this.editedItem.telephone);
-        this.setPatientUsername(this.editedItem.username);
-        this.setPatientPassword(this.editedItem.password);
-        this.setPatientDoctor(this.editedItem.doctor);
-        this.setPatientProfil("patient");
-        this.addPatient();
+        let sendData = await axios
+          .post("/patient", {
+            name: this.editedItem.name,
+            telephone: this.editedItem.telephone,
+            email: this.editedItem.email,
+            adresse: this.editedItem.adresse,
+            city: this.editedItem.city,
+            birthdate: this.editedItem.birthdate,
+            doctor: this.editedItem.doctor,
+            profil: "patient",
+            addedBy: localStorage.getItem("tokenUserName")
+          })
+          .catch(() => {
+            this.error = true;
+          });
 
-        if (this.success) {
-          // todo find a way to update component
+        if (sendData && sendData.status === 200) {
+          this.success = true;
+
+          this.loadPatients();
+        } else {
+          alert(`All fields must be filled`);
         }
-      } else {
-        alert(`All fields must be filled`);
       }
     },
-
-    edit() {
-      this.setPatientId(this.editedItem._id);
-      this.setPatientName(this.editedItem.name);
-      this.setPatientEmail(this.editedItem.email);
-      this.setPatientAdresse(this.editedItem.adresse);
-      this.setPatientCity(this.editedItem.city);
-      this.setPatientBirth(this.editedItem.birthdate);
-      this.setPatientTelephone(this.editedItem.telephone);
-      this.setPatientUsername(this.editedItem.username);
-      this.setPatientPassword(this.editedItem.password);
-      this.setPatientDoctor(this.editedItem.doctor);
-      this.setPatientProfil("patient");
-      this.editPatient();
+    async edit() {
+      let sendData = await axios
+        .put("/patient", {
+          id: this.editedItem._id,
+          name: this.editedItem.name,
+          telephone: this.editedItem.telephone,
+          email: this.editedItem.email,
+          adresse: this.editedItem.adresse,
+          city: this.editedItem.city,
+          birthdate: this.editedItem.birthdate,
+          doctor: this.editedItem.doctor,
+          profil: "patient",
+          addedBy: localStorage.getItem("tokenUserName")
+        })
+        .then(() => {
+          if (sendData && sendData.status === 200) {
+            this.success = true;
+            this.loadPatients();
+          }
+        })
+        .catch(() => {
+          this.error = true;
+        });
     },
 
-    supprPatient() {
-      this.setPatientId(this.indexToDel);
-      this.deletePatient();
-    },
+    async supprPatient() {
+      let sendData = await axios
+        .delete("/patient", {
+          data: this.indexToDel
+        })
+        .catch(() => {
+          this.error = true;
+        });
 
-    ...mapMutations([
-      "setPatientName",
-      "setPatientTelephone",
-      "setPatientUsername",
-      "setPatientPassword",
-      "setPatientId",
-      "setPatientProfil",
-      "setPatientEmail",
-      "setPatientAdresse",
-      "setPatientCity",
-      "setPatientBirth",
-      "setPatientDoctor"
-    ]),
-    ...mapActions([
-      "loadPatients",
-      "addPatient",
-      "editPatient",
-      "deletePatient"
-    ])
+      if (sendData && sendData.status === 200) {
+        this.success = true;
+      }
+    }
   }
 };
 </script>

@@ -10,7 +10,6 @@ import adminNurse from "../components/admin/nurses.vue";
 import patientView from "../views/patient.vue";
 import messages from "../components/messages.vue";
 import bookings from "../components/bookings.vue";
-import readMessage from "../components/readMessage.vue";
 import patientList from "../components/admin/patient.vue";
 Vue.use(Router);
 
@@ -55,11 +54,7 @@ const router = new Router({
           name: "bookings",
           component: bookings
         },
-        {
-          path: "readMessage/:id",
-          name: "readMessage",
-          component: readMessage
-        },
+        
         {
           path: "patientList",
           name: "patientList",

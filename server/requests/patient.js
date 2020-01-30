@@ -22,10 +22,9 @@ const patientSchema = new mongoose.Schema({
   adresse: String,
   city: String,
   birthdate: String,
-  username: String,
-  password: String,
   doctor: String,
-  profil: String
+  profil: String,
+  addedBy: String
 });
 
 async function loadPatients() {
@@ -36,7 +35,6 @@ async function loadPatients() {
 // add personel
 
 router.post("/", async function(req, res) {
-  console.log(req.body);
   if (req.body.flag === "log") {
     let query = await loadPatients();
     await query.findOne(
@@ -67,7 +65,7 @@ router.get("/", async function(req, res) {
   let query = await loadPatients();
   await query.find({ profil: req.query.profil }, (error, patientsList) => {
     if (error) return res.status(500).send(error);
-    console.log(patientsList.length);
+   
     return res.status(200).send(patientsList);
   });
 });
@@ -91,7 +89,6 @@ router.put("/", async function(req, res) {
 // delete personel
 
 router.delete("/", async function(req, res) {
-  console.log(req.body);
   id = req.body._id;
   let query = await loadPatients();
   query.findByIdAndRemove(id, (err, doc) => {

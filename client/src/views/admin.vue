@@ -61,7 +61,7 @@
               <v-icon>fas fa-user</v-icon>
             </v-list-item-icon>
 
-            <router-link to="/admin/patient">
+            <router-link to="/admin/patientList">
               <v-list-item-title>Patients</v-list-item-title>
             </router-link>
           </v-list-item>
