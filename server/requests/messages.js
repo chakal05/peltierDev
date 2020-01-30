@@ -35,7 +35,7 @@ async function loadMessages() {
 // add Message
 
 router.post("/", async function(req, res) {
-  console.log(req.body);
+ 
   let payload = {
     senderName: req.body.name,
     userFrom: req.body.from,
@@ -117,7 +117,7 @@ router.put("/:id", async function(req, res) {
 // delete Message
 
 router.post("/:id", async function(req, res) {
-  console.log(req.body);
+  
   id = req.body.id;
   let query = await loadMessages();
   query.findByIdAndRemove(id, (err, doc) => {

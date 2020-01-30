@@ -17,15 +17,17 @@
           </v-toolbar>
 
           <v-list two-line v-if="!contact">
-            <v-list-item-group v-model="selected" multiple active-class="teal--text">
+            <v-list-item-group v-model="selected" active-class="teal--text">
               <template v-for="(item, index) in items">
-                <v-list-item :key="item._id">
-                    <v-list-item-content @click="messageDetails(item._id)">
-                      <v-list-item-title v-text="item.senderName "></v-list-item-title>
-                      <br />
-                      <v-list-item-subtitle v-text="item.time"></v-list-item-subtitle>
-                    </v-list-item-content>
-                  
+                <v-list-item
+                  :key="item._id"
+                  v-bind:style="[item.userToRead === 'no'? {fontWeight:'bold', background:'rgb(229, 227, 227)' }: '']"
+                >
+                  <v-list-item-content @click="messageDetails(item._id)">
+                    <v-list-item-title v-text="item.senderName "></v-list-item-title>
+                    <br />
+                    <v-list-item-subtitle v-text="item.time"></v-list-item-subtitle>
+                  </v-list-item-content>
                 </v-list-item>
 
                 <v-divider v-if="index + 1 < items.length" :key="index"></v-divider>
@@ -80,6 +82,7 @@
             </v-list-item-action>
           </v-list-item>
 
+          <v-alert v-if="success" type="success">Message {{messageStatus}}.</v-alert>
           <div class="reponse">
             <v-textarea
               outlined
@@ -111,10 +114,12 @@ export default {
     contact: false,
     chat: false,
     del: false,
-    conversationWith: null,
+    unreadMessages: [],
     page: 1,
     receivedMessages: [],
-    items: []
+    items: [],
+    success: false,
+    messageStatus: "sent"
   }),
   computed: {
     //
@@ -141,11 +146,6 @@ export default {
           this.items = response.data.reverse();
           this.chat = false;
           this.contact = false;
-          response.data.map(element => {
-            if (element.userToRead === "no") {
-              this.selected.push(this.items.indexOf(element));
-            }
-          });
         })
         .catch(err => {
           throw err;
@@ -225,9 +225,14 @@ export default {
         })
         .then(response => {
           if (response.status === 200) {
-            this.chat = false;
-            
-            alert(response.data);
+            this.success = true;
+            this.messageStatus = "deleted";
+
+            setInterval(() => {
+              this.success = false;
+              this.chat = false;
+              this.loadMessages();
+            }, 3000);
           }
         })
         .catch(err => {
@@ -253,8 +258,12 @@ export default {
         .then(response => {
           if (response.status === 200) {
             this.message = null;
-            this.chat = false;
-            alert(response.data);
+
+            this.success = true;
+            setInterval(() => {
+              this.success = false;
+              this.chat = false;
+            }, 3000);
           }
         })
         .catch(err => {
@@ -274,6 +283,7 @@ export default {
   .row {
     .column {
       .v-card {
+        color: rgba(0, 128, 0, 0.589);
         position: relative;
         .v-pagination {
           position: absolute;
