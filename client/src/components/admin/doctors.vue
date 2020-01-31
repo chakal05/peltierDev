@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="text-center">
-      <h2 class="display-2 font-weight-thin mb-4">Doctor list</h2>
+      <h2 class="display-2 font-weight-thin mb-4">Doctors list</h2>
     </div>
     <br />
     <v-data-table
@@ -41,10 +41,12 @@
                         :rules="nameRules"
                         v-model="editedItem.name"
                         label="Name"
+                        color="teal darken-4"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
+                        color="teal darken-4"
                         v-model="editedItem.departement"
                         label="Departement"
                       ></v-text-field>
@@ -52,6 +54,7 @@
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         :rules="telephoneRules"
+                        color="teal darken-4"
                         v-model="editedItem.telephone"
                         label="Telephone"
                       ></v-text-field>
@@ -60,12 +63,14 @@
                       <v-text-field
                         v-model="editedItem.adresse"
                         label="Adresse"
+                        color="teal darken-4"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         v-model="editedItem.city"
                         label="City"
+                        color="teal darken-4"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
@@ -73,6 +78,7 @@
                         v-model="editedItem.email"
                         :rules="emailRules"
                         label="Email"
+                        color="teal darken-4"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
@@ -92,6 +98,7 @@
                             prepend-icon="event"
                             readonly
                             v-on="on"
+                            color="teal darken-4"
                           ></v-text-field>
                         </template>
                         <v-date-picker
@@ -100,6 +107,7 @@
                           :max="new Date().toISOString().substr(0, 10)"
                           min="1950-01-01"
                           @change="birth"
+                          color="teal darken-4"
                         ></v-date-picker>
                       </v-menu>
                     </v-col>
@@ -113,6 +121,7 @@
                         label="Password"
                         hint="At least x characters"
                         counter
+                        color="teal darken-4"
                         @click:append="show1 = !show1"
                       ></v-text-field>
                     </v-col>

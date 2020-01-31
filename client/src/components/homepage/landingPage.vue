@@ -80,51 +80,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-col class="text-center" cols="12">
-                    <v-dialog v-model="dialog" persistent max-width="600px">
-                      <template v-slot:activator="{ on }">
-                        <v-btn color="white" class="black--text" v-on="on">Personal</v-btn>
-                      </template>
-                      <v-card>
-                        <v-card-title>
-                          <span class="headline">Personal</span>
-                        </v-card-title>
-                        <v-card-text>
-                          <v-form>
-                            <v-container>
-                              <v-row>
-                                <v-col cols="12" md="6">
-                                  <v-text-field
-                                    label="Email"
-                                    color='teal darken-4'
-                                    autocomplete="email"
-                                    v-model="email"
-                                    required
-                                  ></v-text-field>
-                                </v-col>
-                                <v-col cols="12" md="6">
-                                  <v-text-field
-                                    label="Password"
-                                    v-model="pass"
-                                     color='teal darken-4'
-                                    type="password"
-                                    autocomplete="current-password"
-                                    required
-                                  ></v-text-field>
-                                </v-col>
-                                <v-col class="d-flex" cols="12" md="12">
-                                  <v-select  color='teal darken-4' :items="profils" v-model="profil" label="Profil"></v-select>
-                                </v-col>
-                              </v-row>
-                            </v-container>
-                          </v-form>
-                        </v-card-text>
-                        <v-card-actions>
-                          <div class="flex-grow-1"></div>
-                          <v-btn color="teal darken-4" class="white--text" @click="save">Validate</v-btn>
-                          <v-btn color="error" @click="dialog = false">Cancel</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
+                   
                   </v-col>
                 </v-card-actions>
               </v-card>
@@ -225,10 +181,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$baseColor : #00695c;
+
 .container {
   margin-top: 1rem;
   .v-parallax {
-    height: 731px !important;
+    height: 890px  !important;
 
     .row {
       @media (max-width: 800px) {
@@ -238,13 +196,13 @@ export default {
       }
 
       h1 {
-        background-color: #00695c;
+        background-color:$baseColor;
         padding: 0.5rem;
         border-radius: 3px;
       }
 
       h4 {
-        background-color: #00695c;
+        background-color: $baseColor;
         padding: 0.2rem;
         border-radius: 3px;
       }

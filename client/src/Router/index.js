@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import homeView from "../views/home.vue";
+import homeView from "../components/home.vue";
 import adminView from "../views/admin.vue";
 import adminDash from "../components/admin/adminDash.vue";
 import doctorView from "../views/doctor.vue";

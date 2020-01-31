@@ -35,23 +35,24 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field :rules="nameRules" v-model="editedItem.name" label="Name"></v-text-field>
+                      <v-text-field color='teal darken-4' :rules="nameRules" v-model="editedItem.name" label="Name"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         :rules="telephoneRules"
                         v-model="editedItem.telephone"
                         label="Telephone"
+                        color='teal darken-4'
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.adresse" label="Adresse"></v-text-field>
+                      <v-text-field color='teal darken-4' v-model="editedItem.adresse" label="Adresse"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.city " label="City"></v-text-field>
+                      <v-text-field color='teal darken-4' v-model="editedItem.city " label="City"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.email" :rules="emailRules" label="Email"></v-text-field>
+                      <v-text-field color='teal darken-4' v-model="editedItem.email" :rules="emailRules" label="Email"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-menu
@@ -70,11 +71,13 @@
                             prepend-icon="event"
                             readonly
                             v-on="on"
+                            color='teal darken-4'
                           ></v-text-field>
                         </template>
                         <v-date-picker
                           ref="picker"
                           v-model="date"
+                          color='teal darken-4'
                           :max="new Date().toISOString().substr(0, 10)"
                           min="1950-01-01"
                           @change="birth"
@@ -86,6 +89,7 @@
                         v-model="editedItem.doctor"
                         :items="doctors"
                         label="Doctor"
+                        color='teal darken-4'
                         required
                       ></v-select>
                     </v-col>

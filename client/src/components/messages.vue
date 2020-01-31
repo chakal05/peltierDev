@@ -4,7 +4,7 @@
       <h2 v-if="chat" class="display-2 font-weight-thin mb-4">Messages</h2>
     </div>
     <v-row no-gutters>
-      <v-col class="column" cols="12" md="3">
+      <v-col v-if="sideBar" class="column" cols="12" md="3">
         <v-card height="700">
           <v-toolbar color="teal darken-4" dark>
             <v-toolbar-title>
@@ -21,16 +21,27 @@
               <template v-for="(item, index) in items">
                 <v-list-item
                   :key="item._id"
-                  v-bind:style="[item.userToRead === 'no'? {fontWeight:'bold', background:'rgb(229, 227, 227)' }: '']"
+                  v-bind:style="[
+                    item.userToRead === 'no'
+                      ? { fontWeight: 'bold', background: 'rgb(229, 227, 227)' }
+                      : ''
+                  ]"
                 >
                   <v-list-item-content @click="messageDetails(item._id)">
-                    <v-list-item-title v-text="item.senderName "></v-list-item-title>
+                    <v-list-item-title
+                      v-text="item.senderName"
+                    ></v-list-item-title>
                     <br />
-                    <v-list-item-subtitle v-text="item.time"></v-list-item-subtitle>
+                    <v-list-item-subtitle
+                      v-text="item.time"
+                    ></v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
 
-                <v-divider v-if="index + 1 < items.length" :key="index"></v-divider>
+                <v-divider
+                  v-if="index + 1 < items.length"
+                  :key="index"
+                ></v-divider>
               </template>
             </v-list-item-group>
           </v-list>
@@ -39,50 +50,85 @@
             <v-list-item-group active-class="teal--text">
               <template v-for="(item, index) in personel">
                 <v-list-item :key="item._id">
-                  <template v-slot:default="{  }">
+                  <template v-slot:default="{}">
                     <v-list-item-content @click="newMess(item._id)">
                       <v-list-item-title v-text="item.name"></v-list-item-title>
                     </v-list-item-content>
                   </template>
                 </v-list-item>
 
-                <v-divider v-if="index + 1 < items.length" :key="index"></v-divider>
+                <v-divider
+                  v-if="index + 1 < items.length"
+                  :key="index"
+                ></v-divider>
               </template>
             </v-list-item-group>
           </v-list>
 
           <div class="text-center">
-            <v-pagination v-model="page" :length="2" color="teal darken-4"></v-pagination>
+            <v-pagination
+              v-model="page"
+              :length="2"
+              color="teal darken-4"
+            ></v-pagination>
           </div>
         </v-card>
       </v-col>
 
       <v-col class="main">
-        <v-card class="callToAction" v-if="!chat" align="center" justify="center" height="700">
-          <v-card-text class="display-2 font-weight-thin mb-4">- - - Messages - - -</v-card-text>
+        <v-card
+          class="callToAction"
+          v-if="!chat"
+          align="center"
+          justify="center"
+          height="700"
+        >
+          <v-card-text class="display-2 font-weight-thin mb-4">
+            <v-icon color="teal darken-4">mail</v-icon>
+          </v-card-text>
         </v-card>
         <v-card v-if="chat" class="chat_box" height="700">
           <v-toolbar>
+            <v-icon @click="goBack" class="goBack" color="black"
+              >arrow_back</v-icon
+            >
             <v-spacer></v-spacer>
             <v-toolbar-title>Message</v-toolbar-title>
           </v-toolbar>
-          <v-list-item v-for="item in receivedMessages" :key="item._id" three-line>
+          <v-list-item
+            v-for="item in receivedMessages"
+            :key="item._id"
+            three-line
+          >
             <v-list-item-content>
-              <v-list-item-title class="title mb-1">From: {{item.senderName || 'me'}}</v-list-item-title>
-              <div class="subtitle-1 black--text">To: {{item.name || 'me'}}</div>
+              <v-list-item-title class="title mb-1"
+                >From: {{ item.senderName || "me" }}</v-list-item-title
+              >
+              <div class="subtitle-1 black--text">
+                To: {{ item.name || "me" }}
+              </div>
               <v-divider></v-divider>
-              <v-list-item-subtitle class="my-12">{{item.message}}</v-list-item-subtitle>
+              <v-list-item-subtitle class="my-12">{{
+                item.message
+              }}</v-list-item-subtitle>
               <br />
               <v-list-item>
-                <p class="subtitle-2 black--text">{{item.time}}</p>
+                <p class="subtitle-2 black--text">{{ item.time }}</p>
               </v-list-item>
             </v-list-item-content>
             <v-list-item-action v-if="del">
-              <v-icon color="red darken-4" @click="deleteMess(item._id)" class="white--text">delete</v-icon>
+              <v-icon
+                color="red darken-4"
+                @click="deleteMess(item._id)"
+                class="white--text"
+                >delete</v-icon
+              >
             </v-list-item-action>
           </v-list-item>
 
-          <v-alert v-if="success" type="success">Message {{messageStatus}}.</v-alert>
+          <v-alert v-if="success" type="success"
+            >Message {{ messageStatus }}.</v-alert
+          >
           <div class="reponse">
             <v-textarea
               outlined
@@ -94,7 +140,9 @@
               color="teal darken-4"
               rows="2"
             ></v-textarea>
-            <v-icon @click="save" color="teal darken-4" class="btnSend">send</v-icon>
+            <v-icon @click="save" color="teal darken-4" class="btnSend"
+              >send</v-icon
+            >
           </div>
         </v-card>
       </v-col>
@@ -107,6 +155,7 @@ import axios from "axios";
 //import { _ } from "vue-underscore";
 export default {
   data: () => ({
+    sideBar: true,
     selected: [],
     personel: [],
     user_to: null,
@@ -165,6 +214,12 @@ export default {
           this.chat = true;
           this.del = true;
           this.updtateMessage(id);
+
+          const width = window.innerWidth;
+
+          if (width < 960) {
+            this.sideBar = false;
+          }
         })
         .catch();
     },
@@ -174,8 +229,9 @@ export default {
         .put("/messages/:id", {
           id: id
         })
-        .then()
-        .catch();
+        .catch(err => {
+          console.log(err);
+        });
     },
 
     async getContacts() {
@@ -211,6 +267,12 @@ export default {
             this.user_to = response.data[0]._id;
             this.chat = true;
             this.del = false;
+
+            const width = window.innerWidth;
+
+            if (width < 960) {
+              this.sideBar = false;
+            }
           }
         })
         .catch(err => {
@@ -269,13 +331,22 @@ export default {
         .catch(err => {
           throw err;
         });
+    },
+
+    goBack() {
+      this.chat = false;
+      this.sideBar = true;
     }
   }
 };
 </script>
 
-
-<style lang='scss'>
+<style lang="scss">
+@mixin desktop {
+  @media (max-width: 960px) {
+    @content;
+  }
+}
 .container {
   .text-center {
     margin-bottom: 2rem;
@@ -295,15 +366,38 @@ export default {
           float: right;
         }
       }
+
+      @include desktop {
+        width: 100% !important;
+      }
     }
     .main {
       .callToAction {
         .v-card__text {
           position: absolute;
-          top: 41%;
+          top: 37%;
+
+          .v-icon {
+            font-size: 7rem;
+          }
+        }
+
+        @include desktop {
+          display: none;
         }
       }
       .chat_box {
+        .v-toolbar {
+          .goBack {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: none;
+
+            @include desktop {
+              display: block;
+            }
+          }
+        }
         .v-list-item {
           .v-list-item__content {
             .theme--light {
