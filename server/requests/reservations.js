@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/peltier", {
   useNewUrlParser: true,
   useUnifiedTopology: true
-}); 
+});
 
 // 'useFindAndModify' set to false
 mongoose.set("useFindAndModify", false);
@@ -37,13 +37,12 @@ router.get("/", async function(req, res) {
   let query = await loadTider();
 
   if (req.query.date[1] === `hours`) {
-    console.log(req.query);
     await query.find({ date: req.query.date[0] }, (error, booking) => {
       let timmars = [];
 
-      if (error) return res.status(500).send(error);
+      while (error) return res.status(500).send(error);
       booking.forEach(element => {
-        timmars.push(element.heure);
+        timmars.push(element.hour);
       });
 
       return res.status(200).send(timmars);
@@ -51,8 +50,7 @@ router.get("/", async function(req, res) {
   } else {
     await query.find({ date: req.query.date }, (error, booking) => {
       if (error) return res.status(500).send(error);
-      else console.log(booking.length);
-      return res.status(200).send(booking);
+      else return res.status(200).send(booking);
     });
   }
 });

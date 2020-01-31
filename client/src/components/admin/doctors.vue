@@ -24,7 +24,9 @@
           <v-spacer></v-spacer>
           <v-dialog persistent v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Add doctor</v-btn>
+              <v-btn color="teal darken-4" dark class="mb-2" v-on="on"
+                >Add doctor</v-btn
+              >
             </template>
             <v-card>
               <v-card-title>
@@ -35,10 +37,17 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field :rules="nameRules" v-model="editedItem.name" label="Name"></v-text-field>
+                      <v-text-field
+                        :rules="nameRules"
+                        v-model="editedItem.name"
+                        label="Name"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.departement" label="Departement"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.departement"
+                        label="Departement"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
@@ -48,13 +57,23 @@
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.adresse" label="Adresse"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.adresse"
+                        label="Adresse"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.city " label="City"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.city"
+                        label="City"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.email" :rules="emailRules" label="Email"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.email"
+                        :rules="emailRules"
+                        label="Email"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-menu
@@ -100,7 +119,10 @@
                   </v-row>
                 </v-container>
               </v-card-text>
-
+              <div class="text-center">
+                <p v-bind:style="{ color: 'green' }">{{ ifSuccess }}</p>
+                <p v-bind:style="{ color: 'red' }">{{ ifError }}</p>
+              </div>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="teal darken-4" text @click="close">Cancel</v-btn>
@@ -130,6 +152,8 @@ export default {
     indexToDel: null,
     date: null,
     menu: false,
+    ifSuccess: null,
+    ifError: null,
     headers: [
       {
         text: "Name",
@@ -192,13 +216,35 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-    ...mapGetters({ theList: "getPersonelList" }),
+    ...mapGetters({
+      theList: "getPersonelList",
+      iFsuccess: "success",
+      iFerror: "error"
+    }),
     getPersonelList: {
       get() {
         return this.theList;
       },
       set(list) {
         return list;
+      }
+    },
+
+    success: {
+      get() {
+        return this.iFsuccess;
+      },
+      set(status) {
+        return status;
+      }
+    },
+
+    error: {
+      get() {
+        return this.ifError;
+      },
+      set(status) {
+        return status;
       }
     }
   },
@@ -251,13 +297,12 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.getPersonelList[this.editedIndex], this.editedItem);
+        //  Object.assign(this.getPersonelList[this.editedIndex], this.editedItem);
         this.edit();
       } else {
-        this.getPersonelList.push(this.editedItem);
+        //   this.getPersonelList.push(this.editedItem);
         this.add();
       }
-      this.close();
     },
 
     add() {
@@ -282,13 +327,21 @@ export default {
           pass: this.editedItem.password,
           profil: "doctor"
         });
-        this.addPersonel();
 
-        if (this.success) {
-          // todo find a way to update component
+        this.addPersonel();
+        if (this.success === true) {
+          this.ifError = null;
+          this.ifSuccess = "Added a new doctor";
+          setTimeout(() => {
+            this.loadPersonel("doctor");
+
+            this.ifSuccess = null;
+            this.close();
+          }, 3000);
         }
       } else {
-        alert(`All fields must be filled`);
+        this.ifError = "All fields must be filled";
+        this.dialog = true;
       }
     },
 
@@ -306,6 +359,22 @@ export default {
         profil: "nurse"
       });
       this.editPersonel();
+
+      if (this.success) {
+        this.ifSuccess = "One item was edited";
+        setTimeout(() => {
+          this.loadPersonel("doctor");
+          this.ifSuccess = null;
+          this.close();
+        }, 3000);
+      } else {
+        this.ifError = "There was a problem ";
+        setTimeout(() => {
+          this.loadPersonel("doctor");
+          this.ifError = null;
+          this.close();
+        }, 3000);
+      }
     },
 
     supprDoc() {

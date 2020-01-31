@@ -15,7 +15,9 @@
             class="mt-4"
           ></v-date-picker>
           <v-col class="text-center" cols="12">
-            <v-btn color="teal darken-4" class="white--text mr-4" @click="load">SEARCH</v-btn>
+            <v-btn color="teal darken-4" class="white--text mr-4" @click="load"
+              >SEARCH</v-btn
+            >
           </v-col>
         </v-col>
       </v-row>
@@ -46,7 +48,14 @@
             <v-spacer></v-spacer>
             <v-dialog persistent v-model="dialog" max-width="500px">
               <template v-slot:activator="{ on }">
-                <v-btn color="teal darken-4" dark class="mb-2" v-on="on" @click="editItem">Add new</v-btn>
+                <v-btn
+                  color="teal darken-4"
+                  dark
+                  class="mb-2"
+                  v-on="on"
+                  @click="editItem"
+                  >Add new</v-btn
+                >
               </template>
               <v-card>
                 <v-card-title>
@@ -65,7 +74,12 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-select :items="genre" v-model="editedItem.sexe" label="Gender" required></v-select>
+                        <v-select
+                          :items="genre"
+                          v-model="editedItem.sexe"
+                          label="Gender"
+                          required
+                        ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
@@ -85,7 +99,12 @@
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field v-model="picker" readonly label="Day" required></v-text-field>
+                        <v-text-field
+                          v-model="picker"
+                          readonly
+                          label="Day"
+                          required
+                        ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-select
@@ -100,13 +119,15 @@
                 </v-card-text>
 
                 <div class="text-center">
-                  <p v-bind:style="{color:'green'}">{{success}}</p>
-                  <p v-bind:style="{color:'red'}">{{error}}</p>
+                  <p v-bind:style="{ color: 'green' }">{{ success }}</p>
+                  <p v-bind:style="{ color: 'red' }">{{ error }}</p>
                 </div>
 
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
-                  <v-btn color="teal darken-4" text @click="close">Cancel</v-btn>
+                  <v-btn color="teal darken-4" text @click="close"
+                    >Cancel</v-btn
+                  >
                   <v-btn color="teal darken-4" text @click="save">Save</v-btn>
                 </v-card-actions>
               </v-card>
@@ -122,16 +143,18 @@
         </template>
       </v-data-table>
       <v-col class="text-center boutonBox" cols="12">
-        <v-btn color="teal darken-4" class="white--text mr-4" @click="backToCalendar">Previous</v-btn>
+        <v-btn
+          color="teal darken-4"
+          class="white--text mr-4"
+          @click="backToCalendar"
+          >Previous</v-btn
+        >
       </v-col>
     </div>
   </v-container>
 </template>
 
 <script>
-//TODO  'npm config set ignore-scripts false' was run. Make sure everything
-// TODO run smoothly at the end
-import { _ } from "vue-underscore";
 import axios from "axios";
 export default {
   data: () => ({
@@ -176,7 +199,7 @@ export default {
     ],
     telephoneRules: [
       v => !!v || "A phone number is required ",
-      v => (v && v.length <= 8) || "Phone number should contain 8 numbers max",
+      v => (v && v.length >= 8) || "Phone number should contain 8 numbers min",
       v => !isNaN(v) || "The phone number should only contain numeric values"
     ],
     editedIndex: -1,
@@ -186,7 +209,7 @@ export default {
       hour: "",
       telephone: "",
       doctor: "",
-      addedBy: ""
+      addedBy: "" 
     },
     defaultItem: {
       name: "",
@@ -194,7 +217,7 @@ export default {
       hour: "",
       telephone: "",
       doctor: "",
-      addedBy: ""
+      addedBy: "" 
     }
   }),
 
@@ -237,10 +260,8 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.getAppointments[this.editedIndex], this.editedItem);
         this.changeItem();
       } else {
-        this.getAppointments.push(this.editedItem);
         this.add();
       }
     },
@@ -286,6 +307,11 @@ export default {
       }
     },
 
+    difference(arr1, arr2) {
+      return arr1
+        .filter(x => !arr2.includes(x))
+        .concat(arr2.filter(x => !arr1.includes(x)));
+    },
     // retrieve booked hours of the day
 
     async loadHours(day) {
@@ -311,15 +337,15 @@ export default {
           params: { date: [day, `hours`] }
         })
         .then(response => {
-          if (response.data.length < 1) {
+          if (response.data.length === 0) {
             // No reservations for that day, send default hours
 
             this.dispoHours = baseHours;
           } else {
             // if there are reservations for that day, display available hours
 
-            let displayHours = _.difference(baseHours, response.data);
-            if (displayHours.length < 1) {
+            let displayHours = this.difference(baseHours, response.data);
+            if (!displayHours[0]) {
               //if fully booked
               this.dispoHours.push("Fully booked");
             } else {
@@ -335,8 +361,8 @@ export default {
     // Add an appointment to dB
 
     async register() {
-      if (this.editedItem.heure) {
-        this.setRank(this.editItem.heure);
+      if (this.editedItem.hour) {
+        this.setRank(this.editItem.hour);
       }
 
       await axios
@@ -354,13 +380,11 @@ export default {
           if (response && response.status === 200) {
             this.success = "New appointment saved";
 
-            setInterval(
-              () => {
-                this.success = null;
-              },
-              3000,
-              this.close()
-            );
+            setTimeout(() => {
+              this.success = null;
+              this.loadBookings(this.picker);
+              this.close();
+            }, 3000);
           }
         })
         .catch(() => {
@@ -389,11 +413,16 @@ export default {
         })
         .then(response => {
           if (response && response.status === 200) {
+            Object.assign(
+         
+              this.editedItem
+            );
             this.success = "An item was edited";
-            setInterval(() => {
+            setTimeout(() => {
+              this.loadBookings(this.picker);
               this.success = null;
               this.close();
-            }, 2000);
+            }, 3000);
           }
         })
         .catch(() => {
@@ -407,14 +436,6 @@ export default {
       axios
         .delete("/reservations", {
           data: { id: this.indexToDel._id }
-        })
-        .then(response => {
-          if (response && response.status === 200) {
-            setInterval(() => {
-              this.success = "An item was deleted";
-              this.close();
-            }, 2000);
-          }
         })
         .catch(() => {
           this.error = "Item could not been deleted";
@@ -431,11 +452,8 @@ export default {
         .then(response => {
           this.getAppointments = response.data;
         })
-        .catch(() => {
-          // if (error) {
-          //   this.getAppointments = [];
-          //   this.loadHours(picker);
-          // }
+        .catch(eror => {
+          this.error = eror;
         });
     },
 
@@ -466,7 +484,7 @@ export default {
   }
 };
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .container {
   .calendarView {
     .text-center {

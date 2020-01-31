@@ -11,13 +11,15 @@ const state = {
   personelPassword: null,
   personelList: [],
   profil: null,
-  error: false,
-  success: false
+  if_error: false,
+  if_success: false
 };
 
 // Todo delete later when unnecessary
 
 const getters = {
+  success: state => state.if_success,
+  error: state => state.if_error,
   getPersonelList: state => state.personelList
 };
 const mutations = {
@@ -52,22 +54,21 @@ const actions = {
       })
       .then(response => {
         if (response.status === 200) {
+          state.if_success = true;
           if (response.data) {
             commit("setPersonel", response.data);
           }
         }
       })
-      .catch(err => {
-        if (err === 403) {
-          throw err;
-        }
+      .catch(() => {
+        state.if_error = true;
       });
   },
 
   // Add new personel
 
   async addPersonel() {
-    let sendData = await axios
+    await axios
       .post("/personel", {
         name: state.personelName,
         departement: state.departement,
@@ -79,20 +80,20 @@ const actions = {
         password: state.personelPassword,
         profil: state.profil
       })
+      .then(response => {
+        if (response && response.status === 200) {
+          state.if_success = true;
+        }
+      })
       .catch(() => {
-        state.error = true;
+        state.if_error = true;
       });
-
-    if (sendData && sendData.status === 200) {
-      state.success = true;
-      alert(sendData.data);
-    }
   },
 
   // Edit personel info
 
   async editPersonel() {
-    let sendData = await axios
+    await axios
       .put("/personel", {
         id: state.personelId,
         name: state.personelName,
@@ -104,29 +105,29 @@ const actions = {
         birthdate: state.personelBirth,
         password: state.personelPassword
       })
+      .then(response => {
+        if (response && response.status === 200) {
+          state.if_success = true;
+        }
+      })
       .catch(() => {
-        state.error = true;
+        state.if_error = true;
       });
-
-    if (sendData && sendData.status === 200) {
-      state.success = true;
-      alert(sendData.data);
-    }
   },
 
   async deletePersonel() {
-    let sendData = await axios
+    await axios
       .delete("/personel", {
         data: { id: state.personelId }
       })
+      .then(response => {
+        if (response && response.status === 200) {
+          state.if_success = true;
+        }
+      })
       .catch(() => {
-        state.error = true;
+        state.if_error = true;
       });
-
-    if (sendData && sendData.status === 200) {
-      state.success = true;
-      alert(sendData.data);
-    }
   }
 };
 

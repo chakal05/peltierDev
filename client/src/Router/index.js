@@ -49,12 +49,13 @@ const router = new Router({
           name: "messages",
           component: messages
         },
+       
         {
           path: "bookings",
           name: "bookings",
           component: bookings
         },
-        
+    
         {
           path: "patientList",
           name: "patientList",
@@ -62,7 +63,7 @@ const router = new Router({
         }
       ]
     },
-
+   
     {
       path: "/doctor",
       name: "doctor",

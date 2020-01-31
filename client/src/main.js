@@ -4,9 +4,7 @@ import vuetify from "./plugins/vuetify";
 import Vuetify from "vuetify/lib";
 import router from "./Router/index";
 import store from "./Store/index";
-import underscore from "vue-underscore";
 
-Vue.use(underscore);
 Vue.use(router);
 Vue.use(Vuetify);
 

@@ -95,6 +95,7 @@
                                 <v-col cols="12" md="6">
                                   <v-text-field
                                     label="Email"
+                                    color='teal darken-4'
                                     autocomplete="email"
                                     v-model="email"
                                     required
@@ -104,13 +105,14 @@
                                   <v-text-field
                                     label="Password"
                                     v-model="pass"
+                                     color='teal darken-4'
                                     type="password"
                                     autocomplete="current-password"
                                     required
                                   ></v-text-field>
                                 </v-col>
                                 <v-col class="d-flex" cols="12" md="12">
-                                  <v-select :items="profils" v-model="profil" label="Profil"></v-select>
+                                  <v-select  color='teal darken-4' :items="profils" v-model="profil" label="Profil"></v-select>
                                 </v-col>
                               </v-row>
                             </v-container>

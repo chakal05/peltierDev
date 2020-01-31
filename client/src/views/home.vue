@@ -10,9 +10,9 @@
     </v-app-bar>
 
     <div>
-      <homepage v-if="showHome"></homepage>
-      <patientInfo v-if="showForm"></patientInfo>
- 
+      
+      <homepage></homepage>
+
         </div>
   </v-container>
 </template>
@@ -20,26 +20,14 @@
 
 <script>
 import homepage from "../components/homepage/landingPage";
-import patientInfo from "../components/homepage/form";
-import { mapGetters } from "vuex";
 
 export default {
   name: "home",
   components: {
-    homepage,
-    patientInfo
+    homepage
   },
-  data: () => ({
-    //
-  }),
-
-  computed: {
-    ...mapGetters(["showHome", "showForm"])
-  },
-
-  methods: {
-    //
-  }
+ 
+  
 };
 </script>
 
