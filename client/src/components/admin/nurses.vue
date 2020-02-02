@@ -25,7 +25,7 @@
           <v-dialog persistent v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
               <v-btn color="teal darken-4" dark class="mb-2" v-on="on"
-                >Add doctor</v-btn
+                >Add nurse </v-btn
               >
             </template>
             <v-card>
@@ -216,7 +216,7 @@ export default {
     ],
     telephoneRules: [
       v => !!v || "A phone number is required ",
-      v => (v && v.length <= 8) || "Phone number should contain 8 numbers max",
+      v => (v && v.length >= 8) || "Phone number should contain 8 numbers min",
       v => !isNaN(v) || "The phone number should only contain numeric values"
     ]
   }),
@@ -328,13 +328,13 @@ export default {
         this.setPersonelInfo({
           adresse: this.editedItem.adresse,
           city: this.editedItem.city,
-          birth: this.date,
+          birth:  this.editedItem.birthdate,
           name: this.editedItem.name,
           email: this.editedItem.email,
           departement: this.editedItem.departement,
           tel: this.editedItem.telephone,
           pass: this.editedItem.password,
-          profil: "doctor"
+          profil: "nurse"
         });
 
         this.addPersonel();
@@ -350,22 +350,26 @@ export default {
         }
       } else {
         this.ifError = "All fields must be filled";
+        
+        setTimeout(() => {
+          this.ifError = null;
+        }, 3000);
         this.dialog = true;
       }
     },
 
     edit() {
       this.setPersonelInfo({
-        adresse: this.editedItem.adresse,
+          adresse: this.editedItem.adresse,
         city: this.editedItem.city,
-        birth: this.date,
+        birth:  this.editedItem.birthdate,
         name: this.editedItem.name,
         email: this.editedItem.email,
         departement: this.editedItem.departement,
         tel: this.editedItem.telephone,
         pass: this.editedItem.password,
-        id: this.editedItem._id,
-        profil: "nurse"
+        profil: "nurse",
+        id: this.editedItem._id
       });
       this.editPersonel();
 

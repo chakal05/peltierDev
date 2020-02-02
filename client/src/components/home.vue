@@ -13,9 +13,8 @@
             >Login</v-btn
           >
         </template>
-        <v-card  >
-          
-          <v-card-text>
+        <v-card>
+          <v-card-text v-bind:style="{ paddingTop: '1rem' }">
             <v-form>
               <v-container>
                 <v-row>
@@ -50,17 +49,29 @@
               </v-container>
             </v-form>
           </v-card-text>
-          <v-card-actions>
-          <v-col class="text-center">
-              <v-btn v-bind:style="{ marginRight: '1rem'}" color="teal darken-4" class="white--text" @click="save"
-              >Validate</v-btn
-            > 
 
-           
-            <v-btn color="error" @click="dialog = false">Cancel</v-btn>
-        
-          </v-col>
-            </v-card-actions>
+          <div class="text-center">
+            <p v-bind:style="{ color: 'red' }">{{ error }}</p>
+          </div>
+
+          <v-card-actions v-bind:style="{ paddingBottom: '3rem' }">
+            <v-col class="text-center">
+              <v-btn
+                v-bind:style="{ marginRight: '1rem', marginLeft: '1rem' }"
+                color="teal darken-4"
+                class="white--text"
+                @click="save"
+                >Validate</v-btn
+              >
+              <v-progress-circular
+                v-if="wait"
+                v-bind:style="{ marginRight: '1rem' }"
+                indeterminate
+                color="teal darken-4"
+              ></v-progress-circular>
+              <v-btn color="error" @click="dialog = false">Cancel</v-btn>
+            </v-col>
+          </v-card-actions>
         </v-card>
       </v-dialog>
     </v-app-bar>
@@ -71,7 +82,7 @@
           <h1 class="display-2 font-weight-bold mb-4 white--text">
             Manedek Medical Center
           </h1>
-           </v-row>
+        </v-row>
       </v-parallax>
     </div>
   </v-container>
@@ -82,8 +93,10 @@ import axios from "axios";
 export default {
   data: () => ({
     dialog: false,
-    profils: ["admin", "doctor", "nurse", "patient"],
+    wait: false,
+    profils: ["admin", "doctor", "nurse"],
     email: "",
+    error: null,
     pass: "",
     profil: ""
   }),
@@ -117,12 +130,20 @@ export default {
     async save() {
       if (this.email && this.pass && this.profil) {
         await axios
-          .post("/login", {
-            email: this.email,
-            password: this.pass,
-            profil: this.profil
-          })
+          .post(
+            "/login",
+            {
+              email: this.email,
+              password: this.pass,
+              profil: this.profil
+            },
+            (this.wait = true)
+          )
           .then(response => {
+            if (response) {
+              this.wait = false;
+            }
+
             if (response.status === 200) {
               const token = response.data.accesToken;
               const decoded = this.parseJwt(token);
@@ -153,11 +174,12 @@ export default {
           })
           .catch(err => {
             if (err) {
-              alert("something wrong with the credentials");
+              this.error = "something wrong with the credentials";
+              this.wait = false;
             }
           });
       } else {
-        alert("All fields are required");
+        this.error = "All fields are required";
       }
     }
   }
@@ -170,13 +192,25 @@ $baseColor: #00695c;
 .container {
   .v-toolbar {
     padding-left: 0.5rem;
+    .v-toolbar__title {
+      @media (max-width: 414px) {
+        padding-left: 0;
+        font-size: 1.3rem;
+      }
+    }
+
     .logo {
       .v-icon {
         font-size: 3rem;
+        @media (max-width: 414px) {
+        padding-left: 0;
+        font-size: 2rem;
+      }
       }
     }
+
   }
- 
+
   margin-top: 2rem;
   .v-parallax {
     height: 870px !important;
@@ -193,7 +227,6 @@ $baseColor: #00695c;
         padding: 1rem;
         border-radius: 5px;
       }
-
     }
   }
 }

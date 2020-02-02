@@ -328,7 +328,7 @@ export default {
         this.setPersonelInfo({
           adresse: this.editedItem.adresse,
           city: this.editedItem.city,
-          birth: this.date,
+          birth: this.editedItem.birthdate,
           name: this.editedItem.name,
           email: this.editedItem.email,
           departement: this.editedItem.departement,
@@ -350,6 +350,10 @@ export default {
         }
       } else {
         this.ifError = "All fields must be filled";
+
+        setTimeout(() => {
+          this.ifError = null;
+        }, 3000);
         this.dialog = true;
       }
     },
@@ -358,14 +362,14 @@ export default {
       this.setPersonelInfo({
         adresse: this.editedItem.adresse,
         city: this.editedItem.city,
-        birth: this.date,
+        birth: this.editedItem.birthdate,
         name: this.editedItem.name,
         email: this.editedItem.email,
         departement: this.editedItem.departement,
         tel: this.editedItem.telephone,
         pass: this.editedItem.password,
-        id: this.editedItem._id,
-        profil: "nurse"
+        profil: "doctor",
+        id: this.editedItem._id
       });
       this.editPersonel();
 

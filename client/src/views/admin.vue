@@ -93,7 +93,7 @@
           </router-link>
         </v-badge>
 
-        <v-btn>{{ userName }}</v-btn>
+        <v-btn text>{{ userName }}</v-btn>
       </v-app-bar>
 
       <v-content>
@@ -230,27 +230,33 @@ export default {
           font-size: 3rem;
           margin-left: 0rem;
         }
+
+        @media (max-width: 414px) {
+          display: none;
+        }
       }
 
       .v-badge {
         margin: 2.5rem !important;
+
+        @media (max-width: 414px) {
+        margin-top: 2.7rem !important;
+      }
 
         .v-icon {
           margin-right: -0.5rem;
         }
       }
 
-      .v-avatar {
-        margin-left: 1rem;
-        margin-top: -0.5rem;
-        a {
-          img {
-            height: 3rem;
-            width: 3rem;
-            border-radius: 50%;
-          }
+      .v-btn{
+
+        @media (max-width: 320px) {
+          margin-right: -1rem;
+          font-size: .9rem;
         }
       }
+
+    
     }
   }
 }

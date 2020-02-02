@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/peltier", {
   useNewUrlParser: true,
@@ -35,7 +34,7 @@ async function loadMessages() {
 // add Message
 
 router.post("/", async function(req, res) {
- 
+
   let payload = {
     senderName: req.body.name,
     userFrom: req.body.from,
@@ -116,7 +115,7 @@ router.put("/:id", async function(req, res) {
 
 // delete Message
 
-router.post("/:id", async function(req, res) {
+router.delete("/", async function(req, res) {
   
   id = req.body.id;
   let query = await loadMessages();

@@ -140,9 +140,10 @@
               color="teal darken-4"
               rows="2"
             ></v-textarea>
-            <v-icon @click="save" color="teal darken-4" class="btnSend"
-              >send</v-icon
-            >
+
+            <v-btn text @click="save" class="btnSend">
+              <v-icon color="teal darken-4"> send </v-icon>
+            </v-btn>
           </div>
         </v-card>
       </v-col>
@@ -269,7 +270,6 @@ export default {
             this.del = false;
 
             const width = window.innerWidth;
-
             if (width < 960) {
               this.sideBar = false;
             }
@@ -282,8 +282,8 @@ export default {
 
     async deleteMess(id) {
       await axios
-        .post("/messages/:id", {
-          id: id
+        .delete("/messages/", {
+          data: { id: id }
         })
         .then(response => {
           if (response.status === 200) {
@@ -292,7 +292,6 @@ export default {
 
             setInterval(() => {
               this.success = false;
-              this.chat = false;
               this.loadMessages();
             }, 3000);
           }
@@ -324,7 +323,7 @@ export default {
             this.success = true;
             setInterval(() => {
               this.success = false;
-              this.chat = false;
+             // this.chat = false;
             }, 3000);
           }
         })
@@ -372,6 +371,7 @@ export default {
       }
     }
     .main {
+       
       .callToAction {
         .v-card__text {
           position: absolute;
@@ -387,6 +387,9 @@ export default {
         }
       }
       .chat_box {
+        @include desktop {
+          
+            }
         .v-toolbar {
           .goBack {
             font-size: 1.5rem;
@@ -429,7 +432,7 @@ export default {
           .btnSend {
             position: absolute;
             right: 1rem;
-            bottom: 3rem;
+            bottom: 2.7rem;
           }
         }
       }

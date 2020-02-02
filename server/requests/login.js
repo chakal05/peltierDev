@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const Mongo = require("mongodb").MongoClient;
 const url = "mongodb://localhost:27017/";
 const jwt = require("jsonwebtoken");
-//
+
 
 async function checkUser() {
   const connection = await Mongo.connect(url, {
@@ -16,28 +16,31 @@ async function checkUser() {
 }
 
 router.post("/", async function(req, res) {
-  if (req.body.profil !== "patient") {
-    let query = await checkUser();
+  let query = await checkUser();
 
-    let result = await query.findOne({
-      email: req.body.email,
-      profil: req.body.profil
-    });
+  let result = await query.findOne({
+    email: req.body.email,
+    profil: req.body.profil
+  });
 
-    if (result) {
-      let check = bcrypt.compareSync(req.body.password, result.password);
+  if (result) {
+    let check = bcrypt.compareSync(req.body.password, result.password);
+
+    if (check) {
+      const accesToken = jwt.sign(result, process.env.ACCESS_TOKEN_SECRET);
+      return res.status(200).json({ accesToken: accesToken });
+
+    } else {
+      return res.status(503).json({ message: "password doesnt match dB pass" });
+    }
+
     
-      if (check) {
-        const accesToken = jwt.sign(result, process.env.ACCESS_TOKEN_SECRET);
-        return res.status(200).json({ accesToken: accesToken });
-      } else {
-        return res
-          .status(503)
-          .json({ message: "password doesnt match dB pass" });
-      }
-    } else if (result === null) {
-      return res.status(503).json({ message: "Email and profil not found" });
-    } 
+  } else if (!result) {
+    return res.status(503).json({ message: "Email and profil not found" });
+  }
+
+  if(res.finished){
+    console.log(`sent res`);
   }
 });
 
