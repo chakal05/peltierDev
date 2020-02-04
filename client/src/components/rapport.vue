@@ -24,7 +24,7 @@
           <v-spacer></v-spacer>
           <v-dialog persistent v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn @click="editItem" color="teal darken-4" dark class="mb-2" v-on="on">Add patient</v-btn>
+              <v-btn @click="editItem" color="teal darken-4" dark class="mb-2" v-on="on">Add rapport</v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -34,41 +34,14 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col cols="12" sm="6" md="12">
                       <v-text-field
                         color="teal darken-4"
-                        :rules="nameRules"
-                        v-model="editedItem.name"
-                        label="Name"
+                        v-model="editedItem.description"
+                        label="Description"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        :rules="telephoneRules"
-                        v-model="editedItem.telephone"
-                        label="Telephone"
-                        color="teal darken-4"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        color="teal darken-4"
-                        v-model="editedItem.adresse"
-                        label="Adresse"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field color="teal darken-4" v-model="editedItem.city " label="City"></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        color="teal darken-4"
-                        v-model="editedItem.email"
-                        :rules="emailRules"
-                        label="Email"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col cols="12" sm="6" md="6">
                       <v-menu
                         ref="menu"
                         v-model="menu"
@@ -80,8 +53,8 @@
                       >
                         <template v-slot:activator="{ on }">
                           <v-text-field
-                            v-model="editedItem.birthdate"
-                            label="Birthday date"
+                            v-model="editedItem.day"
+                            label="Date"
                             prepend-icon="event"
                             readonly
                             v-on="on"
@@ -92,13 +65,21 @@
                           ref="picker"
                           v-model="date"
                           color="teal darken-4"
-                          :max="new Date().toISOString().substr(0, 10)"
-                          min="1950-01-01"
+                         
                           @change="birth"
                         ></v-date-picker>
                       </v-menu>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col cols="12" sm="6" md="6">
+                      <v-select
+                        v-model="editedItem.patient"
+                        :items="getPatientsList"
+                        label="Patient"
+                        color="teal darken-4"
+                        required
+                      ></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="12">
                       <v-select
                         v-model="editedItem.doctor"
                         :items="getDoctorList"
@@ -150,40 +131,31 @@ export default {
     menu: false,
     headers: [
       {
-        text: "Name",
+        text: "Description",
         align: "left",
         sortable: false,
-        value: "name"
+        value: "description"
       },
-      { text: "Telephone", value: "telephone" },
-      { text: "Email", value: "email" },
-      { text: "Adresse", value: "adresse" },
-      { text: "City", value: "city" },
-      { text: "Birthdate", value: "birthdate" },
+      { text: "Patient", value: "patient" },
       { text: "Doctor", value: "doctor" },
-      { text: "added by", value: "addedBy" },
+      { text: "Date", value: "day" },
+      { text: "Added by", value: "addedBy" },
       { text: "Actions", value: "action", sortable: false }
     ],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      departement: "",
-      telephone: "",
-      adresse: "",
-      city: "",
-      email: "",
-      birthdate: "",
-      doctor: ""
+      description: "",
+      patient: "",
+      doctor: "",
+      day: "",
+      addedBy: ""
     },
     defaultItem: {
-      name: "",
-      departement: "",
-      telephone: "",
-      adresse: "",
-      city: "",
-      email: "",
-      birthdate: "",
-      doctor: ""
+      description: "",
+      patient: "",
+      doctor: "",
+      day: "",
+      addedBy: ""
     },
     show1: false,
     getRapports: []
@@ -225,7 +197,7 @@ export default {
 
   created() {
     this.initialize();
-    this.loadPatients();
+    this.loadRapports();
   },
 
   methods: {
@@ -235,21 +207,22 @@ export default {
 
     editItem(item) {
       this.docList();
-      this.editedIndex = this.getPatientsList.indexOf(item);
+      this.loadPatients("names");
+      this.editedIndex = this.getRapports.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.getPatientsList.indexOf(item);
-      this.indexToDel = this.getPatientsList[index];
+      const index = this.getRapports.indexOf(item);
+      this.indexToDel = this.getRapports[index];
       confirm("Are you sure you want to delete this item?") &&
-        this.supprPatient();
+        this.supprRapport();
     },
 
     birth(date) {
       this.$refs.menu.save(date);
-      if (date) this.editedItem.birthdate = date;
+      if (date) this.editedItem.day = date;
     },
 
     close() {
@@ -270,31 +243,32 @@ export default {
 
     // retrieve rapports
 
-  async  getRapports(){
-      await axios.get('rapport').then().catch()
-  },
+    async loadRapports() {
+      await axios
+        .get("/rapport")
+        .then(response =>{
+            if(response && response.status === 200){
+                this.getRapports = response.data;
+            }
+        })
+        .catch();
+    },
 
     //add patients
 
     async add() {
       if (
-        this.editedItem.name &&
-        this.editedItem.telephone &&
-        this.editedItem.adresse &&
-        this.editedItem.city &&
-        this.editedItem.birthdate &&
-        this.editedItem.email
+        this.editedItem.description &&
+        this.editedItem.patient &&
+        this.editedItem.doctor &&
+        this.editedItem.day
       ) {
         await axios
           .post("/rapport", {
-            name: this.editedItem.name,
-            telephone: this.editedItem.telephone,
-            email: this.editedItem.email,
-            adresse: this.editedItem.adresse,
-            city: this.editedItem.city,
-            birthdate: this.editedItem.birthdate,
+            description: this.editedItem.description,
+            patient: this.editedItem.patient,
             doctor: this.editedItem.doctor,
-            profil: "patient",
+            day: this.editedItem.day,
             addedBy: localStorage.getItem("tokenUserName")
           })
           .then(response => {
@@ -302,7 +276,7 @@ export default {
               this.error = null;
               this.success = "Added a new doctor";
               setTimeout(() => {
-                this.loadPatients();
+                this.loadRapports();
 
                 this.success = null;
                 this.close();
@@ -321,14 +295,10 @@ export default {
       await axios
         .put("/rapport", {
           id: this.editedItem._id,
-          name: this.editedItem.name,
-          telephone: this.editedItem.telephone,
-          email: this.editedItem.email,
-          adresse: this.editedItem.adresse,
-          city: this.editedItem.city,
-          birthdate: this.editedItem.birthdate,
+          description: this.editedItem.description,
+          patient: this.editedItem.patient,
           doctor: this.editedItem.doctor,
-          profil: "patient",
+          day: this.editedItem.day,
           addedBy: localStorage.getItem("tokenUserName")
         })
         .then(response => {
@@ -336,7 +306,7 @@ export default {
             this.error = null;
             this.success = "Edited one item";
             setTimeout(() => {
-              this.loadPatients();
+              this.loadRapports();
               this.success = null;
               this.close();
             }, 3000);
@@ -347,14 +317,14 @@ export default {
         });
     },
 
-    async supprPatient() {
+    async supprRapport() {
       await axios
         .delete("/rapport", {
           data: this.indexToDel
         })
         .then(response => {
           if (response && response.status === 200) {
-            this.loadPatients();
+            this.loadRapports();
           }
         })
         .catch(() => {

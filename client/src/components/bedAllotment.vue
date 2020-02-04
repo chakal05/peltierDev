@@ -64,6 +64,7 @@
                         v-model="menu"
                         :close-on-content-click="false"
                         transition="scale-transition"
+                        :return-value.sync="date"
                         offset-y
                         full-width
                         min-width="290px"
@@ -82,6 +83,7 @@
                           ref="picker"
                           v-model="date"
                           color="teal darken-4"
+                          :max="new Date().toISOString().substr(0, 10)"
                           min="1950-01-01"
                           @change="dayIn"
                         ></v-date-picker>
@@ -105,13 +107,13 @@
                             readonly
                             v-on="on"
                             color="teal darken-4"
+                            min="1950-01-01"
                           ></v-text-field>
                         </template>
                         <v-date-picker
                           ref="picker2"
                           v-model="datum"
                           color="teal darken-4"
-                          min="1950-01-01"
                           @change="dayOut"
                         ></v-date-picker>
                       </v-menu>
@@ -155,8 +157,8 @@ export default {
     error: null,
     search: "",
     indexToDel: null,
-    date: null,
-    datum: null,
+    date: new Date().toISOString().substr(0, 10),
+    datum: new Date().toISOString().substr(0, 10),
     menu: false,
     menu2: false,
     bedsList: [],

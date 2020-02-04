@@ -22,12 +22,15 @@ const personel = require("./requests/personel");
 const patients = require("./requests/patient");
 const messages = require("./requests/messages");
 const bedAllotment = require("./requests/bedAll");
+const rapport = require("./requests/rapport");
 
 app.use("/reservations", reservations);
 app.use("/personel", personel);
 app.use("/patient", patients);
 app.use("/messages", messages);
 app.use("/bedAll", bedAllotment);
+app.use("/rapport", rapport);
+
 const port = process.env.port || 4000;
 let server = app.listen(port, () => console.log("APP RUNNING ON PORT 4000"));
 
