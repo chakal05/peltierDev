@@ -59,15 +59,27 @@ router.post("/", async function(req, res) {
   }
 });
 
-// get personel list
+// get patient list
 
 router.get("/", async function(req, res) {
   let query = await loadPatients();
-  await query.find({ profil: req.query.profil }, (error, patientsList) => {
-    if (error) return res.status(500).send(error);
-   
-    return res.status(200).send(patientsList);
-  });
+  let names = [];
+  if (req.query.data === "names") {
+    await query.find({}, (error, patientsList) => {
+      if (error) return res.status(500).send(error);
+
+      patientsList.forEach(el => {
+        names.push(el.name);
+      })
+      return res.status(200).send(names);
+    });
+  } else {
+    await query.find({}, (error, patientsList) => {
+      if (error) return res.status(500).send(error);
+
+      return res.status(200).send(patientsList);
+    });
+  }
 });
 
 // Edit personel

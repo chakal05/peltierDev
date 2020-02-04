@@ -93,15 +93,29 @@ router.get("/", async function(req, res) {
       .catch(err => {
         throw err;
       });
-  } else {
+  } else if ( req.query.data === 'doctorList'){
+    let docList = [];
     query
-      .find({ profil: req.query.profil }, (error, personelList) => {
+      .find({ profil: req.query.profil }, (error, doctorList) => {
         if (error) return res.status(500).send(error);
-        return res.status(200).send(personelList);
+
+        doctorList.forEach(el =>{
+          docList.push(el.name);
+        })
+        return res.status(200).send(docList);
       })
       .catch(err => {
         throw err;
       });
+  } else{
+    query
+    .find({ profil: req.query.profil }, (error, personelList) => {
+      if (error) return res.status(500).send(error);
+      return res.status(200).send(personelList);
+    })
+    .catch(err => {
+      throw err;
+    });
   }
 });
 

@@ -49,7 +49,7 @@ const actions = {
     await axios
       .get("/personel", {
         params: {
-          profil
+         profil: profil 
         }
       })
       .then(response => {

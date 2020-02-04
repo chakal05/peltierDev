@@ -7,10 +7,13 @@ import doctorView from "../views/doctor.vue";
 import adminDoc from "../components/admin/doctors.vue";
 import nurseView from "../views/nurse.vue";
 import adminNurse from "../components/admin/nurses.vue";
-import patientView from "../views/patient.vue";
 import messages from "../components/messages.vue";
 import bookings from "../components/bookings.vue";
-import patientList from "../components/admin/patient.vue";
+import patientList from "../components/patient.vue";
+import nurseDash from "../components/nurse/dashboard.vue";
+import docDash from "../components/doctor/dashboard.vue";
+import bedAllotment from "../components/bedAllotment.vue";
+import rapport from '../components/rapport';
 Vue.use(Router);
 
 const router = new Router({
@@ -49,28 +52,57 @@ const router = new Router({
           name: "messages",
           component: messages
         },
-       
+
         {
-          path: "bookings",
+          path: "bookingsAdmin",
           name: "bookings",
           component: bookings
         },
-    
+
         {
           path: "patientList",
           name: "patientList",
           component: patientList
+        },
+
+        {
+          path: "bedAllotment",
+          name: "bedAllotment",
+          component: bedAllotment
         }
       ]
     },
-   
+
     {
       path: "/doctor",
       name: "doctor",
       component: doctorView,
       meta: {
         requiresAuth: true
-      }
+      },
+      children: [
+        {
+          path: "docDash",
+          name: "docDash",
+          component: docDash
+        },
+
+        {
+          path: "bookings",
+          name: "bookingsDoc",
+          component: bookings
+        },
+        {
+          path: "patientList",
+          name: "patientListDoc",
+          component: patientList
+        },
+        {
+          path: "bedAllotment",
+          name: "bedAllotmentDoc",
+          component: bedAllotment
+        }
+      ]
     },
 
     {
@@ -79,16 +111,34 @@ const router = new Router({
       component: nurseView,
       meta: {
         requiresAuth: true
-      }
-    },
-
-    {
-      path: "/patient",
-      name: "patient",
-      component: patientView,
-      meta: {
-        requiresAuth: true
-      }
+      },
+      children: [
+        {
+          path: "nurseDash",
+          name: "nurseDash",
+          component: nurseDash
+        },
+        {
+          path: "bookings",
+          name: "bookingsNur",
+          component: bookings
+        },
+        {
+          path: "patientList",
+          name: "patientListNur",
+          component: patientList
+        },
+        {
+          path: "bedAllotment",
+          name: "bedAllotmentNur",
+          component: bedAllotment
+        },
+        {
+          path: "rapport",
+          name: "rapportNur",
+          component: rapport
+        }
+      ]
     }
   ]
 });

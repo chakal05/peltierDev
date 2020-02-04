@@ -15,9 +15,7 @@
             class="mt-4"
           ></v-date-picker>
           <v-col class="text-center" cols="12">
-            <v-btn color="teal darken-4" class="white--text mr-4" @click="load"
-              >SEARCH</v-btn
-            >
+            <v-btn color="teal darken-4" class="white--text mr-4" @click="load">SEARCH</v-btn>
           </v-col>
         </v-col>
       </v-row>
@@ -48,14 +46,7 @@
             <v-spacer></v-spacer>
             <v-dialog persistent v-model="dialog" max-width="500px">
               <template v-slot:activator="{ on }">
-                <v-btn
-                  color="teal darken-4"
-                  dark
-                  class="mb-2"
-                  v-on="on"
-                  @click="editItem"
-                  >Add new</v-btn
-                >
+                <v-btn color="teal darken-4" dark class="mb-2" v-on="on" @click="editItem">Add new</v-btn>
               </template>
               <v-card>
                 <v-card-title>
@@ -74,12 +65,7 @@
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-select
-                          :items="genre"
-                          v-model="editedItem.sexe"
-                          label="Gender"
-                          required
-                        ></v-select>
+                        <v-select :items="genre" v-model="editedItem.sexe" label="Gender" required></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
@@ -99,17 +85,12 @@
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="picker"
-                          readonly
-                          label="Day"
-                          required
-                        ></v-text-field>
+                        <v-text-field v-model="picker" readonly label="Day" required></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-select
                           v-model="editedItem.doctor"
-                          :items="docteur"
+                          :items="getDoctorList"
                           label="Doctor"
                           required
                         ></v-select>
@@ -125,9 +106,7 @@
 
                 <v-card-actions>
                   <div class="flex-grow-1"></div>
-                  <v-btn color="teal darken-4" text @click="close"
-                    >Cancel</v-btn
-                  >
+                  <v-btn color="teal darken-4" text @click="close">Cancel</v-btn>
                   <v-btn color="teal darken-4" text @click="save">Save</v-btn>
                 </v-card-actions>
               </v-card>
@@ -143,12 +122,7 @@
         </template>
       </v-data-table>
       <v-col class="text-center boutonBox" cols="12">
-        <v-btn
-          color="teal darken-4"
-          class="white--text mr-4"
-          @click="backToCalendar"
-          >Previous</v-btn
-        >
+        <v-btn color="teal darken-4" class="white--text mr-4" @click="backToCalendar">Previous</v-btn>
       </v-col>
     </div>
   </v-container>
@@ -156,6 +130,7 @@
 
 <script>
 import axios from "axios";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   data: () => ({
     dialog: false,
@@ -169,12 +144,6 @@ export default {
     zero: false,
     fifteen: 15,
     rank: null,
-    docteur: [
-      "Assign doctor   --",
-      "Dr Omar Hassan Houssein",
-      "Dr Hodan Farah Nour",
-      "Dr Moussa Moussa Ali"
-    ],
     indexToDel: null,
     genre: [`Man`, `Woman`],
     getAppointments: [],
@@ -209,7 +178,7 @@ export default {
       hour: "",
       telephone: "",
       doctor: "",
-      addedBy: "" 
+      addedBy: ""
     },
     defaultItem: {
       name: "",
@@ -217,13 +186,24 @@ export default {
       hour: "",
       telephone: "",
       doctor: "",
-      addedBy: "" 
+      addedBy: ""
     }
   }),
 
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New item" : "Edit item";
+    },
+
+    ...mapGetters({ theList: "getDoctorList" }),
+    getDoctorList: {
+      get() {
+        return this.theList;
+      },
+
+      set(list) {
+        return list;
+      }
     }
   },
 
@@ -239,6 +219,7 @@ export default {
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
       this.loadHours(this.picker);
+      this.docList();
     },
 
     deleteItem(item) {
@@ -307,11 +288,6 @@ export default {
       }
     },
 
-    difference(arr1, arr2) {
-      return arr1
-        .filter(x => !arr2.includes(x))
-        .concat(arr2.filter(x => !arr1.includes(x)));
-    },
     // retrieve booked hours of the day
 
     async loadHours(day) {
@@ -343,8 +319,9 @@ export default {
             this.dispoHours = baseHours;
           } else {
             // if there are reservations for that day, display available hours
-
-            let displayHours = this.difference(baseHours, response.data);
+            let displayHours = baseHours
+              .filter(x => !response.data.includes(x))
+              .concat(response.data.filter(x => !baseHours.includes(x)));
             if (!displayHours[0]) {
               //if fully booked
               this.dispoHours.push("Fully booked");
@@ -413,10 +390,7 @@ export default {
         })
         .then(response => {
           if (response && response.status === 200) {
-            Object.assign(
-         
-              this.editedItem
-            );
+            Object.assign(this.editedItem);
             this.success = "An item was edited";
             setTimeout(() => {
               this.loadBookings(this.picker);
@@ -480,7 +454,9 @@ export default {
     backToCalendar() {
       this.showCalendar = true;
       this.showTable = false;
-    }
+    },
+    ...mapActions(["docList"]),
+    ...mapMutations(["difference"])
   }
 };
 </script>

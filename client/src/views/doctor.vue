@@ -22,9 +22,20 @@
               <v-icon>dashboard</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-content>
+            <router-link to="/doctor/docDash">
               <v-list-item-title>Dashboard</v-list-item-title>
-            </v-list-item-content>
+            </router-link>
+          </v-list-item>
+
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>schedule</v-icon>
+            </v-list-item-icon>
+
+            <router-link to="/doctor/bookings">
+              <v-list-item-title>Appointments</v-list-item-title>
+            </router-link>
           </v-list-item>
 
           <v-list-item>
@@ -32,25 +43,15 @@
               <v-icon>fas fa-user</v-icon>
             </v-list-item-icon>
 
-            <v-list-item-content>
-              <v-list-item-title>Patient</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>schedule</v-icon>
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              <v-list-item-title>Appointment</v-list-item-title>
-            </v-list-item-content>
+            <router-link to="/doctor/patientList">
+              <v-list-item-title>Patients</v-list-item-title>
+            </router-link>
           </v-list-item>
         </v-list>
 
         <template v-slot:append>
           <div class="pa-2">
-            <v-btn color="white" light block>Logout</v-btn>
+            <v-btn color="white" @click="logOut" light block>Logout</v-btn>
           </div>
         </template>
       </v-navigation-drawer>
@@ -65,19 +66,23 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon>
-          <v-icon>mdi-bell</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>account_circle</v-icon>
-        </v-btn>
+        <v-badge  color="teal darken-4">
+          <template  v-slot:badge>
+            <span > {{newMessages}} </span>
+          </template>
+          <router-link to="/admin/messages">
+            <v-icon>mdi-email</v-icon>
+          </router-link>
+        </v-badge>
+
+        <v-btn text>{{ userName }}</v-btn>
       </v-app-bar>
 
       <v-content>
         <v-container fill-height>
           <v-layout justify-center align-center>
             <v-flex>
-              <dashboard></dashboard>
+              <router-view />
             </v-flex>
           </v-layout>
         </v-container>
@@ -87,28 +92,81 @@
 </template>
 
 <script>
-import dashboard from "../components/doctor/dashboard";
+import { mapMutations } from "vuex";
+import axios from "axios";
 export default {
-  name: "doctor",
+  name: "admin",
   components: {
-    dashboard
-  },
-
-  computed: {
     //
   },
+  created() {
+    //get number of unread messages
+   this.notifyMessages();
+
+    // get number of unread messages every 3 seconds
+   this.getUnread();
+  },
+
+  computed: {},
   data: () => ({
-    drawer: null
+    drawer: null,
+    timer: null,
+    show: true,
+    newMessages: null,
+    userName: localStorage.getItem("tokenUserName")
   }),
 
   methods: {
-    //
+    ...mapMutations(["logOut"]),
+
+    getUnread() {
+      this.timer = setInterval(async () => {
+        await axios
+          .get("/messages", {
+            params: {
+              id: localStorage.getItem("tokenUserId"),
+              data: "unread"
+            }
+          })
+          .then(reponse => {
+            this.newMessages = reponse.data;
+          })
+          .catch(err => {
+            throw err;
+          });
+      }, 3000);
+    },
+
+    async notifyMessages() {
+      await axios
+        .get("/messages", {
+          params: {
+            id: localStorage.getItem("tokenUserId"),
+            data: "unread"
+          }
+        })
+        .then(reponse => {
+          this.newMessages = reponse.data;
+        })
+        .catch(err => {
+          throw err;
+        });
+    }
+  },
+
+  beforeDestroy() {
+    clearInterval(this.timer);
   }
 };
 </script>
 
 <style  lang='scss' scoped>
 .container {
+  a {
+    text-decoration: none;
+    color: white;
+  }
+
   .v-application--wrap {
     .v-navigation-drawer {
       .logo-gris {
@@ -154,7 +212,33 @@ export default {
           font-size: 3rem;
           margin-left: 0rem;
         }
+
+        @media (max-width: 414px) {
+          display: none;
+        }
       }
+
+      .v-badge {
+        margin: 2.5rem !important;
+
+        @media (max-width: 414px) {
+        margin-top: 2.7rem !important;
+      }
+
+        .v-icon {
+          margin-right: -0.5rem;
+        }
+      }
+
+      .v-btn{
+
+        @media (max-width: 320px) {
+          margin-right: -1rem;
+          font-size: .9rem;
+        }
+      }
+
+    
     }
   }
 }

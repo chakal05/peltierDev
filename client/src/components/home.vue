@@ -9,9 +9,7 @@
       <div class="flex-grow-1"></div>
       <v-dialog v-model="dialog" persistent max-width="600px">
         <template v-slot:activator="{ on }">
-          <v-btn color="teal darken-4" class="white--text" v-on="on"
-            >Login</v-btn
-          >
+          <v-btn color="teal darken-4" class="white--text" v-on="on">Login</v-btn>
         </template>
         <v-card>
           <v-card-text v-bind:style="{ paddingTop: '1rem' }">
@@ -61,8 +59,7 @@
                 color="teal darken-4"
                 class="white--text"
                 @click="save"
-                >Validate</v-btn
-              >
+              >Validate</v-btn>
               <v-progress-circular
                 v-if="wait"
                 v-bind:style="{ marginRight: '1rem' }"
@@ -79,9 +76,7 @@
     <div>
       <v-parallax dark src="../assets/doctors.jpg">
         <v-row align="center" justify="center">
-          <h1 class="display-2 font-weight-bold mb-4 white--text">
-            Manedek Medical Center
-          </h1>
+          <h1 class="display-2 font-weight-bold mb-4 white--text">Manedek Medical Center</h1>
         </v-row>
       </v-parallax>
     </div>
@@ -153,23 +148,19 @@ export default {
               localStorage.setItem("tokenUserId", decoded._id);
               localStorage.setItem("tokenUserProfil", decoded.profil);
               this.setHeaders();
-              // if (decoded.profil === "admin") {
-              //   if (this.$router.path !== "/admin/adminDash") {
-              //
-              //   }
-              // }
-
-              this.$router.push("/admin/adminDash");
-              //   else if (decoded.profil === "doctor") {
-              //    if (this.$router.path !== "/admin/adminDash") {
-              //      this.$router.push("/admin/adminDash");
-              //    }
-              //  } else if (decoded.profil === "nurse") {
-              //    if (this.$router.path !== "/admin/adminDash") {
-              //      this.$router.push("/admin/adminDash");
-              //
-              //   }
-              //  }
+              if (decoded.profil === "admin") {
+                if (this.$router.path !== "/admin/adminDash") {
+                  this.$router.push("/admin/adminDash");
+                }
+              } else if (decoded.profil === "doctor") {
+                if (this.$router.path !== "/doctor/docDash") {
+                  this.$router.push("/doctor/docDash");
+                }
+              } else if (decoded.profil === "nurse") {
+                if (this.$router.path !== "/nurse/nurseDash") {
+                  this.$router.push("/nurse/nurseDash");
+                }
+              }
             }
           })
           .catch(err => {
@@ -203,12 +194,11 @@ $baseColor: #00695c;
       .v-icon {
         font-size: 3rem;
         @media (max-width: 414px) {
-        padding-left: 0;
-        font-size: 2rem;
-      }
+          padding-left: 0;
+          font-size: 2rem;
+        }
       }
     }
-
   }
 
   margin-top: 2rem;

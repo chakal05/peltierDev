@@ -1,12 +1,12 @@
 <template>
   <v-container>
     <div class="text-center">
-      <h2 class="display-2 font-weight-thin mb-4">Patients list</h2>
+      <h2 class="display-2 font-weight-thin mb-4">Rapport</h2>
     </div>
     <br />
     <v-data-table
       :headers="headers"
-      :items="getPatientsList"
+      :items="getRapports"
       :search="search"
       sort-by="name"
       class="elevation-1"
@@ -24,7 +24,7 @@
           <v-spacer></v-spacer>
           <v-dialog persistent v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Add patient</v-btn>
+              <v-btn @click="editItem" color="teal darken-4" dark class="mb-2" v-on="on">Add patient</v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -35,24 +35,38 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field color='teal darken-4' :rules="nameRules" v-model="editedItem.name" label="Name"></v-text-field>
+                      <v-text-field
+                        color="teal darken-4"
+                        :rules="nameRules"
+                        v-model="editedItem.name"
+                        label="Name"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
                         :rules="telephoneRules"
                         v-model="editedItem.telephone"
                         label="Telephone"
-                        color='teal darken-4'
+                        color="teal darken-4"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field color='teal darken-4' v-model="editedItem.adresse" label="Adresse"></v-text-field>
+                      <v-text-field
+                        color="teal darken-4"
+                        v-model="editedItem.adresse"
+                        label="Adresse"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field color='teal darken-4' v-model="editedItem.city " label="City"></v-text-field>
+                      <v-text-field color="teal darken-4" v-model="editedItem.city " label="City"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field color='teal darken-4' v-model="editedItem.email" :rules="emailRules" label="Email"></v-text-field>
+                      <v-text-field
+                        color="teal darken-4"
+                        v-model="editedItem.email"
+                        :rules="emailRules"
+                        label="Email"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-menu
@@ -71,13 +85,13 @@
                             prepend-icon="event"
                             readonly
                             v-on="on"
-                            color='teal darken-4'
+                            color="teal darken-4"
                           ></v-text-field>
                         </template>
                         <v-date-picker
                           ref="picker"
                           v-model="date"
-                          color='teal darken-4'
+                          color="teal darken-4"
                           :max="new Date().toISOString().substr(0, 10)"
                           min="1950-01-01"
                           @change="birth"
@@ -87,16 +101,20 @@
                     <v-col cols="12" sm="6" md="4">
                       <v-select
                         v-model="editedItem.doctor"
-                        :items="doctors"
+                        :items="getDoctorList"
                         label="Doctor"
-                        color='teal darken-4'
+                        color="teal darken-4"
                         required
                       ></v-select>
                     </v-col>
-                  
                   </v-row>
                 </v-container>
               </v-card-text>
+
+              <div class="text-center">
+                <p v-bind:style="{ color: 'green' }">{{ success }}</p>
+                <p v-bind:style="{ color: 'red' }">{{ error }}</p>
+              </div>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -119,20 +137,17 @@
 
 <script>
 import axios from "axios";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data: () => ({
     dialog: false,
     fifteen: 15,
+    success: null,
+    error: null,
     search: "",
     indexToDel: null,
     date: null,
     menu: false,
-    doctors: [
-      "Assign doctor   --",
-      "Dr Omar Hassan Houssein",
-      "Dr Hodan Farah Nour",
-      "Dr Moussa Moussa Ali"
-    ],
     headers: [
       {
         text: "Name",
@@ -145,6 +160,7 @@ export default {
       { text: "Adresse", value: "adresse" },
       { text: "City", value: "city" },
       { text: "Birthdate", value: "birthdate" },
+      { text: "Doctor", value: "doctor" },
       { text: "added by", value: "addedBy" },
       { text: "Actions", value: "action", sortable: false }
     ],
@@ -157,6 +173,7 @@ export default {
       city: "",
       email: "",
       birthdate: "",
+      doctor: ""
     },
     defaultItem: {
       name: "",
@@ -166,32 +183,34 @@ export default {
       city: "",
       email: "",
       birthdate: "",
+      doctor: ""
     },
     show1: false,
-    getPatientsList: [],
-    rules: {
-      required: value => !!value || "Required.",
-      min: v => v.length >= 3 || "Min 3 characters",
-      emailMatch: () => "The email and password you entered don't match"
-    },
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+/.test(v) || "E-mail must be valid"
-    ],
-    nameRules: [
-      v => !!v || "Le nom est requis",
-      v => isNaN(v) || "Names should not contain numbers"
-    ],
-    telephoneRules: [
-      v => !!v || "A phone number is required ",
-      v => (v && v.length <= 8) || "Phone number should contain 8 numbers max",
-      v => !isNaN(v) || "The phone number should only contain numeric values"
-    ]
+    getRapports: []
   }),
 
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
+    },
+    ...mapGetters({ theList: "getDoctorList", patients: "getPatientsList" }),
+    getDoctorList: {
+      get() {
+        return this.theList;
+      },
+
+      set(list) {
+        return list;
+      }
+    },
+
+    getPatientsList: {
+      get() {
+        return this.patients;
+      },
+      set(list) {
+        return list;
+      }
     }
   },
 
@@ -205,16 +224,17 @@ export default {
   },
 
   created() {
-    this.loadPatients("patient");
     this.initialize();
+    this.loadPatients();
   },
 
   methods: {
     initialize() {
-      this.getPatientsList = [];
+      this.getRapports = [];
     },
 
     editItem(item) {
+      this.docList();
       this.editedIndex = this.getPatientsList.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
@@ -224,8 +244,7 @@ export default {
       const index = this.getPatientsList.indexOf(item);
       this.indexToDel = this.getPatientsList[index];
       confirm("Are you sure you want to delete this item?") &&
-        this.getPatientsList.splice(index, 1);
-      this.supprPatient();
+        this.supprPatient();
     },
 
     birth(date) {
@@ -243,28 +262,17 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        Object.assign(this.getPatientsList[this.editedIndex], this.editedItem);
         this.edit();
       } else {
-        this.getPatientsList.push(this.editedItem);
         this.add();
       }
-      this.close();
     },
 
-    // retrieve patients
+    // retrieve rapports
 
-    async loadPatients() {
-      const response = await axios.get("/patient", {
-        params: {
-          profil: "patient"
-        }
-      });
-
-      if (response && response.data) {
-        this.getPatientsList = response.data;
-      }
-    },
+  async  getRapports(){
+      await axios.get('rapport').then().catch()
+  },
 
     //add patients
 
@@ -277,8 +285,8 @@ export default {
         this.editedItem.birthdate &&
         this.editedItem.email
       ) {
-        let sendData = await axios
-          .post("/patient", {
+        await axios
+          .post("/rapport", {
             name: this.editedItem.name,
             telephone: this.editedItem.telephone,
             email: this.editedItem.email,
@@ -289,22 +297,29 @@ export default {
             profil: "patient",
             addedBy: localStorage.getItem("tokenUserName")
           })
+          .then(response => {
+            if (response && response.status === 200) {
+              this.error = null;
+              this.success = "Added a new doctor";
+              setTimeout(() => {
+                this.loadPatients();
+
+                this.success = null;
+                this.close();
+              }, 3000);
+            } else {
+              this.error = `All fields must be filled`;
+              this.dialog = true;
+            }
+          })
           .catch(() => {
-            this.error = true;
+            this.error = "There was a problem";
           });
-
-        if (sendData && sendData.status === 200) {
-          this.success = true;
-
-          this.loadPatients();
-        } else {
-          alert(`All fields must be filled`);
-        }
       }
     },
     async edit() {
-      let sendData = await axios
-        .put("/patient", {
+      await axios
+        .put("/rapport", {
           id: this.editedItem._id,
           name: this.editedItem.name,
           telephone: this.editedItem.telephone,
@@ -316,9 +331,29 @@ export default {
           profil: "patient",
           addedBy: localStorage.getItem("tokenUserName")
         })
-        .then(() => {
-          if (sendData && sendData.status === 200) {
-            this.success = true;
+        .then(response => {
+          if (response && response.status === 200) {
+            this.error = null;
+            this.success = "Edited one item";
+            setTimeout(() => {
+              this.loadPatients();
+              this.success = null;
+              this.close();
+            }, 3000);
+          }
+        })
+        .catch(() => {
+          this.error = "There was a problem";
+        });
+    },
+
+    async supprPatient() {
+      await axios
+        .delete("/rapport", {
+          data: this.indexToDel
+        })
+        .then(response => {
+          if (response && response.status === 200) {
             this.loadPatients();
           }
         })
@@ -326,20 +361,7 @@ export default {
           this.error = true;
         });
     },
-
-    async supprPatient() {
-      let sendData = await axios
-        .delete("/patient", {
-          data: this.indexToDel
-        })
-        .catch(() => {
-          this.error = true;
-        });
-
-      if (sendData && sendData.status === 200) {
-        this.success = true;
-      }
-    }
+    ...mapActions(["docList", "loadPatients"])
   }
 };
 </script>
