@@ -4,11 +4,11 @@
       <h2 v-if="chat" class="display-2 font-weight-thin mb-4">Messages</h2>
     </div>
     <v-row no-gutters>
-      <v-col v-if="sideBar" class="column" cols="12" md="3">
+      <v-col v-if="sideBar" v-bind:class="{show : chat}" class="column" cols="12" md="3">
         <v-card height="700">
           <v-toolbar color="teal darken-4" dark>
             <v-toolbar-title>
-              <v-btn @click="loadMessages" color="teal darken-4">Inbox</v-btn>
+              <v-btn @click="inbox" color="teal darken-4">Inbox</v-btn>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-title class="newMessage">
@@ -28,27 +28,19 @@
                   ]"
                 >
                   <v-list-item-content @click="messageDetails(item._id)">
-                    <v-list-item-title
-                      v-text="item.senderName"
-                    ></v-list-item-title>
+                    <v-list-item-title v-text="item.senderName"></v-list-item-title>
                     <br />
-                    <v-list-item-subtitle
-                      v-text="item.time"
-                    ></v-list-item-subtitle>
+                    <v-list-item-subtitle v-text="item.time"></v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
-
-                <v-divider
-                  v-if="index + 1 < items.length"
-                  :key="index"
-                ></v-divider>
+                <v-divider v-if="index + 1 <items.length" :key="index"></v-divider>
               </template>
             </v-list-item-group>
           </v-list>
 
           <v-list v-if="contact">
             <v-list-item-group active-class="teal--text">
-              <template v-for="(item, index) in personel">
+              <template v-for="(item,index ) in personel">
                 <v-list-item :key="item._id">
                   <template v-slot:default="{}">
                     <v-list-item-content @click="newMess(item._id)">
@@ -56,79 +48,50 @@
                     </v-list-item-content>
                   </template>
                 </v-list-item>
-
-                <v-divider
-                  v-if="index + 1 < items.length"
-                  :key="index"
-                ></v-divider>
+                <v-divider :key="index"></v-divider>
               </template>
             </v-list-item-group>
           </v-list>
 
           <div class="text-center">
-            <v-pagination
-              v-model="page"
-              :length="2"
-              color="teal darken-4"
-            ></v-pagination>
+            <v-pagination v-model="page" :length="2" color="teal darken-4"></v-pagination>
           </div>
         </v-card>
       </v-col>
 
       <v-col class="main">
-        <v-card
-          class="callToAction"
-          v-if="!chat"
-          align="center"
-          justify="center"
-          height="700"
-        >
+        <v-card class="callToAction" v-if="!chat" align="center" justify="center" height="700">
           <v-card-text class="display-2 font-weight-thin mb-4">
             <v-icon color="teal darken-4">mail</v-icon>
           </v-card-text>
         </v-card>
         <v-card v-if="chat" class="chat_box" height="700">
           <v-toolbar>
-            <v-icon @click="goBack" class="goBack" color="black"
-              >arrow_back</v-icon
-            >
+            <v-icon @click="goBack" class="goBack" color="black">arrow_back</v-icon>
             <v-spacer></v-spacer>
             <v-toolbar-title>Message</v-toolbar-title>
           </v-toolbar>
-          <v-list-item
-            v-for="item in receivedMessages"
-            :key="item._id"
-            three-line
-          >
+          <v-list-item v-for="item in receivedMessages" :key="item._id" three-line>
             <v-list-item-content>
-              <v-list-item-title class="title mb-1"
-                >From: {{ item.senderName || "me" }}</v-list-item-title
-              >
-              <div class="subtitle-1 black--text">
-                To: {{ item.name || "me" }}
-              </div>
+              <v-list-item-title class="title mb-1">From: {{ item.senderName || "me" }}</v-list-item-title>
+              <div class="subtitle-1 black--text">To: {{ item.name || "me" }}</div>
               <v-divider></v-divider>
-              <v-list-item-subtitle class="my-12">{{
+              <v-list-item-subtitle class="my-12">
+                {{
                 item.message
-              }}</v-list-item-subtitle>
+                }}
+              </v-list-item-subtitle>
               <br />
               <v-list-item>
                 <p class="subtitle-2 black--text">{{ item.time }}</p>
               </v-list-item>
             </v-list-item-content>
             <v-list-item-action v-if="del">
-              <v-icon
-                color="red darken-4"
-                @click="deleteMess(item._id)"
-                class="white--text"
-                >delete</v-icon
-              >
+              <v-icon color="red darken-4" @click="deleteMess(item._id)" class="white--text">delete</v-icon>
             </v-list-item-action>
           </v-list-item>
 
-          <v-alert v-if="success" type="success"
-            >Message {{ messageStatus }}.</v-alert
-          >
+          <v-alert v-if="success" type="success">Message {{ messageStatus }}.</v-alert>
           <div class="reponse">
             <v-textarea
               outlined
@@ -142,7 +105,7 @@
             ></v-textarea>
 
             <v-btn text @click="save" class="btnSend">
-              <v-icon color="teal darken-4"> send </v-icon>
+              <v-icon color="teal darken-4">send</v-icon>
             </v-btn>
           </div>
         </v-card>
@@ -153,7 +116,6 @@
 
 <script>
 import axios from "axios";
-//import { _ } from "vue-underscore";
 export default {
   data: () => ({
     sideBar: true,
@@ -164,7 +126,6 @@ export default {
     contact: false,
     chat: false,
     del: false,
-    unreadMessages: [],
     page: 1,
     receivedMessages: [],
     items: [],
@@ -172,7 +133,7 @@ export default {
     messageStatus: "sent"
   }),
   computed: {
-    //
+   //
   },
   watch: {
     dialog(val) {
@@ -200,6 +161,12 @@ export default {
         });
     },
 
+    inbox() {
+      this.chat = false;
+      this.contact = false;
+      this.loadMessages();
+    },
+
     async messageDetails(id) {
       await axios
         .get("/messages/:id", {
@@ -213,13 +180,8 @@ export default {
           this.chat = true;
           this.del = true;
           this.updtateMessage(id);
-        this.loadMessages();
+          this.loadMessages();
 
-          const width = window.innerWidth;
-
-          if (width < 960) {
-            this.sideBar = false;
-          }
         })
         .catch();
     },
@@ -267,11 +229,6 @@ export default {
             this.user_to = response.data[0]._id;
             this.chat = true;
             this.del = false;
-
-            const width = window.innerWidth;
-            if (width < 960) {
-              this.sideBar = false;
-            }
           }
         })
         .catch(err => {
@@ -322,7 +279,7 @@ export default {
             this.success = true;
             setInterval(() => {
               this.success = false;
-             // this.chat = false;
+              // this.chat = false;
             }, 3000);
           }
         })
@@ -350,6 +307,11 @@ export default {
     margin-bottom: 2rem;
   }
   .row {
+    .show {
+      @include desktop {
+        display: none;
+      }
+    }
     .column {
       .v-card {
         color: rgba(0, 128, 0, 0.589);
@@ -364,13 +326,8 @@ export default {
           float: right;
         }
       }
-
-      @include desktop {
-        width: 100% !important;
-      }
     }
     .main {
-       
       .callToAction {
         .v-card__text {
           position: absolute;
@@ -386,9 +343,6 @@ export default {
         }
       }
       .chat_box {
-        @include desktop {
-          
-            }
         .v-toolbar {
           .goBack {
             font-size: 1.5rem;
