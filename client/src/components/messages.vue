@@ -235,7 +235,7 @@ export default {
           throw err;
         });
     },
-
+ 
     async deleteMess(id) {
       await axios
         .delete("/messages/", {

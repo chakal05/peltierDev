@@ -58,13 +58,28 @@
           <v-item v-slot:default="{ active }">
           <router-link to='/nurse/rapport'>
               <v-card
-              :color="active ? 'grey darken-4' : ''"
               class="d-flex align-center white--text"
               height="200"
             >
               <v-card-text class="display-3 flex-grow-1 text-center" v-if="!active">
                 <v-icon>fas fa-book</v-icon>
                 <h3 class="display-2 font-weight-thin">Rapports</h3>
+              </v-card-text>
+               </v-card>
+          </router-link>
+          </v-item>
+        </v-col>
+
+  <v-col cols="12" md="3">
+          <v-item>
+          <router-link to='/nurse/profil'>
+              <v-card
+              class="d-flex align-center white--text"
+              height="200"
+            >
+              <v-card-text class="display-3 flex-grow-1 text-center" >
+                <v-icon>account_box</v-icon>
+                <h3 class="display-2 font-weight-thin">Profil</h3>
               </v-card-text>
                </v-card>
           </router-link>

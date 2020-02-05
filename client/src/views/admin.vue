@@ -65,6 +65,16 @@
               <v-list-item-title>Patients</v-list-item-title>
             </router-link>
           </v-list-item>
+
+           <v-list-item>
+            <v-list-item-icon>
+              <v-icon>account_box</v-icon>
+            </v-list-item-icon>
+
+            <router-link to="/admin/profil">
+              <v-list-item-title>Profil</v-list-item-title>
+            </router-link>
+          </v-list-item>
         </v-list>
 
         <template v-slot:append>
@@ -121,10 +131,10 @@ export default {
   computed: { ...mapGetters(["newMess"]) },
   created() {
     //get number of unread messages
-    this.notifyMessages();
+  //  this.notifyMessages();
 
     // get number of unread messages every 3 seconds
-    this.getUnread();
+  //  this.getUnread();
   },
 
   methods: {

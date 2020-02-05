@@ -13,8 +13,9 @@ import patientList from "../components/patient.vue";
 import nurseDash from "../components/nurse/dashboard.vue";
 import docDash from "../components/doctor/dashboard.vue";
 import bedAllotment from "../components/bedAllotment.vue";
-import rapport from '../components/rapport';
+import rapport from '../components/rapport.vue';
 import prescription from '../components/doctor/prescription.vue';
+import profil from '../components/profil.vue';
 Vue.use(Router);
 
 const router = new Router({
@@ -75,6 +76,12 @@ const router = new Router({
           path: "rapport",
           name: "rapport",
           component: rapport
+        },
+
+        {
+          path: "profil",
+          name: "profil",
+          component: profil
         }
       ]
     },
@@ -122,6 +129,11 @@ const router = new Router({
           path: "rapport",
           name: "rapportDoc",
           component: rapport
+        },
+        {
+          path: "profil",
+          name: "profilDoc",
+          component: profil
         }
       ]
     },
@@ -163,6 +175,11 @@ const router = new Router({
           path: "rapport",
           name: "rapportNur",
           component: rapport
+        },
+        {
+          path: "profil",
+          name: "profilNur",
+          component: profil
         }
       ]
     }

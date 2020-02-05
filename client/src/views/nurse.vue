@@ -66,6 +66,16 @@
               <v-list-item-title>Rapport</v-list-item-title>
             </router-link>
           </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>account_box</v-icon>
+            </v-list-item-icon>
+
+            <router-link to="/nurse/profil">
+              <v-list-item-title>Profil</v-list-item-title>
+            </router-link>
+          </v-list-item>
         </v-list>
 
         <template v-slot:append>
@@ -113,7 +123,6 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
-  name: "admin",
   data: () => ({
     drawer: null,
     show: true,
@@ -133,6 +142,8 @@ export default {
 
     ...mapActions(["getUnread", "notifyMessages"])
   },
+
+  // Destoy setIntervall
 
   beforeDestroy() {
     this.stopTimer();
@@ -204,7 +215,7 @@ export default {
           margin-left: 0rem;
         }
 
-       @include tablette {
+        @include tablette {
           display: none;
         }
       }

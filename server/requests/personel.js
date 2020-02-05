@@ -50,7 +50,7 @@ router.post("/", async function(req, res) {
     birthdate: req.body.birthdate,
     password: hashedPass,
     profil: req.body.profil
-  }; 
+  };
 
   const newPersonel = new query(newPersone);
   newPersonel.save(err => {
@@ -93,57 +93,76 @@ router.get("/", async function(req, res) {
       .catch(err => {
         throw err;
       });
-  } else if ( req.query.data === 'doctorList'){
+  } else if (req.query.data === "doctorList") {
     let docList = [];
     query
       .find({ profil: req.query.profil }, (error, doctorList) => {
         if (error) return res.status(500).send(error);
 
-        doctorList.forEach(el =>{
+        doctorList.forEach(el => {
           docList.push(el.name);
-        })
+        });
         return res.status(200).send(docList);
       })
       .catch(err => {
         throw err;
       });
-  } else{
+  } else {
     query
-    .find({ profil: req.query.profil }, (error, personelList) => {
-      if (error) return res.status(500).send(error);
-      return res.status(200).send(personelList);
-    })
-    .catch(err => {
-      throw err;
-    });
+      .find({ profil: req.query.profil }, (error, personelList) => {
+        if (error) return res.status(500).send(error);
+        return res.status(200).send(personelList);
+      })
+      .catch(err => {
+        throw err;
+      });
   }
 });
 
 // Edit personel
 
 router.put("/", async function(req, res) {
+  console.log(req.body);
   let query = await loadPersonel();
-  let hashedPass = bcrypt.hashSync(req.body.password, salt);
-  const newPersone = {
-    name: req.body.name,
-    departement: req.body.departement,
-    telephone: req.body.telephone,
-    email: req.body.email,
-    adresse: req.body.adresse,
-    city: req.body.city,
-    birthdate: req.body.birthdate,
-    password: hashedPass
-  };
-  await query.findByIdAndUpdate(
-    req.body.id,
-    newPersone,
-    { new: true },
+  if (!req.body.departement && !req.body.birthdate && !req.body.password) {
+    await query.findByIdAndUpdate(
+      req.body.id,
+      {
+        name: req.body.name,
+        email: req.body.email,
+        adresse: req.body.adresse,
+        city: req.body.city,
+        telephone: req.body.telephone
+      },
+      { new: true },
+      err => {
+        if (err) return res.status(500).send(err);
+        return res.status(200).send("Edited one item from server/personel");
+      }
+    );
+  } else {
+    let hashedPass = bcrypt.hashSync(req.body.password, salt);
+    const editPersone = {
+      name: req.body.name,
+      departement: req.body.departement,
+      telephone: req.body.telephone,
+      email: req.body.email,
+      adresse: req.body.adresse,
+      city: req.body.city,
+      birthdate: req.body.birthdate,
+      password: hashedPass
+    };
+    await query.findByIdAndUpdate(
+      req.body.id,
+      editPersone,
+      { new: true },
 
-    err => {
-      if (err) return res.status(500).send(err);
-      return res.status(200).send("Edited one item from server/personel");
-    }
-  );
+      err => {
+        if (err) return res.status(500).send(err);
+        return res.status(200).send("Edited one item from server/personel");
+      }
+    );
+  }
 });
 
 // delete personel
