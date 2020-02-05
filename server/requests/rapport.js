@@ -28,14 +28,10 @@ async function loadRapport() {
   return rapport;
 }
 
-// get rapports 
+// get rapports
 
 router.get("/", async function(req, res) {
-
-    console.log(req.query);
-
   let query = await loadRapport();
-
   await query.find({}, (error, rapports) => {
     if (error) return res.status(500).send(error);
     else return res.status(200).send(rapports);
@@ -45,8 +41,6 @@ router.get("/", async function(req, res) {
 // Add a new bed allotment
 
 router.post("/", async function(req, res) {
-  console.log(req.body);
-
   const nyRapport = {
     description: req.body.description,
     patient: req.body.patient,
@@ -76,7 +70,6 @@ router.put("/", async function(req, res) {
 // Delete item
 
 router.delete("/", async function(req, res) {
-  console.log(req.body);
   id = req.body._id;
   let query = await loadRapport();
   query.findByIdAndRemove(id, (err, doc) => {

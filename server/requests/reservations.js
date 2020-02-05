@@ -58,15 +58,6 @@ router.get("/", async function(req, res) {
 // Add a new appointment
 
 router.post("/", async function(req, res) {
-  console.log(req.body);
-
-  let doc;
-
-  if (req.body.doctor) {
-    doc = req.body.doctor;
-  } else {
-    doc = "Assign Doctor";
-  }
 
   const nyTid = {
     name: req.body.name,
@@ -74,7 +65,7 @@ router.post("/", async function(req, res) {
     sexe: req.body.sexe,
     date: req.body.date,
     hour: req.body.time,
-    doctor: doc,
+    doctor:req.body.doctor,
     rank: req.body.rank,
     addedBy: req.body.addedBy
   };
@@ -90,7 +81,7 @@ router.post("/", async function(req, res) {
 // Edit item
 
 router.put("/", async function(req, res) {
-  console.log(req.body);
+ 
   let query = await loadTider();
   await query.findByIdAndUpdate(req.body.id, req.body, { new: true }, err => {
     if (err) return res.status(500).send(err);

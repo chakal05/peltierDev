@@ -15,54 +15,43 @@ db.on("error", console.error.bind(console, "connection error:"));
 
 // Schema
 
-const bedSchema = new mongoose.Schema({
-  bedNumber: Number,
+const prescriptionSchema = new mongoose.Schema({
+  description: String,
   patient: String,
-  dateIn: String,
-  dateOut: String,
+  doctor: String,
+  medication: String,
+  date: String,
   addedBy: String
 });
 
-async function loadBeds() {
-  let bed = mongoose.model("beds", bedSchema);
-  return bed;
+async function loadPrescriptions() {
+  let prescription = mongoose.model("prescriptions", prescriptionSchema);
+  return prescription;
 }
 
-// get bookings
+// get rapports
 
 router.get("/", async function(req, res) {
-  let query = await loadBeds();
-
-  if (req.query.data === "beds") {
-    let beds = [];
-    await query.find({}, (error, booking) => {
-      if (error) return res.status(500).send(error);
-      booking.forEach(el => {
-        beds.push(el.bedNumber);
-      });
-      return res.status(200).send(beds);
-    });
-  } else {
-    await query.find({}, (error, booking) => {
-      if (error) return res.status(500).send(error);
-      else return res.status(200).send(booking);
-    });
-  }
+  let query = await loadPrescriptions();
+  await query.find({}, (error, rapports) => {
+    if (error) return res.status(500).send(error);
+    else return res.status(200).send(rapports);
+  });
 });
 
 // Add a new bed allotment
 
 router.post("/", async function(req, res) {
-  const nyBed = {
-    bedNumber: req.body.bedNumber,
+  const nyPresc = {
+    description: req.body.description,
     patient: req.body.patient,
-    dateIn: req.body.dateIn,
-    dateOut: req.body.dateOut,
+    medication: req.body.medication,
+    date: req.body.date,
     addedBy: req.body.addedBy
   };
 
-  let connexion = await loadBeds();
-  let post = new connexion(nyBed);
+  let connexion = await loadPrescriptions();
+  let post = new connexion(nyPresc);
 
   if (post.save()) {
     res.status(200).send();
@@ -72,7 +61,7 @@ router.post("/", async function(req, res) {
 // Edit item
 
 router.put("/", async function(req, res) {
-  let query = await loadBeds();
+  let query = await loadPrescriptions();
   await query.findByIdAndUpdate(req.body.id, req.body, { new: true }, err => {
     if (err) return res.status(500).send(err);
     return res.status(200).end();
@@ -83,7 +72,7 @@ router.put("/", async function(req, res) {
 
 router.delete("/", async function(req, res) {
   id = req.body._id;
-  let query = await loadBeds();
+  let query = await loadPrescriptions();
   query.findByIdAndRemove(id, (err, doc) => {
     if (err) return res.status(500).send(err);
 

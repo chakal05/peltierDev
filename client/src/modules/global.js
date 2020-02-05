@@ -3,12 +3,15 @@ import router from "../Router/index";
 const state = {
   unreadMessages: null,
   doctorList: [],
-  patientsList: []
+  patientsList: [],
+  timer: null,
+  newMessages: null
 };
 
 const getters = {
   getDoctorList: state => state.doctorList,
-  getPatientsList: state => state.patientsList
+  getPatientsList: state => state.patientsList,
+  newMess: state => state.newMessages
 };
 const mutations = {
   logOut() {
@@ -18,7 +21,9 @@ const mutations = {
   },
 
   setDoctorList: (state, list) => (state.doctorList = list),
-  setPatientsList: (state, list) => (state.patientsList = list)
+  setPatientsList: (state, list) => (state.patientsList = list),
+  setUnreadMessages: (state, unread) => (state.newMessages = unread),
+  stopTimer: (state) => (clearInterval(state.timer))
 };
 const actions = {
   async docList({ commit }) {
@@ -39,16 +44,34 @@ const actions = {
       });
   },
 
-  async loadMessages() {
+  getUnread({ commit }) {
+    state.timer = setInterval(async () => {
+      await axios
+        .get("/messages", {
+          params: {
+            id: localStorage.getItem("tokenUserId"),
+            data: "unread"
+          }
+        })
+        .then(response => {
+          commit("setUnreadMessages", response.data);
+        })
+        .catch(err => {
+          throw err;
+        });
+    }, 3000);
+  },
+
+  async notifyMessages({commit}) {
     await axios
       .get("/messages", {
         params: {
           id: localStorage.getItem("tokenUserId"),
-          data: "messages"
+          data: "unread"
         }
       })
       .then(response => {
-        this.listOfMessages = response.data;
+        commit("setUnreadMessages", response.data);
       })
       .catch(err => {
         throw err;

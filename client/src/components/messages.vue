@@ -194,8 +194,6 @@ export default {
         })
         .then(response => {
           this.items = response.data.reverse();
-          this.chat = false;
-          this.contact = false;
         })
         .catch(err => {
           throw err;
@@ -215,6 +213,7 @@ export default {
           this.chat = true;
           this.del = true;
           this.updtateMessage(id);
+        this.loadMessages();
 
           const width = window.innerWidth;
 

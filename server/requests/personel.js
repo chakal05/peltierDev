@@ -149,7 +149,6 @@ router.put("/", async function(req, res) {
 // delete personel
 
 router.delete("/", async function(req, res) {
- 
   let query = await loadPersonel();
   query.findByIdAndRemove(req.body.id, (err, doc) => {
     if (err) return res.status(500).send(err);

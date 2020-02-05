@@ -47,7 +47,7 @@
             </router-link>
           </v-list-item>
 
-           <v-list-item>
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>fas fa-bed</v-icon>
             </v-list-item-icon>
@@ -57,7 +57,7 @@
             </router-link>
           </v-list-item>
 
-            <v-list-item>
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>fas fa-book</v-icon>
             </v-list-item-icon>
@@ -85,11 +85,11 @@
 
         <v-spacer></v-spacer>
 
-        <v-badge  color="teal darken-4">
-          <template  v-slot:badge>
-            <span > {{newMessages}} </span>
+        <v-badge color="teal darken-4">
+          <template v-slot:badge>
+            <span>{{newMess}}</span>
           </template>
-          <router-link to="/admin/messages">
+          <router-link to="/nurse/messages">
             <v-icon>mdi-email</v-icon>
           </router-link>
         </v-badge>
@@ -111,75 +111,47 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import axios from "axios";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
   name: "admin",
-  components: {
-    //
-  },
-  created() {
-    //get number of unread messages
-   this.notifyMessages();
-
-    // get number of unread messages every 3 seconds
-   this.getUnread();
-  },
-
-  computed: {},
   data: () => ({
     drawer: null,
-    timer: null,
     show: true,
-    newMessages: null,
     userName: localStorage.getItem("tokenUserName")
   }),
+  computed: { ...mapGetters(["newMess"]) },
+  created() {
+    //get number of unread messages
+    this.notifyMessages();
+
+    // get number of unread messages every 3 seconds
+    this.getUnread();
+  },
 
   methods: {
-    ...mapMutations(["logOut"]),
+    ...mapMutations(["logOut", "stopTimer"]),
 
-    getUnread() {
-      this.timer = setInterval(async () => {
-        await axios
-          .get("/messages", {
-            params: {
-              id: localStorage.getItem("tokenUserId"),
-              data: "unread"
-            }
-          })
-          .then(reponse => {
-            this.newMessages = reponse.data;
-          })
-          .catch(err => {
-            throw err;
-          });
-      }, 3000);
-    },
-
-    async notifyMessages() {
-      await axios
-        .get("/messages", {
-          params: {
-            id: localStorage.getItem("tokenUserId"),
-            data: "unread"
-          }
-        })
-        .then(reponse => {
-          this.newMessages = reponse.data;
-        })
-        .catch(err => {
-          throw err;
-        });
-    }
+    ...mapActions(["getUnread", "notifyMessages"])
   },
 
   beforeDestroy() {
-    clearInterval(this.timer);
+    this.stopTimer();
   }
 };
 </script>
 
 <style  lang='scss' scoped>
+@mixin desktop() {
+  @media (max-width: 1264px) {
+    @content;
+  }
+}
+
+@mixin tablette() {
+  @media (max-width: 761px) {
+    @content;
+  }
+}
 .container {
   a {
     text-decoration: none;
@@ -191,7 +163,7 @@ export default {
       .logo-gris {
         display: none;
 
-        @media (max-width: 1264px) {
+        @include desktop {
           display: block;
         }
 
@@ -215,7 +187,7 @@ export default {
       }
 
       .v-list {
-        @media (max-width: 1264px) {
+        @include desktop() {
           margin-top: -2rem;
         }
       }
@@ -232,7 +204,7 @@ export default {
           margin-left: 0rem;
         }
 
-        @media (max-width: 414px) {
+       @include tablette {
           display: none;
         }
       }
@@ -240,24 +212,22 @@ export default {
       .v-badge {
         margin: 2.5rem !important;
 
-        @media (max-width: 414px) {
-        margin-top: 2.7rem !important;
-      }
+        @include tablette {
+          margin-top: 2.7rem !important;
+          margin-right: 1rem !important;
+        }
 
         .v-icon {
           margin-right: -0.5rem;
         }
       }
 
-      .v-btn{
-
+      .v-btn {
         @media (max-width: 320px) {
           margin-right: -1rem;
-          font-size: .9rem;
+          font-size: 0.9rem;
         }
       }
-
-    
     }
   }
 }

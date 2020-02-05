@@ -1,12 +1,12 @@
 <template>
   <v-container>
     <div class="text-center">
-      <h2 class="display-2 font-weight-thin mb-4">Bed allotment</h2>
+      <h2 class="display-2 font-weight-thin mb-4">Prescription</h2>
     </div>
     <br />
     <v-data-table
       :headers="headers"
-      :items="getBookedBeds"
+      :items="getPrescriptions"
       :search="search"
       sort-by="name"
       class="elevation-1"
@@ -30,7 +30,7 @@
                 dark
                 class="mb-2"
                 v-on="on"
-              >Add bed allotment</v-btn>
+              >Add prescription</v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -40,20 +40,26 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-select
-                        v-model="editedItem.bedNumber"
-                        :items="bedsList"
-                        label="Bed number"
+                    <v-col cols="12" sm="6" md="12">
+                      <v-text-field
+                        color="teal darken-4"
+                        v-model="editedItem.description"
+                        label="Description"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="12">
+                      <v-text-field
+                        v-model="editedItem.medication"
+                        label="Medication"
                         color="teal darken-4"
                         required
-                      ></v-select>
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
                       <v-select
                         v-model="editedItem.patient"
                         :items="getPatientsList"
-                        label="Patients"
+                        label="Patient"
                         color="teal darken-4"
                         required
                       ></v-select>
@@ -64,15 +70,14 @@
                         v-model="menu"
                         :close-on-content-click="false"
                         transition="scale-transition"
-                        :return-value.sync="date"
                         offset-y
                         full-width
                         min-width="290px"
                       >
                         <template v-slot:activator="{ on }">
                           <v-text-field
-                            v-model="editedItem.dateIn"
-                            label="Allotment date"
+                            v-model="editedItem.date"
+                            label="Date"
                             prepend-icon="event"
                             readonly
                             v-on="on"
@@ -85,36 +90,7 @@
                           color="teal darken-4"
                           :max="new Date().toISOString().substr(0, 10)"
                           min="1950-01-01"
-                          @change="dayIn"
-                        ></v-date-picker>
-                      </v-menu>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-menu
-                        ref="menu2"
-                        v-model="menu2"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        full-width
-                        min-width="290px"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <v-text-field
-                            v-model="editedItem.dateOut"
-                            label="Discharge date"
-                            prepend-icon="event"
-                            readonly
-                            v-on="on"
-                            color="teal darken-4"
-                            min="1950-01-01"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          ref="picker2"
-                          v-model="datum"
-                          color="teal darken-4"
-                          @change="dayOut"
+                          @change="birth"
                         ></v-date-picker>
                       </v-menu>
                     </v-col>
@@ -148,7 +124,7 @@
 
 <script>
 import axios from "axios";
-import { mapGetters, mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data: () => ({
     dialog: false,
@@ -157,49 +133,46 @@ export default {
     error: null,
     search: "",
     indexToDel: null,
-    date: new Date().toISOString().substr(0, 10),
-    datum: new Date().toISOString().substr(0, 10),
+    date: null,
     menu: false,
-    menu2: false,
-    bedsList: [],
     headers: [
       {
-        text: "Bed number",
+        text: "Patient",
         align: "left",
         sortable: false,
-        value: "bedNumber"
+        value: "patient"
       },
-      { text: "Patient", value: "patient" },
-      { text: "Allotment Date ", value: "dateIn" },
-      { text: "Discharge Date", value: "dateOut" },
+      { text: "Description", value: "description" },
+      { text: "Medication", value: "medication" },
+      { text: "Date", value: "date" },
       { text: "Added by", value: "addedBy" },
       { text: "Actions", value: "action", sortable: false }
     ],
     editedIndex: -1,
     editedItem: {
-      number: "",
       patient: "",
-      dateIn: "",
-      dateOut: "",
+      description: "",
+      medication: "",
+      date: "",
       addedBy: ""
     },
     defaultItem: {
-      number: "",
       patient: "",
-      dateIn: "",
-      dateOut: "",
+      description: "",
+      medication: "",
+      date: "",
       addedBy: ""
     },
     show1: false,
-    getBookedBeds: []
+    getPrescriptions: []
   }),
 
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-
     ...mapGetters({ patients: "getPatientsList" }),
+
     getPatientsList: {
       get() {
         return this.patients;
@@ -216,47 +189,38 @@ export default {
     },
     menu(val) {
       val && setTimeout(() => (this.$refs.picker.activePicker = "YEAR"));
-    },
-
-    menu2(val) {
-      val && setTimeout(() => (this.$refs.picker2.activePicker = "YEAR"));
     }
   },
 
   created() {
-    this.loadBedAllotment();
     this.initialize();
+    this.loadPrescriptions();
   },
 
   methods: {
     initialize() {
-      this.getBookedBeds = [];
+      this.getPrescriptions = [];
     },
 
     editItem(item) {
       this.loadPatients("names");
-      this.availableBeds();
-      this.editedIndex = this.getBookedBeds.indexOf(item);
+      this.editedIndex = this.getPrescriptions.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.getBookedBeds.indexOf(item);
-      this.indexToDel = this.getBookedBeds[index];
+      const index = this.getPrescriptions.indexOf(item);
+      this.indexToDel = this.getPrescriptions[index];
       confirm("Are you sure you want to delete this item?") &&
-        this.suppr();
+        this.supprRapport();
     },
 
-    dayIn(date) {
+    birth(date) {
       this.$refs.menu.save(date);
-      if (date) this.editedItem.dateIn = date;
+      if (date) this.editedItem.date = date;
     },
 
-    dayOut(datum) {
-      this.$refs.menu2.save(datum);
-      if (datum) this.editedItem.dateOut = datum;
-    },
     close() {
       this.dialog = false;
       setTimeout(() => {
@@ -273,39 +237,42 @@ export default {
       }
     },
 
-    // retrieve bed allotments
+    // retrieve prescriptions
 
-    async loadBedAllotment() {
-      await axios.get("/bedAll").then(response => {
-        if (response && response.status === 200) {
-          this.getBookedBeds = response.data;
-        }
-      });
+    async loadPrescriptions() {
+      await axios
+        .get("/prescription")
+        .then(response => {
+          if (response && response.status === 200) {
+            this.getPrescriptions = response.data;
+          }
+        })
+        .catch();
     },
 
-    //add bedAllotment
+    //add patients
 
     async add() {
       if (
-        this.editedItem.bedNumber &&
+        this.editedItem.description &&
         this.editedItem.patient &&
-        this.editedItem.dateIn &&
-        this.editedItem.dateOut
+        this.editedItem.medication &&
+        this.editedItem.date
       ) {
         await axios
-          .post("/bedAll", {
-            bedNumber: this.editedItem.bedNumber,
+          .post("/prescription", {
+            description: this.editedItem.description,
             patient: this.editedItem.patient,
-            dateIn: this.editedItem.dateIn,
-            dateOut: this.editedItem.dateOut,
+            medication: this.editedItem.medication,
+            date: this.editedItem.date,
             addedBy: localStorage.getItem("tokenUserName")
           })
           .then(response => {
             if (response && response.status === 200) {
               this.error = null;
-              this.success = "Added a new bedAllotment";
+              this.success = "Added a new prescription";
               setTimeout(() => {
-                this.loadBedAllotment();
+                this.loadPrescriptions();
 
                 this.success = null;
                 this.close();
@@ -322,20 +289,20 @@ export default {
     },
     async edit() {
       await axios
-        .put("/bedAll", {
+        .put("/prescription", {
           id: this.editedItem._id,
-          bedNumber: this.editedItem.bedNumber,
+          description: this.editedItem.description,
           patient: this.editedItem.patient,
-          dateIn: this.editedItem.dateIn,
-          dateOut: this.editedItem.dateOut,
+          medication: this.editedItem.medication,
+          date: this.editedItem.date,
           addedBy: localStorage.getItem("tokenUserName")
         })
         .then(response => {
           if (response && response.status === 200) {
             this.error = null;
-            this.success = "Edited one item";
+            this.success = "Edited one prescription";
             setTimeout(() => {
-              this.loadBedAllotment();
+              this.loadPrescriptions();
               this.success = null;
               this.close();
             }, 3000);
@@ -346,47 +313,20 @@ export default {
         });
     },
 
-    async suppr() {
+    async supprRapport() {
       await axios
-        .delete("/bedAll", {
+        .delete("/prescription", {
           data: this.indexToDel
         })
         .then(response => {
           if (response && response.status === 200) {
-            this.loadBedAllotment();
+            this.loadPrescriptions();
           }
         })
         .catch(() => {
           this.error = true;
         });
     },
-
-    async availableBeds() {
-      let allBeds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
-      await axios
-        .get("/bedAll", {
-          params: {
-            data: "beds"
-          }
-        })
-        .then(response => {
-          if (response.data.length === 0) {
-            this.bedsList = allBeds;
-          } else {
-            let avaiBeds = allBeds
-              .filter(x => !response.data.includes(x))
-              .concat(response.data.filter(x => !allBeds.includes(x)));
-
-            if (!avaiBeds[0]) {
-              this.bedsList.push("No available beds");
-            } else {
-              this.bedsList = avaiBeds;
-            }
-          }
-        });
-    },
-
     ...mapActions(["loadPatients"])
   }
 };
