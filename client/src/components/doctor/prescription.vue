@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <div class="text-center">
-      <h2 class="display-2 font-weight-thin mb-4">Prescription</h2>
+      <h2 class="display-2 font-weight-thin mb-4">Medication</h2>
     </div>
     <br />
     <v-data-table
@@ -30,7 +30,7 @@
                 dark
                 class="mb-2"
                 v-on="on"
-              >Add prescription</v-btn>
+              >Add medication</v-btn>
             </template>
             <v-card>
               <v-card-title>

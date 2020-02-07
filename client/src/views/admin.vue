@@ -52,7 +52,7 @@
             </v-list-item-icon>
 
             <router-link to="/admin/bookings">
-              <v-list-item-title>Appointments</v-list-item-title>
+              <v-list-item-title>Bookings</v-list-item-title>
             </router-link>
           </v-list-item>
 
@@ -131,10 +131,10 @@ export default {
   computed: { ...mapGetters(["newMess"]) },
   created() {
     //get number of unread messages
-  //  this.notifyMessages();
+    this.notifyMessages();
 
     // get number of unread messages every 3 seconds
-  //  this.getUnread();
+    this.getUnread();
   },
 
   methods: {

@@ -30,7 +30,7 @@
               >
                 <v-card-text class="display-3 flex-grow-1 text-center" v-if="!active">
                   <v-icon>fas fa-calendar-alt</v-icon>
-                  <h3 class="display-2 font-weight-thin">Appointment</h3>
+                  <h3 class="display-2 font-weight-thin">Bookings</h3>
                 </v-card-text>
               </v-card>
             </router-link>
@@ -107,6 +107,11 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@mixin bigScreen {
+  @media all and (max-width: 1903px) and (min-width: 960px) {
+    @content;
+  }
+}
 .container {
   *a {
     text-decoration: none;
@@ -116,6 +121,11 @@ export default {
       .v-icon {
         font-size: 2rem;
         margin-bottom: 1rem;
+      }
+      .display-2 {
+        @include bigScreen{
+          font-size: 2rem !important;
+        }
       }
     }
   }

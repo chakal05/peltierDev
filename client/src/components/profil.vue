@@ -42,8 +42,8 @@
           </v-row>
 
           <div class="text-center">
-            <p v-bind:style="{color: 'green', fontSize:'1.5rem'}" v-if="successPr" color="teal darken-4">{{isSuccessPr}}</p>
-            <p v-bind:style="{color: 'red', fontSize:'1.5rem'}" v-if="errorPr">{{isErrorPr}}</p>
+            <p v-bind:style="{color: 'green'}" v-if="successPr" color="teal darken-4">{{isSuccessPr}}</p>
+            <p v-bind:style="{color: 'red'}" v-if="errorPr">{{isErrorPr}}</p>
           </div>
 
           <v-card-actions>
@@ -74,8 +74,8 @@
             </v-col>
           </v-row>
           <div class="text-center">
-            <p v-bind:style="{color: 'green', fontSize:'1.5rem'}" v-if="successPa" color="teal darken-4">{{isSuccessPa}}</p>
-            <p v-bind:style="{color: 'red', fontSize:'1.5rem'}" v-if="errorPa">{{isErrorPa}}</p>
+            <p v-bind:style="{color: 'green'}" v-if="successPa" color="teal darken-4">{{isSuccessPa}}</p>
+            <p v-bind:style="{color: 'red'}" v-if="errorPa">{{isErrorPa}}</p>
           </div>
 
           <v-card-actions>

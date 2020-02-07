@@ -4,7 +4,7 @@
       <v-row align="center" justify="center">
         <v-col>
           <div class="text-center">
-            <h1 class="display-2 font-weight-thin mb-4">Consultations</h1>
+            <h1 class="display-2 font-weight-thin mb-4">Bookings </h1>
           </div>
 
           <v-date-picker
@@ -60,6 +60,7 @@
                         <v-text-field
                           v-model="editedItem.name"
                           label="Name"
+                          color="teal darken-4"
                           :rules="nameRules"
                           required
                         ></v-text-field>
@@ -72,6 +73,7 @@
                           v-model="editedItem.telephone"
                           :counter="8"
                           label="Telephone"
+                          color="teal darken-4"
                           :rules="telephoneRules"
                           required
                         ></v-text-field>
@@ -81,7 +83,7 @@
                           :items="dispoHours"
                           v-model="editedItem.hour"
                           label="Time"
-                          required
+                          color="teal darken-4"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -92,7 +94,7 @@
                           v-model="editedItem.doctor"
                           :items="getDoctorList"
                           label="Doctor"
-                          required
+                          color="teal darken-4"
                         ></v-select>
                       </v-col>
                     </v-row>

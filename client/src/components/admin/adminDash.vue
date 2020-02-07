@@ -31,7 +31,7 @@
               >
                 <v-card-text class="display-3 flex-grow-1 text-center" v-if="!active">
                   <v-icon>fas fa-calendar-alt</v-icon>
-                  <h3 class="display-2 font-weight-thin">Appointment</h3>
+                  <h3 class="display-2 font-weight-thin">Bookings </h3>
                 </v-card-text>
               </v-card>
             </router-link>
@@ -93,18 +93,22 @@
         </v-col>
         <v-col cols="12" md="3">
           <v-item v-slot:default="{ active}">
-           <router-link to='/admin/bedAllotment'>
-              <v-card :color="active ? 'grey darken-4' : ''" class="d-flex align-center" height="200">
-              <v-card-text class="display-3 flex-grow-1 text-center" v-if="!active">
-                <v-icon>fas fa-bed</v-icon>
-                <h3 class="display-2 font-weight-thin">Beds</h3>
-              </v-card-text>
-            </v-card>
-           </router-link>
+            <router-link to="/admin/bedAllotment">
+              <v-card
+                :color="active ? 'grey darken-4' : ''"
+                class="d-flex align-center"
+                height="200"
+              >
+                <v-card-text class="display-3 flex-grow-1 text-center" v-if="!active">
+                  <v-icon>fas fa-bed</v-icon>
+                  <h3 class="display-2 font-weight-thin">Beds</h3>
+                </v-card-text>
+              </v-card>
+            </router-link>
           </v-item>
         </v-col>
 
-         <v-col cols="12" md="3">
+        <v-col cols="12" md="3">
           <v-item>
             <router-link to="/admin/profil">
               <v-card class="d-flex align-center white--text" height="200">
@@ -214,6 +218,11 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@mixin bigScreen {
+  @media all and (max-width: 1903px) and (min-width: 960px) {
+    @content;
+  }
+}
 .container {
   *a {
     text-decoration: none;
@@ -224,7 +233,12 @@ export default {
         font-size: 2rem;
         margin-bottom: 1rem;
       }
+      .display-2 {
+        @include bigScreen{
+          font-size: 2rem !important;
+        }
+      }
     }
   }
 }
-</style>
+</style> 

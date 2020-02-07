@@ -33,7 +33,7 @@
             </v-list-item-icon>
 
             <router-link to="/nurse/bookings">
-              <v-list-item-title>Appointments</v-list-item-title>
+              <v-list-item-title>Bookings </v-list-item-title>
             </router-link>
           </v-list-item>
 

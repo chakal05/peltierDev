@@ -34,7 +34,7 @@
             </v-list-item-icon>
 
             <router-link to="/doctor/bookings">
-              <v-list-item-title>Appointments</v-list-item-title>
+              <v-list-item-title>Bookings</v-list-item-title>
             </router-link>
           </v-list-item>
 
@@ -54,7 +54,7 @@
             </v-list-item-icon>
 
             <router-link to="/doctor/prescription">
-              <v-list-item-title>Prescription</v-list-item-title>
+              <v-list-item-title>Medication</v-list-item-title>
             </router-link>
           </v-list-item>
 
