@@ -104,20 +104,16 @@
           </v-item>
         </v-col>
 
-        <v-col cols="12" md="3">
-          <v-item v-slot:default="{ active, toggle }">
-            <v-card
-              :color="active ? 'grey darken-4' : ''"
-              class="d-flex align-center"
-              height="200"
-              @click="toggle"
-            >
-              <v-card-text class="display-3 flex-grow-1 text-center" v-if="!active">
-                <v-icon>fas fa-medkit</v-icon>
-                <h3 class="display-2 font-weight-thin">Pharmacie</h3>
-              </v-card-text>
-              <div v-if="active" class="display-3 flex-grow-1 white--text text-center">Coming soon</div>
-            </v-card>
+         <v-col cols="12" md="3">
+          <v-item>
+            <router-link to="/admin/profil">
+              <v-card class="d-flex align-center white--text" height="200">
+                <v-card-text class="display-3 flex-grow-1 text-center">
+                  <v-icon>account_box</v-icon>
+                  <h3 class="display-2 font-weight-thin">Profil</h3>
+                </v-card-text>
+              </v-card>
+            </router-link>
           </v-item>
         </v-col>
 

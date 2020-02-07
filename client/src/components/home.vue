@@ -165,7 +165,7 @@ export default {
           })
           .catch(err => {
             if (err) {
-              this.error = "something wrong with the credentials";
+              this.error = "Something wrong with the credentials. Check again please.";
               this.wait = false;
             }
           });

@@ -93,27 +93,26 @@ const actions = {
   // Edit personel info
 
   async editPersonel() {
-      await axios
-        .put("/personel", {
-          id: state.personelId || localStorage.getItem("tokenUserId"),
-          name: state.personelName,
-          departement: state.departement,
-          telephone: state.personelTelephone,
-          adresse: state.personelAdresse,
-          city: state.personelCity,
-          email: state.personelEmail,
-          birthdate: state.personelBirth,
-          password: state.personelPassword
-        })
-        .then(response => {
-          if (response && response.status === 200) {
-            state.if_success = true;
-          }
-        })
-        .catch(() => {
-          state.if_error = true;
-        });
-    
+    await axios
+      .put("/personel", {
+        id: state.personelId || localStorage.getItem("tokenUserId"),
+        name: state.personelName,
+        departement: state.departement,
+        telephone: state.personelTelephone,
+        adresse: state.personelAdresse,
+        city: state.personelCity,
+        email: state.personelEmail,
+        birthdate: state.personelBirth,
+        password: state.personelPassword
+      })
+      .then(response => {
+        if (response.status === 200) {
+          state.if_success = true;
+        }
+      })
+      .catch(() => {
+        state.if_error = true;
+      });
   },
 
   async deletePersonel() {

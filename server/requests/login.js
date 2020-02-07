@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const Mongo = require("mongodb").MongoClient;
-const url = "mongodb://localhost:27017/";
+const url = "mongodb://localhost:27017/"; 
 const jwt = require("jsonwebtoken");
 
 

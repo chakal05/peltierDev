@@ -78,6 +78,15 @@
             </router-link>
           </v-list-item>
           
+            <v-list-item>
+            <v-list-item-icon>
+              <v-icon>account_box</v-icon>
+            </v-list-item-icon>
+
+            <router-link to="/doctor/profil">
+              <v-list-item-title>Profil</v-list-item-title>
+            </router-link>
+          </v-list-item>
         </v-list>
 
         <template v-slot:append>

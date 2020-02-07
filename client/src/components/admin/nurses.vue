@@ -16,7 +16,7 @@
         <v-toolbar flat color="white">
           <v-text-field
             v-model="search"
-            append-icon="search"
+            append-icon="search" 
             label="Search"
             single-line
             hide-details
@@ -250,7 +250,7 @@ export default {
 
     error: {
       get() {
-        return this.ifError;
+        return this.iFerror;
       },
       set(status) {
         return status;
@@ -306,10 +306,8 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        //  Object.assign(this.getPersonelList[this.editedIndex], this.editedItem);
         this.edit();
       } else {
-        //   this.getPersonelList.push(this.editedItem);
         this.add();
       }
     },
@@ -340,7 +338,7 @@ export default {
         this.addPersonel();
         if (this.success === true) {
           this.ifError = null;
-          this.ifSuccess = "Added a new doctor";
+          this.ifSuccess = "Added a new nurse";
           setTimeout(() => {
             this.loadPersonel("nurse");
 

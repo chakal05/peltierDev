@@ -5,7 +5,7 @@
     </div>
     <v-row no-gutters justify="center">
       <v-col class="edit" cols="12" md="5">
-        <v-card height="400">
+        <v-card height="450">
           <v-toolbar>
             <v-toolbar-title>Edit profil</v-toolbar-title>
           </v-toolbar>
@@ -41,6 +41,11 @@
             </v-col>
           </v-row>
 
+          <div class="text-center">
+            <p v-bind:style="{color: 'green', fontSize:'1.5rem'}" v-if="successPr" color="teal darken-4">{{isSuccessPr}}</p>
+            <p v-bind:style="{color: 'red', fontSize:'1.5rem'}" v-if="errorPr">{{isErrorPr}}</p>
+          </div>
+
           <v-card-actions>
             <v-col align="center">
               <v-btn @click="updateProfil" color="teal darken-4" class="white--text">Update profil</v-btn>
@@ -50,7 +55,7 @@
       </v-col>
 
       <v-col class="pass" cols="12" md="5">
-        <v-card height="400">
+        <v-card height="450">
           <v-toolbar color="teal darken-4">
             <v-spacer></v-spacer>
             <v-toolbar-title class="white--text">Edit password</v-toolbar-title>
@@ -65,9 +70,13 @@
             </v-col>
 
             <v-col cols="12" md="10">
-              <v-text-field color="teal darken-4" v-model="confPass" label="Confirm password"></v-text-field>
+              <v-text-field color="teal darken-4" v-model="confPass" label="Confirm new password"></v-text-field>
             </v-col>
           </v-row>
+          <div class="text-center">
+            <p v-bind:style="{color: 'green', fontSize:'1.5rem'}" v-if="successPa" color="teal darken-4">{{isSuccessPa}}</p>
+            <p v-bind:style="{color: 'red', fontSize:'1.5rem'}" v-if="errorPa">{{isErrorPa}}</p>
+          </div>
 
           <v-card-actions>
             <v-col align="center">
@@ -81,7 +90,8 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from "vuex";
+import { mapMutations, mapActions } from "vuex";
+import axios from "axios";
 export default {
   data: () => ({
     name: null,
@@ -93,25 +103,120 @@ export default {
     newPass: null,
     confPass: null,
     telephoneRules: [],
-    nameRules: []
+    nameRules: [],
+    isSuccessPr: null,
+    isErrorPr: null,
+    isSuccessPa: null,
+    isErrorPa: null,
+    successPa: false,
+    errorPa: false,
+    successPr: false,
+    errorPr: false
   }),
   computed: {
-    ...mapGetters(["success", "error"])
+    //
   },
   watch: {},
   created() {},
   methods: {
-    updateProfil() {
-      this.setPersonelInfo({
-        adresse : this.adresse,
-        city: this.city,
-        name: this.name,
-        tel: this.telephone,
-        email: this.email
-      });
-      this.editPersonel();
+    async updateProfil() {
+      if (
+        this.name === null &&
+        this.email === null &&
+        this.telephone === null &&
+        this.adresse === null &&
+        this.city === null
+      ) {
+        this.errorPr = true;
+        this.isErrorPr = "Nothing to update";
+        setTimeout(() => {
+          this.errorPr = false;
+          this.isErrorPr = null;
+        }, 3000);
+      } else {
+        await axios
+          .put("/personel/:id", {
+            id: localStorage.getItem("tokenUserId"),
+            name: this.name,
+            email: this.email,
+            telephone: this.telephone,
+            adresse: this.adresse,
+            city: this.city,
+            flag: "updateProfil"
+          })
+          .then(response => {
+            if (response.status === 200) {
+              this.successPr = true;
+              this.isSuccessPr = response.data;
+              setTimeout(() => {
+                this.successPr = false;
+                this.isSuccessPr = null;
+                this.name = null;
+                this.email = null;
+                this.telephone = null;
+                this.adresse = null;
+                this.city = null;
+              }, 3000);
+            }
+          })
+          .catch(() => {
+            this.errorPr = true;
+            setTimeout(() => {
+              this.isErrorPr = "There was a problem, please check later";
+            }, 3000);
+          });
+      }
     },
-    updatePass() {},
+
+    async updatePass() {
+      if (this.pass && this.newPass && this.confPass) {
+        if (this.newPass === this.confPass) {
+          await axios
+            .put("/personel/:id", {
+              id: localStorage.getItem("tokenUserId"),
+              pass: this.pass,
+              newPass: this.newPass,
+              confPass: this.confPass,
+              flag: "updatePass"
+            })
+            .then(response => {
+              if (response.status === 200) {
+                this.successPa = true;
+                this.isSuccessPa = response.data;
+                setTimeout(() => {
+                  this.successPa = false;
+                  this.isSuccessPa = null;
+                  this.pass = null;
+                  this.newPass = null;
+                  this.confPass = null;
+                }, 3000);
+              }
+            })
+            .catch(() => {
+              this.errorPa = true;
+              this.isErrorPa = "There was a problem. Please, try later";
+              setTimeout(() => {
+                this.error = false;
+                this.isErrorPa = null;
+              }, 3000);
+            });
+        } else {
+          this.errorPa = true;
+          this.isErrorPa = "The new password must be the same";
+          setTimeout(() => {
+            this.errorPa  = false;
+            this.isErrorPa = null;
+          }, 3000);
+        }
+      } else {
+        this.errorPa = true;
+        this.isErrorPa = "All fields must be filled";
+        setTimeout(() => {
+          this.errorPa = false;
+          this.isErrorPa = null;
+        }, 3000);
+      }
+    },
     ...mapMutations(["setPersonelInfo"]),
     ...mapActions(["editPersonel"])
   }
@@ -134,40 +239,13 @@ export default {
 
       .v-card {
         @include desktop {
-          height: 500px !important;
+          height: 570px !important;
         }
         .row {
           padding-top: 1.5rem;
 
           @include desktop {
-            padding-top: 0;
-          }
-
-          .col-12 {
-            @include desktop {
-              max-width: 90%;
-              padding: 0;
-            }
-          }
-        }
-
-        .v-card__actions {
-          @include desktop {
-            //   margin-top: -1rem;
-          }
-        }
-      }
-    }
-
-    .pass {
-      margin-right: 1rem;
-
-      .v-card {
-        .row {
-          padding-top: 1.5rem;
-
-          @include desktop {
-            padding-top: 0;
+            padding-top: 1rem;
           }
 
           .col-12 {
@@ -181,6 +259,36 @@ export default {
         .v-card__actions {
           @include desktop {
             margin-top: 2rem;
+          }
+        }
+      }
+    }
+
+    .pass {
+      margin-right: 1rem;
+
+      .v-card {
+        @include desktop {
+          height: 450px !important;
+        }
+        .row {
+          padding-top: 1.5rem;
+
+          @include desktop {
+            padding-top: 1rem;
+          }
+
+          .col-12 {
+            @include desktop {
+              max-width: 90%;
+              padding: 0;
+            }
+          }
+        }
+
+        .v-card__actions {
+          @include desktop {
+            margin-top: 1rem;
           }
         }
       }
