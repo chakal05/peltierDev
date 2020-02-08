@@ -133,7 +133,7 @@ export default {
     messageStatus: "sent"
   }),
   computed: {
-   //
+    //
   },
   watch: {
     dialog(val) {
@@ -181,7 +181,6 @@ export default {
           this.del = true;
           this.updtateMessage(id);
           this.loadMessages();
-
         })
         .catch();
     },
@@ -235,7 +234,7 @@ export default {
           throw err;
         });
     },
- 
+
     async deleteMess(id) {
       await axios
         .delete("/messages/", {
@@ -258,9 +257,13 @@ export default {
     },
 
     async save() {
+
+      // format the timestamp
       let date = new Date().toISOString().substring(0, 10);
-      let hour = new Date().getHours();
-      let minute = new Date().getMinutes();
+      let h = new Date().getHours();
+      let hour = h < 10 ? "0" + h : "";
+      let m = new Date().getMinutes();
+      let minute = m < 10 ? "0" + m : "";
       let timestamp = `${date} at ${hour}:${minute}`;
 
       await axios
