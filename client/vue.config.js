@@ -1,3 +1,4 @@
+const path = require('path');
 module.exports = {
   devServer: {
     proxy: "http://localhost:4000"
@@ -12,7 +13,7 @@ module.exports = {
         // modify the options...
         return options;
       });
-  }
-  // outputDir: path.resolve(__dirname, "../public"),
-  //runtimeCompiler: true,
+  },
+   outputDir: path.resolve(__dirname, "../public"),
+   runtimeCompiler: true,
 };
