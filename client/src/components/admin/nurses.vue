@@ -16,7 +16,7 @@
         <v-toolbar flat color="white">
           <v-text-field
             v-model="search"
-            append-icon="search" 
+            append-icon="search"
             label="Search"
             single-line
             hide-details
@@ -24,119 +24,127 @@
           <v-spacer></v-spacer>
           <v-dialog persistent v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
-              <v-btn color="teal darken-4" dark class="mb-2" v-on="on"
-                >Add nurse </v-btn
-              >
+              <v-btn color="teal darken-4" dark class="mb-2" v-on="on">Add nurse</v-btn>
             </template>
             <v-card>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
+              <v-form>
+                <v-card-title>
+                  <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
 
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        :rules="nameRules"
-                        v-model="editedItem.name"
-                        label="Name"
-                        color="teal darken-4"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        color="teal darken-4"
-                        v-model="editedItem.departement"
-                        label="Departement"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        :rules="telephoneRules"
-                        color="teal darken-4"
-                        v-model="editedItem.telephone"
-                        label="Telephone"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.adresse"
-                        label="Adresse"
-                        color="teal darken-4"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.city"
-                        label="City"
-                        color="teal darken-4"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.email"
-                        :rules="emailRules"
-                        label="Email"
-                        color="teal darken-4"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-menu
-                        ref="menu"
-                        v-model="menu"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        full-width
-                        min-width="290px"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <v-text-field
-                            v-model="editedItem.birthdate"
-                            label="Birthday date"
-                            prepend-icon="event"
-                            readonly
-                            v-on="on"
-                            color="teal darken-4"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          ref="picker"
-                          v-model="date"
-                          :max="new Date().toISOString().substr(0, 10)"
-                          min="1950-01-01"
-                          @change="birth"
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          :rules="nameRules"
+                          v-model="editedItem.name"
+                          label="Name"
                           color="teal darken-4"
-                        ></v-date-picker>
-                      </v-menu>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.password"
-                        :append-icon="show1 ? 'visibility' : 'visibility_off'"
-                        :rules="[rules.required, rules.min]"
-                        :type="show1 ? 'text' : 'password'"
-                        name="input-10-1"
-                        label="Password"
-                        hint="At least x characters"
-                        counter
-                        color="teal darken-4"
-                        @click:append="show1 = !show1"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-              <div class="text-center">
-                <p v-bind:style="{ color: 'green' }">{{ ifSuccess }}</p>
-                <p v-bind:style="{ color: 'red' }">{{ ifError }}</p>
-              </div>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="teal darken-4" text @click="close">Cancel</v-btn>
-                <v-btn color="teal darken-4" text @click="save">Save</v-btn>
-              </v-card-actions>
+                          prepend-icon="account_box"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          color="teal darken-4"
+                          v-model="editedItem.departement"
+                          label="Departement"
+                          prepend-icon="fas fa-vote-yea"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          :rules="telephoneRules"
+                          color="teal darken-4"
+                          v-model="editedItem.telephone"
+                          label="Telephone"
+                          prepend-icon="phone"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.adresse"
+                          label="Adresse"
+                          color="teal darken-4"
+                          prepend-icon="place"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.city"
+                          prepend-icon="home"
+                          label="City"
+                          color="teal darken-4"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.email"
+                          :rules="emailRules"
+                          label="Email"
+                          color="teal darken-4"
+                          prepend-icon="mail"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-menu
+                          ref="menu"
+                          v-model="menu"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          full-width
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="editedItem.birthdate"
+                              label="Birthday date"
+                              prepend-icon="event"
+                              readonly
+                              v-on="on"
+                              color="teal darken-4"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            ref="picker"
+                            v-model="date"
+                            :max="new Date().toISOString().substr(0, 10)"
+                            min="1950-01-01"
+                            @change="birth"
+                            color="teal darken-4"
+                          ></v-date-picker>
+                        </v-menu>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.password"
+                          
+                          :append-icon="show1 ? 'visibility' : 'visibility_off'"
+                          :rules="[rules.required, rules.min]"
+                          :type="show1 ? 'text' : 'password'"
+                          name="input-10-1"
+                          label="Password"
+                          prepend-icon="lock"
+                          hint="At least x characters"
+                          counter
+                          color="teal darken-4"
+                          @click:append="show1 = !show1"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+                <div class="text-center">
+                  <p v-bind:style="{ color: 'green' }">{{ ifSuccess }}</p>
+                  <p v-bind:style="{ color: 'red' }">{{ ifError }}</p>
+                </div>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="teal darken-4" text @click="close">Cancel</v-btn>
+                  <v-btn color="teal darken-4" text @click="save">Save</v-btn>
+                </v-card-actions>
+              </v-form>
             </v-card>
           </v-dialog>
         </v-toolbar>
@@ -326,7 +334,7 @@ export default {
         this.setPersonelInfo({
           adresse: this.editedItem.adresse,
           city: this.editedItem.city,
-          birth:  this.editedItem.birthdate,
+          birth: this.editedItem.birthdate,
           name: this.editedItem.name,
           email: this.editedItem.email,
           departement: this.editedItem.departement,
@@ -348,7 +356,7 @@ export default {
         }
       } else {
         this.ifError = "All fields must be filled";
-        
+
         setTimeout(() => {
           this.ifError = null;
         }, 3000);
@@ -358,9 +366,9 @@ export default {
 
     edit() {
       this.setPersonelInfo({
-          adresse: this.editedItem.adresse,
+        adresse: this.editedItem.adresse,
         city: this.editedItem.city,
-        birth:  this.editedItem.birthdate,
+        birth: this.editedItem.birthdate,
         name: this.editedItem.name,
         email: this.editedItem.email,
         departement: this.editedItem.departement,

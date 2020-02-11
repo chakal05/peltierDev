@@ -36,7 +36,8 @@ const port = process.env.port || 4000;
 let server = app.listen(port, () => console.log("APP RUNNING ON PORT 4000"));
 
 // Static folder
-//app.use(express.static(__dirname + "/public/"));
-// SPA
-//app.get(/.*/, (req, res) => res.sendFile(__dirname + "/public/index.html"));
-//
+app.use(express.static(__dirname + "/public/"));
+ 
+//SPA
+app.get(/.*/, (req, res) => res.sendFile(__dirname + "/public/index.html"));
+

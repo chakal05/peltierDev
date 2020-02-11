@@ -12,6 +12,7 @@
           <v-btn color="teal darken-4" class="white--text" v-on="on">Login</v-btn>
         </template>
         <v-card>
+          <v-card-title class="display-2 font-weight-thin">Login</v-card-title>
           <v-card-text v-bind:style="{ paddingTop: '1rem' }">
             <v-form>
               <v-container>
@@ -22,7 +23,7 @@
                       color="teal darken-4"
                       autocomplete="email"
                       v-model="email"
-                      required
+                      prepend-icon="mail"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" md="6">
@@ -30,9 +31,10 @@
                       label="Password"
                       v-model="pass"
                       color="teal darken-4"
-                      type="password"
-                      autocomplete="current-password"
-                      required
+                      :type="showPass ? 'text' : 'password'"
+                      @click:append="showPass = !showPass"
+                      :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off' "
+                      prepend-icon="lock"
                     ></v-text-field>
                   </v-col>
                   <v-col class="d-flex" cols="12" md="12">
@@ -41,6 +43,7 @@
                       :items="profils"
                       v-model="profil"
                       label="Profil"
+                      prepend-icon="account_box"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -93,7 +96,8 @@ export default {
     email: "",
     error: null,
     pass: "",
-    profil: ""
+    profil: "",
+    showPass: false
   }),
   computed: {
     //
@@ -165,7 +169,8 @@ export default {
           })
           .catch(err => {
             if (err) {
-              this.error = "Something wrong with the credentials. Check again please.";
+              this.error =
+                "Something wrong with the credentials. Check again please.";
               this.wait = false;
             }
           });

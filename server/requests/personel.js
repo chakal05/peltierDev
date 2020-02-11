@@ -148,7 +148,6 @@ router.put("/", async function(req, res) {
 
 router.put("/:id", async function(req, res) {
   const query = await loadPersonel();
-
   if (req.body.flag === "updateProfil") {
     query
       .find(

@@ -39,12 +39,13 @@
 
               <v-card-text>
                 <v-container>
-                  <v-row>
+                  <v-form>
                     <v-col cols="12" sm="6" md="12">
                       <v-text-field
                         color="teal darken-4"
                         v-model="editedItem.description"
                         label="Description"
+                        prepend-icon="description"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="12">
@@ -52,7 +53,7 @@
                         v-model="editedItem.medication"
                         label="Medication"
                         color="teal darken-4"
-                        required
+                        prepend-icon="fas fa-capsules"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
@@ -61,7 +62,7 @@
                         :items="getPatientsList"
                         label="Patient"
                         color="teal darken-4"
-                        required
+                        prepend-icon="fa fa-user-injured"
                       ></v-select>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
@@ -94,7 +95,7 @@
                         ></v-date-picker>
                       </v-menu>
                     </v-col>
-                  </v-row>
+                  </v-form>
                 </v-container>
               </v-card-text>
 

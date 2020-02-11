@@ -4,7 +4,7 @@
       <v-row align="center" justify="center">
         <v-col>
           <div class="text-center">
-            <h1 class="display-2 font-weight-thin mb-4">Bookings </h1>
+            <h1 class="display-2 font-weight-thin mb-4">Bookings</h1>
           </div>
 
           <v-date-picker
@@ -49,24 +49,31 @@
                 <v-btn color="teal darken-4" dark class="mb-2" v-on="on" @click="editItem">Add new</v-btn>
               </template>
               <v-card>
-                <v-card-title>
-                  <span class="headline">{{ formTitle }}</span>
-                </v-card-title>
+                <v-form>
+                  <v-card-title>
+                    <span class="headline">{{ formTitle }}</span>
+                  </v-card-title>
 
-                <v-card-text>
-                  <v-container>
-                    <v-row>
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="editedItem.name"
                           label="Name"
                           color="teal darken-4"
                           :rules="nameRules"
-                          required
+                          prepend-icon="account_box"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
-                        <v-select :items="genre" v-model="editedItem.sexe" label="Gender" required></v-select>
+                        <v-select
+                          color="teal darken-4"
+                          :items="genre"
+                          v-model="editedItem.sexe"
+                          label="Gender"
+                          prepend-icon="fas fa-venus-mars"
+                        ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
@@ -75,15 +82,18 @@
                           label="Telephone"
                           color="teal darken-4"
                           :rules="telephoneRules"
-                          required
+                          prepend-icon="phone"
                         ></v-text-field>
                       </v-col>
+                      </v-row>
+                      <v-row>
                       <v-col cols="12" sm="6" md="4">
                         <v-select
                           :items="dispoHours"
                           v-model="editedItem.hour"
                           label="Time"
                           color="teal darken-4"
+                          prepend-icon="fas fa-bell"
                         ></v-select>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -95,22 +105,24 @@
                           :items="getDoctorList"
                           label="Doctor"
                           color="teal darken-4"
+                          prepend-icon="fa fa-user-md"
                         ></v-select>
                       </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
 
-                <div class="text-center">
-                  <p v-bind:style="{ color: 'green' }">{{ success }}</p>
-                  <p v-bind:style="{ color: 'red' }">{{ error }}</p>
-                </div>
+                  <div class="text-center">
+                    <p v-bind:style="{ color: 'green' }">{{ success }}</p>
+                    <p v-bind:style="{ color: 'red' }">{{ error }}</p>
+                  </div>
 
-                <v-card-actions>
-                  <div class="flex-grow-1"></div>
-                  <v-btn color="teal darken-4" text @click="close">Cancel</v-btn>
-                  <v-btn color="teal darken-4" text @click="save">Save</v-btn>
-                </v-card-actions>
+                  <v-card-actions>
+                    <div class="flex-grow-1"></div>
+                    <v-btn color="teal darken-4" text @click="close">Cancel</v-btn>
+                    <v-btn color="teal darken-4" text @click="save">Save</v-btn>
+                  </v-card-actions>
+                </v-form>
               </v-card>
             </v-dialog>
           </v-toolbar>
@@ -476,6 +488,10 @@ export default {
       width: 70%;
       margin: auto;
       margin-bottom: 3rem;
+
+      @media screen and (max-width: 960px) {
+        width: 100%;
+      }
     }
   }
 

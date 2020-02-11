@@ -33,62 +33,65 @@
 
               <v-card-text>
                 <v-container>
-                  <v-row>
+                  <v-form>
                     <v-col cols="12" sm="6" md="12">
                       <v-text-field
                         color="teal darken-4"
                         v-model="editedItem.description"
                         label="Description"
+                        prepend-icon="description"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-menu
-                        ref="menu"
-                        v-model="menu"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        full-width
-                        min-width="290px"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <v-text-field
-                            v-model="editedItem.day"
-                            label="Date"
-                            prepend-icon="event"
-                            readonly
-                            v-on="on"
+                    <v-row>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-menu
+                          ref="menu"
+                          v-model="menu"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          full-width
+                          min-width="290px"
+                        >
+                          <template v-slot:activator="{ on }">
+                            <v-text-field
+                              v-model="editedItem.day"
+                              label="Date"
+                              prepend-icon="event"
+                              readonly
+                              v-on="on"
+                              color="teal darken-4"
+                            ></v-text-field>
+                          </template>
+                          <v-date-picker
+                            ref="picker"
+                            v-model="date"
                             color="teal darken-4"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          ref="picker"
-                          v-model="date"
+                            @change="birth"
+                            :max="new Date().toISOString().substr(0, 10)"
+                          ></v-date-picker>
+                        </v-menu>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-select
+                          v-model="editedItem.patient"
+                          :items="getPatientsList"
+                          label="Patient"
                           color="teal darken-4"
-                         
-                          @change="birth"
-                        ></v-date-picker>
-                      </v-menu>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-select
-                        v-model="editedItem.patient"
-                        :items="getPatientsList"
-                        label="Patient"
-                        color="teal darken-4"
-                        required
-                      ></v-select>
-                    </v-col>
+                          prepend-icon="fa fa-user-injured"
+                        ></v-select>
+                      </v-col>
+                    </v-row>
                     <v-col cols="12" sm="6" md="12">
                       <v-select
                         v-model="editedItem.doctor"
                         :items="getDoctorList"
                         label="Doctor"
                         color="teal darken-4"
-                        required
+                        prepend-icon="fa fa-user-md"
                       ></v-select>
                     </v-col>
-                  </v-row>
+                  </v-form>
                 </v-container>
               </v-card-text>
 
@@ -246,10 +249,10 @@ export default {
     async loadRapports() {
       await axios
         .get("/rapport")
-        .then(response =>{
-            if(response && response.status === 200){
-                this.getRapports = response.data;
-            }
+        .then(response => {
+          if (response && response.status === 200) {
+            this.getRapports = response.data;
+          }
         })
         .catch();
     },

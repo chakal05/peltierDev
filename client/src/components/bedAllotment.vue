@@ -39,25 +39,28 @@
 
               <v-card-text>
                 <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-select
-                        v-model="editedItem.bedNumber"
-                        :items="bedsList"
-                        label="Bed number"
-                        color="teal darken-4"
-                        required
-                      ></v-select>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="6">
-                      <v-select
-                        v-model="editedItem.patient"
-                        :items="getPatientsList"
-                        label="Patients"
-                        color="teal darken-4"
-                        required
-                      ></v-select>
-                    </v-col>
+                  <v-form>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-select
+                          v-model="editedItem.bedNumber"
+                          :items="bedsList"
+                          label="Bed number"
+                          color="teal darken-4"
+                          prepend-icon="hotel"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="6">
+                        <v-select
+                          v-model="editedItem.patient"
+                          :items="getPatientsList"
+                          label="Patients"
+                          color="teal darken-4"
+                          prepend-icon="fa fa-user-injured"
+                        ></v-select>
+                      </v-col>
+                    </v-row>
+                    <v-row>
                     <v-col cols="12" sm="6" md="6">
                       <v-menu
                         ref="menu"
@@ -78,7 +81,7 @@
                             v-on="on"
                             color="teal darken-4"
                           ></v-text-field>
-                        </template>
+                       </template>
                         <v-date-picker
                           ref="picker"
                           v-model="date"
@@ -94,6 +97,7 @@
                         ref="menu2"
                         v-model="menu2"
                         :close-on-content-click="false"
+                        :return-value.sync="datum"
                         transition="scale-transition"
                         offset-y
                         full-width
@@ -107,7 +111,6 @@
                             readonly
                             v-on="on"
                             color="teal darken-4"
-                            min="1950-01-01"
                           ></v-text-field>
                         </template>
                         <v-date-picker
@@ -115,10 +118,13 @@
                           v-model="datum"
                           color="teal darken-4"
                           @change="dayOut"
+                          max="2026-01-01"
+                          :min="new Date().toISOString().substr(0, 10)"
                         ></v-date-picker>
                       </v-menu>
                     </v-col>
-                  </v-row>
+                    </v-row>
+                  </v-form>
                 </v-container>
               </v-card-text>
 
@@ -244,8 +250,7 @@ export default {
     deleteItem(item) {
       const index = this.getBookedBeds.indexOf(item);
       this.indexToDel = this.getBookedBeds[index];
-      confirm("Are you sure you want to delete this item?") &&
-        this.suppr();
+      confirm("Are you sure you want to delete this item?") && this.suppr();
     },
 
     dayIn(date) {

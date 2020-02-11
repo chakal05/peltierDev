@@ -27,6 +27,7 @@
               <v-btn @click="editItem" color="teal darken-4" dark class="mb-2" v-on="on">Add patient</v-btn>
             </template>
             <v-card>
+              <v-form>
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
@@ -40,6 +41,7 @@
                         :rules="nameRules"
                         v-model="editedItem.name"
                         label="Name"
+                        prepend-icon="account_box"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
@@ -48,6 +50,7 @@
                         v-model="editedItem.telephone"
                         label="Telephone"
                         color="teal darken-4"
+                        prepend-icon="phone"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
@@ -55,10 +58,16 @@
                         color="teal darken-4"
                         v-model="editedItem.adresse"
                         label="Adresse"
+                        prepend-icon="place"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field color="teal darken-4" v-model="editedItem.city " label="City"></v-text-field>
+                      <v-text-field
+                        prepend-icon="home"
+                        color="teal darken-4"
+                        v-model="editedItem.city "
+                        label="City"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
                       <v-text-field
@@ -66,6 +75,7 @@
                         v-model="editedItem.email"
                         :rules="emailRules"
                         label="Email"
+                        prepend-icon="mail"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
@@ -104,7 +114,7 @@
                         :items="getDoctorList"
                         label="Doctor"
                         color="teal darken-4"
-                        required
+                        prepend-icon="fa fa-user-md"
                       ></v-select>
                     </v-col>
                   </v-row>
@@ -121,6 +131,7 @@
                 <v-btn color="teal darken-4" text @click="close">Cancel</v-btn>
                 <v-btn color="teal darken-4" text @click="save">Save</v-btn>
               </v-card-actions>
+              </v-form>
             </v-card>
           </v-dialog>
         </v-toolbar>
@@ -313,7 +324,7 @@ export default {
           .then(response => {
             if (response && response.status === 200) {
               this.error = null;
-              this.success = "Added a new doctor";
+              this.success = "Added a new patient";
               setTimeout(() => {
                 this.loadPatients();
 

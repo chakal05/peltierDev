@@ -9,48 +9,64 @@
           <v-toolbar>
             <v-toolbar-title>Edit profil</v-toolbar-title>
           </v-toolbar>
-          <v-row align="center" justify="center">
-            <v-col cols="12" md="5">
-              <v-text-field color="teal darken-4" v-model="name" label="Name" required></v-text-field>
-            </v-col>
-            <v-col cols="12" md="5">
-              <v-text-field
+          <v-form>
+            <v-row align="center" justify="center">
+              <v-col cols="12" md="5">
+                <v-text-field
+                  prepend-icon="account_box"
+                  color="teal darken-4"
+                  v-model="name"
+                  label="Name"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="5">
+                <v-text-field
+                  color="teal darken-4"
+                  v-model="telephone"
+                  :rules="telephoneRules"
+                  label="Telephone"
+                  prepend-icon="phone"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" md="3">
+                <v-text-field
+                  color="teal darken-4"
+                  v-model="email"
+                  :rules="nameRules"
+                  label="Email"
+                  prepend-icon="mail"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" md="3">
+                <v-text-field
+                  color="teal darken-4"
+                  v-model="adresse"
+                  label="Adresse"
+                  prepend-icon="place"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12" md="3">
+                <v-text-field color="teal darken-4" v-model="city" label="City" prepend-icon="home"></v-text-field>
+              </v-col>
+            </v-row>
+
+            <div class="text-center">
+              <p
+                v-bind:style="{color: 'green'}"
+                v-if="successPr"
                 color="teal darken-4"
-                v-model="telephone"
-                :rules="telephoneRules"
-                label="Telephone"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" md="3">
-              <v-text-field
-                color="teal darken-4"
-                v-model="email"
-                :rules="nameRules"
-                label="Email"
-                required
-              ></v-text-field>
-            </v-col>
+              >{{isSuccessPr}}</p>
+              <p v-bind:style="{color: 'red'}" v-if="errorPr">{{isErrorPr}}</p>
+            </div>
 
-            <v-col cols="12" md="3">
-              <v-text-field color="teal darken-4" v-model="adresse" label="Adresse"></v-text-field>
-            </v-col>
-
-            <v-col cols="12" md="3">
-              <v-text-field color="teal darken-4" v-model="city" label="City"></v-text-field>
-            </v-col>
-          </v-row>
-
-          <div class="text-center">
-            <p v-bind:style="{color: 'green'}" v-if="successPr" color="teal darken-4">{{isSuccessPr}}</p>
-            <p v-bind:style="{color: 'red'}" v-if="errorPr">{{isErrorPr}}</p>
-          </div>
-
-          <v-card-actions>
-            <v-col align="center">
-              <v-btn @click="updateProfil" color="teal darken-4" class="white--text">Update profil</v-btn>
-            </v-col>
-          </v-card-actions>
+            <v-card-actions>
+              <v-col align="center">
+                <v-btn @click="updateProfil" color="teal darken-4" class="white--text">Update profil</v-btn>
+              </v-col>
+            </v-card-actions>
+          </v-form>
         </v-card>
       </v-col>
 
@@ -62,27 +78,56 @@
           </v-toolbar>
           <v-row align="center" justify="center">
             <v-col cols="12" md="5">
-              <v-text-field color="teal darken-4" v-model="pass" label="Password"></v-text-field>
+              <v-text-field
+                v-model="pass"
+                color="teal darken-4"
+                prepend-icon="lock"
+                :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPass ? 'text' : 'password'"
+                label="Current password"
+                @click:append="showPass = !showPass"
+              ></v-text-field>
             </v-col>
 
             <v-col cols="12" md="5">
-              <v-text-field color="teal darken-4" v-model="newPass" label="New password"></v-text-field>
+              <v-text-field
+                prepend-icon="lock"
+                color="teal darken-4"
+                :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPass ? 'text' : 'password'"
+                v-model="newPass"
+                label="New password"
+                @click:append="showPass = !showPass"
+              ></v-text-field>
             </v-col>
 
             <v-col cols="12" md="10">
-              <v-text-field color="teal darken-4" v-model="confPass" label="Confirm new password"></v-text-field>
+              <v-text-field
+                prepend-icon="lock"
+                color="teal darken-4"
+                :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPass ? 'text' : 'password'"
+                v-model="confPass"
+                label="Confirm new password"
+                @click:append="showPass = !showPass"
+              ></v-text-field>
             </v-col>
-          </v-row>
-          <div class="text-center">
-            <p v-bind:style="{color: 'green'}" v-if="successPa" color="teal darken-4">{{isSuccessPa}}</p>
-            <p v-bind:style="{color: 'red'}" v-if="errorPa">{{isErrorPa}}</p>
-          </div>
 
-          <v-card-actions>
-            <v-col align="center">
-              <v-btn @click="updatePass" color="teal darken-4" class="white--text">Update password</v-btn>
-            </v-col>
-          </v-card-actions>
+            <div class="text-center">
+              <p
+                v-bind:style="{color: 'green'}"
+                v-if="successPa"
+                color="teal darken-4"
+              >{{isSuccessPa}}</p>
+              <p v-bind:style="{color: 'red'}" v-if="errorPa">{{isErrorPa}}</p>
+            </div>
+
+            <v-card-actions>
+              <v-col align="center">
+                <v-btn @click="updatePass" color="teal darken-4" class="white--text">Update password</v-btn>
+              </v-col>
+            </v-card-actions>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
@@ -111,7 +156,8 @@ export default {
     successPa: false,
     errorPa: false,
     successPr: false,
-    errorPr: false
+    errorPr: false,
+    showPass: false
   }),
   computed: {
     //
@@ -204,7 +250,7 @@ export default {
           this.errorPa = true;
           this.isErrorPa = "The new password must be the same";
           setTimeout(() => {
-            this.errorPa  = false;
+            this.errorPa = false;
             this.isErrorPa = null;
           }, 3000);
         }
