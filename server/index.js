@@ -6,17 +6,19 @@ const helmet = require("helmet");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({ credentials: true, origin: "http://localhost:8080" }));
+app.use(helmet());
 
-const login = require("./requests/login");
-app.use("/login", login);
 
-app.use(function(req, res, next) {
+//Middleware
+
+const auth = function(req, res, next) {
   if (!req.headers.authorization) {
     return res.status(403).json({ error: "No credentials sent!" });
   }
   next();
-});
+};
 
+const login = require("./requests/login");
 const reservations = require("./requests/reservations");
 const personel = require("./requests/personel");
 const patients = require("./requests/patient");
@@ -25,13 +27,14 @@ const bedAllotment = require("./requests/bedAll");
 const rapport = require("./requests/rapport");
 const prescription = require('./requests/prescription');
 
-app.use("/reservations", reservations);
-app.use("/personel", personel);
-app.use("/patient", patients);
-app.use("/messages", messages);
-app.use("/bedAll", bedAllotment);
-app.use("/rapport", rapport);
-app.use('/prescription', prescription);
+app.use("/login", login);
+app.use("/reservations", auth, reservations);
+app.use("/personel", auth, personel);
+app.use("/patient", auth, patients);
+app.use("/messages", auth, messages);
+app.use("/bedAll", auth, bedAllotment);
+app.use("/rapport", auth, rapport);
+app.use('/prescription', auth, prescription);
 
 
 if(process.env.NODE_ENV === 'production'){

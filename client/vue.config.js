@@ -14,6 +14,6 @@ module.exports = {
         return options;
       });
   },
-   outputDir: path.resolve(__dirname, "../server/public"),
-   runtimeCompiler: true,
+  // outputDir: path.resolve(__dirname, "../server/public"),
+  
 };

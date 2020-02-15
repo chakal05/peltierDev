@@ -48,22 +48,36 @@
               </v-col>
 
               <v-col cols="12" md="3">
-                <v-text-field color="teal darken-4" v-model="city" label="City" prepend-icon="home"></v-text-field>
+                <v-text-field
+                  color="teal darken-4"
+                  v-model="city"
+                  label="City"
+                  prepend-icon="home"
+                ></v-text-field>
               </v-col>
             </v-row>
 
             <div class="text-center">
               <p
-                v-bind:style="{color: 'green'}"
+                v-bind:style="{ color: 'green' }"
                 v-if="successPr"
                 color="teal darken-4"
-              >{{isSuccessPr}}</p>
-              <p v-bind:style="{color: 'red'}" v-if="errorPr">{{isErrorPr}}</p>
+              >
+                {{ isSuccessPr }}
+              </p>
+              <p v-bind:style="{ color: 'red' }" v-if="errorPr">
+                {{ isErrorPr }}
+              </p>
             </div>
 
             <v-card-actions>
               <v-col align="center">
-                <v-btn @click="updateProfil" color="teal darken-4" class="white--text">Update profil</v-btn>
+                <v-btn
+                  @click="updateProfil"
+                  color="teal darken-4"
+                  class="white--text"
+                  >Update profil</v-btn
+                >
               </v-col>
             </v-card-actions>
           </v-form>
@@ -112,22 +126,30 @@
                 @click:append="showPass = !showPass"
               ></v-text-field>
             </v-col>
-
-            <div class="text-center">
+          </v-row>
+          <div class="text-center">
+          
               <p
-                v-bind:style="{color: 'green'}"
+                v-bind:style="{ color: 'green' }"
                 v-if="successPa"
                 color="teal darken-4"
-              >{{isSuccessPa}}</p>
-              <p v-bind:style="{color: 'red'}" v-if="errorPa">{{isErrorPa}}</p>
-            </div>
-
-            <v-card-actions>
-              <v-col align="center">
-                <v-btn @click="updatePass" color="teal darken-4" class="white--text">Update password</v-btn>
-              </v-col>
-            </v-card-actions>
-          </v-row>
+              >
+                {{ isSuccessPa }}
+              </p>
+              <p v-bind:style="{ color: 'red' }" v-if="errorPa">
+                {{ isErrorPa }}
+              </p>
+          </div>
+          <v-card-actions>
+            <v-col align="center">
+              <v-btn
+                @click="updatePass"
+                color="teal darken-4"
+                class="white--text"
+                >Update password</v-btn
+              >
+            </v-col>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
