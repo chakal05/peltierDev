@@ -4,7 +4,13 @@
       <h2 v-if="chat" class="display-2 font-weight-thin mb-4">Messages</h2>
     </div>
     <v-row no-gutters>
-      <v-col v-if="sideBar" v-bind:class="{show : chat}" class="column" cols="12" md="3">
+      <v-col
+        v-if="sideBar"
+        v-bind:class="{ show: chat }"
+        class="column"
+        cols="12"
+        md="3"
+      >
         <v-card height="700">
           <v-toolbar color="teal darken-4" dark>
             <v-toolbar-title>
@@ -16,8 +22,13 @@
             </v-toolbar-title>
           </v-toolbar>
 
+        
+
           <v-list two-line v-if="!contact">
-            <v-list-item-group v-model="selected" active-class="teal--text">
+              <div v-if="noMess" class="noMess text-center">
+            <h2 class="teal--text">You do not have new messages</h2>
+          </div>
+            <v-list-item-group v-if="!noMess" v-model="selected" active-class="teal--text">
               <template v-for="(item, index) in items">
                 <v-list-item
                   :key="item._id"
@@ -28,19 +39,26 @@
                   ]"
                 >
                   <v-list-item-content @click="messageDetails(item._id)">
-                    <v-list-item-title v-text="item.senderName"></v-list-item-title>
+                    <v-list-item-title
+                      v-text="item.senderName"
+                    ></v-list-item-title>
                     <br />
-                    <v-list-item-subtitle v-text="item.time"></v-list-item-subtitle>
+                    <v-list-item-subtitle
+                      v-text="item.time"
+                    ></v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
-                <v-divider v-if="index + 1 <items.length" :key="index"></v-divider>
+                <v-divider
+                  v-if="index + 1 < items.length"
+                  :key="index"
+                ></v-divider>
               </template>
             </v-list-item-group>
           </v-list>
 
           <v-list v-if="contact">
             <v-list-item-group active-class="teal--text">
-              <template v-for="(item,index ) in personel">
+              <template v-for="(item, index) in personel">
                 <v-list-item :key="item._id">
                   <template v-slot:default="{}">
                     <v-list-item-content @click="newMess(item._id)">
@@ -54,32 +72,50 @@
           </v-list>
 
           <div class="text-center">
-            <v-pagination v-model="page" :length="2" color="teal darken-4"></v-pagination>
+            <v-pagination
+              v-model="page"
+              :length="2"
+              color="teal darken-4"
+            ></v-pagination>
           </div>
         </v-card>
       </v-col>
 
       <v-col class="main">
-        <v-card class="callToAction" v-if="!chat" align="center" justify="center" height="700">
+        <v-card
+          class="callToAction"
+          v-if="!chat"
+          align="center"
+          justify="center"
+          height="700"
+        >
           <v-card-text class="display-2 font-weight-thin mb-4">
             <v-icon color="teal darken-4">mail</v-icon>
           </v-card-text>
         </v-card>
         <v-card v-if="chat" class="chat_box" height="700">
           <v-toolbar>
-            <v-icon @click="goBack" class="goBack" color="black">arrow_back</v-icon>
+            <v-icon @click="goBack" class="goBack" color="black"
+              >arrow_back</v-icon
+            >
             <v-spacer></v-spacer>
             <v-toolbar-title>Message</v-toolbar-title>
           </v-toolbar>
-          <v-list-item v-for="item in receivedMessages" :key="item._id" three-line>
+          <v-list-item
+            v-for="item in receivedMessages"
+            :key="item._id"
+            three-line
+          >
             <v-list-item-content>
-              <v-list-item-title class="title mb-1">From: {{ item.senderName || "me" }}</v-list-item-title>
-              <div class="subtitle-1 black--text">To: {{ item.name || "me" }}</div>
+              <v-list-item-title class="title mb-1"
+                >From: {{ item.senderName || "me" }}</v-list-item-title
+              >
+              <div class="subtitle-1 black--text">
+                To: {{ item.name || "me" }}
+              </div>
               <v-divider></v-divider>
               <v-list-item-subtitle class="my-12">
-                {{
-                item.message
-                }}
+                {{ item.message }}
               </v-list-item-subtitle>
               <br />
               <v-list-item>
@@ -87,11 +123,18 @@
               </v-list-item>
             </v-list-item-content>
             <v-list-item-action v-if="del">
-              <v-icon color="red darken-4" @click="deleteMess(item._id)" class="white--text">delete</v-icon>
+              <v-icon
+                color="red darken-4"
+                @click="deleteMess(item._id)"
+                class="white--text"
+                >delete</v-icon
+              >
             </v-list-item-action>
           </v-list-item>
 
-          <v-alert v-if="success" type="success">Message {{ messageStatus }}.</v-alert>
+          <v-alert v-if="success" type="success"
+            >Message {{ messageStatus }}.</v-alert
+          >
           <div class="reponse">
             <v-textarea
               outlined
@@ -130,6 +173,7 @@ export default {
     receivedMessages: [],
     items: [],
     success: false,
+    noMess: false,
     messageStatus: "sent"
   }),
   computed: {
@@ -154,7 +198,12 @@ export default {
           }
         })
         .then(response => {
-          this.items = response.data.reverse();
+          if (response.data[0]) {
+            this.items = response.data.reverse();
+              this.noMess = false;
+          } else {
+            this.noMess = true;
+          }
         })
         .catch(err => {
           throw err;
@@ -205,6 +254,7 @@ export default {
         })
         .then(response => {
           this.chat = false;
+          this.noMess = false;
           this.contact = true;
           this.receivedMessages = [];
           this.personel = response.data;
@@ -245,8 +295,9 @@ export default {
             this.success = true;
             this.messageStatus = "deleted";
 
-            setInterval(() => {
+            setTimeout(() => {
               this.success = false;
+              this.chat = false;
               this.loadMessages();
             }, 3000);
           }
@@ -257,13 +308,12 @@ export default {
     },
 
     async save() {
-
       // format the timestamp
       let date = new Date().toISOString().substring(0, 10);
       let h = new Date().getHours();
-      let hour = h < 10 ? "0" + h : "";
+      let hour = h < 10 ? "0" + h : h;
       let m = new Date().getMinutes();
-      let minute = m < 10 ? "0" + m : "";
+      let minute = m < 10 ? "0" + m : m;
       let timestamp = `${date} at ${hour}:${minute}`;
 
       await axios
@@ -275,15 +325,14 @@ export default {
           message: this.message,
           user_to_read: "no"
         })
-        .then(response => {
+        .then(async response => {
           if (response.status === 200) {
-            this.message = null;
-
-            this.success = true;
-            setInterval(() => {
-              this.success = false;
-              // this.chat = false;
-            }, 3000);
+            this.message = null;          
+             this.success = true;
+             setTimeout(() => {
+               this.success = false;
+               this.chat = false;
+             }, 3000);
           }
         })
         .catch(err => {
@@ -323,6 +372,14 @@ export default {
           position: absolute;
           bottom: 0.5rem;
           left: -0.1rem;
+        }
+
+        .noMess {
+          margin-top: 50%;
+
+          h2 {
+            font-size: 2rem;
+          }
         }
 
         .newMessage {

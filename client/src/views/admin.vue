@@ -9,7 +9,10 @@
         app
       >
         <div class="logo-gris">
-          <v-app-bar-nav-icon class="bar" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+          <v-app-bar-nav-icon
+            class="bar"
+            @click.stop="drawer = !drawer"
+          ></v-app-bar-nav-icon>
           <v-toolbar-title class="white--text">
             Manedek
             <v-icon>local_hospital</v-icon>
@@ -66,13 +69,33 @@
             </router-link>
           </v-list-item>
 
-           <v-list-item>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>fas fa-bed</v-icon>
+            </v-list-item-icon>
+
+            <router-link to="/admin/bedAllotment">
+              <v-list-item-title>Bed allotment</v-list-item-title>
+            </router-link>
+          </v-list-item>
+
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>account_box</v-icon>
             </v-list-item-icon>
 
             <router-link to="/admin/profil">
               <v-list-item-title>Profil</v-list-item-title>
+            </router-link>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>fas fa-book</v-icon>
+            </v-list-item-icon>
+
+            <router-link to="/admin/rapport">
+              <v-list-item-title>Rapport</v-list-item-title>
             </router-link>
           </v-list-item>
         </v-list>
@@ -94,9 +117,9 @@
 
         <v-spacer></v-spacer>
 
-        <v-badge  color="teal darken-4">
-          <template  v-slot:badge>
-            <span > {{newMess}} </span>
+        <v-badge color="teal darken-4">
+          <template v-slot:badge>
+            <span> {{ newMess }} </span>
           </template>
           <router-link to="/admin/messages">
             <v-icon>mdi-email</v-icon>
@@ -126,7 +149,8 @@ export default {
   data: () => ({
     drawer: null,
     show: true,
-    userName: localStorage.getItem("tokenUserName")
+    userName: localStorage.getItem("tokenUserName"),
+    finns: false
   }),
   computed: { ...mapGetters(["newMess"]) },
   created() {
@@ -213,7 +237,7 @@ export default {
           margin-left: 0rem;
         }
 
-       @include tablette {
+        @include tablette {
           display: none;
         }
       }

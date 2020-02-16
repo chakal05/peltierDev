@@ -78,7 +78,7 @@ router.get("/", async function(req, res) {
       .catch(err => {
         throw err;
       });
-  }
+  } 
 });
 
 router.get("/:id", async function(req, res) {

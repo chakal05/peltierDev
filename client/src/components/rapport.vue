@@ -277,7 +277,7 @@ export default {
           .then(response => {
             if (response && response.status === 200) {
               this.error = null;
-              this.success = "Added a new doctor";
+              this.success = "Added a new rapport";
               setTimeout(() => {
                 this.loadRapports();
 
