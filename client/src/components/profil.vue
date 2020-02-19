@@ -128,17 +128,16 @@
             </v-col>
           </v-row>
           <div class="text-center">
-          
-              <p
-                v-bind:style="{ color: 'green' }"
-                v-if="successPa"
-                color="teal darken-4"
-              >
-                {{ isSuccessPa }}
-              </p>
-              <p v-bind:style="{ color: 'red' }" v-if="errorPa">
-                {{ isErrorPa }}
-              </p>
+            <p
+              v-bind:style="{ color: 'green' }"
+              v-if="successPa"
+              color="teal darken-4"
+            >
+              {{ isSuccessPa }}
+            </p>
+            <p v-bind:style="{ color: 'red' }" v-if="errorPa">
+              {{ isErrorPa }}
+            </p>
           </div>
           <v-card-actions>
             <v-col align="center">
@@ -292,7 +291,7 @@ export default {
 </script>
 
 <style lang="scss">
-@mixin desktop {
+@mixin medium {
   @media (max-width: 960px) {
     @content;
   }
@@ -301,31 +300,32 @@ export default {
   .row {
     .edit {
       margin-right: 1rem;
-      @include desktop {
+      @include medium {
         margin-bottom: 2rem;
       }
 
       .v-card {
-        @include desktop {
+        @include medium {
           height: 570px !important;
         }
         .row {
           padding-top: 1.5rem;
 
-          @include desktop {
+          @include medium {
             padding-top: 1rem;
           }
 
           .col-12 {
-            @include desktop {
+            @include medium {
               max-width: 90%;
               padding: 0;
+              margin: 0 auto;
             }
           }
         }
 
         .v-card__actions {
-          @include desktop {
+          @include medium {
             margin-top: 2rem;
           }
         }
@@ -336,27 +336,33 @@ export default {
       margin-right: 1rem;
 
       .v-card {
-        @include desktop {
+        @include medium {
           height: 450px !important;
         }
         .row {
           padding-top: 1.5rem;
 
-          @include desktop {
-            padding-top: 1rem;
+          @include medium {
+            padding: 1rem;
           }
 
           .col-12 {
-            @include desktop {
-              max-width: 90%;
+            @include medium {
               padding: 0;
             }
           }
         }
 
         .v-card__actions {
-          @include desktop {
+          @include medium {
             margin-top: 1rem;
+          }
+
+          .col {
+            .v-btn {
+              margin: 0 auto;
+              width: 175px;
+            }
           }
         }
       }

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container >
     <v-app-bar absolute>
       <v-toolbar-title>Manedek Medical Center</v-toolbar-title>
 
@@ -7,62 +7,63 @@
         <v-icon color="teal darken-4">local_hospital</v-icon>
       </div>
       <div class="flex-grow-1"></div>
-      <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-dialog v-model="dialog"  persistent max-width="600px">
         <template v-slot:activator="{ on }">
-          <v-btn color="teal darken-4" class="white--text" v-on="on">Login</v-btn>
+          <v-btn color="teal darken-4" class="white--text" v-on="on"
+            >Login</v-btn
+          >
         </template>
-        <v-card>
+        <v-card >
           <v-card-title class="display-2 font-weight-thin">Login</v-card-title>
           <v-card-text v-bind:style="{ paddingTop: '1rem' }">
             <v-form>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" md="6">
-                    <v-text-field
-                      label="Email"
-                      color="teal darken-4"
-                      autocomplete="email"
-                      v-model="email"
-                      prepend-icon="mail"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" md="6">
-                    <v-text-field
-                      label="Password"
-                      v-model="pass"
-                      color="teal darken-4"
-                      :type="showPass ? 'text' : 'password'"
-                      @click:append="showPass = !showPass"
-                      :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off' "
-                      prepend-icon="lock"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col class="d-flex" cols="12" md="12">
-                    <v-select
-                      color="teal darken-4"
-                      :items="profils"
-                      v-model="profil"
-                      label="Profil"
-                      prepend-icon="account_box"
-                    ></v-select>
-                  </v-col>
-                </v-row>
-              </v-container>
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    label="Email"
+                    color="teal darken-4"
+                    autocomplete="email"
+                    v-model="email"
+                    prepend-icon="mail"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    label="Password"
+                    v-model="pass"
+                    color="teal darken-4"
+                    :type="showPass ? 'text' : 'password'"
+                    @click:append="showPass = !showPass"
+                    :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                    prepend-icon="lock"
+                  ></v-text-field>
+                </v-col>
+                <v-col class="d-flex" cols="12" md="12">
+                  <v-select
+                    color="teal darken-4"
+                    :items="profils"
+                    v-model="profil"
+                    label="Profil"
+                    prepend-icon="account_box"
+                  ></v-select>
+                </v-col>
+              </v-row>
             </v-form>
           </v-card-text>
 
           <div class="text-center">
-            <p v-bind:style="{ color: 'red' }">{{ error }}</p>
+            <p v-if="error" v-bind:style="{ color: 'red' }">{{ error }}</p>
           </div>
 
-          <v-card-actions v-bind:style="{ paddingBottom: '3rem' }">
+          <v-card-actions v-bind:style="{ paddingBottom: '1rem' }">
             <v-col class="text-center">
               <v-btn
                 v-bind:style="{ marginRight: '1rem', marginLeft: '1rem' }"
                 color="teal darken-4"
                 class="white--text"
                 @click="save"
-              >Validate</v-btn>
+                >Validate</v-btn
+              >
               <v-progress-circular
                 v-if="wait"
                 v-bind:style="{ marginRight: '1rem' }"
@@ -79,7 +80,9 @@
     <div>
       <v-parallax dark src="../assets/doctors.jpg">
         <v-row align="center" justify="center">
-          <h1 class="display-2 font-weight-bold mb-4 white--text">Manedek Medical Center</h1>
+          <h1 class="display-2 font-weight-bold mb-4 white--text">
+            Manedek Medical Center
+          </h1>
         </v-row>
       </v-parallax>
     </div>
@@ -185,20 +188,30 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 $baseColor: #00695c;
+
+@mixin phone {
+  @media (max-width: 600px) {
+    @content;
+  }
+}
 .container {
+  @include phone {
+        padding: 1rem;
+        
+      }
   .v-toolbar {
     padding-left: 0.5rem;
     .v-toolbar__title {
-      @media (max-width: 414px) {
+      @include phone {
         padding-left: 0;
-        font-size: 1.3rem;
+        font-size: 1.2rem;
       }
     }
 
     .logo {
       .v-icon {
         font-size: 3rem;
-        @media (max-width: 414px) {
+        @include phone {
           padding-left: 0;
           font-size: 2rem;
         }

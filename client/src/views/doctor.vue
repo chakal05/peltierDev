@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container id="admin">
     <v-app>
       <v-navigation-drawer
         color="teal darken-4"
@@ -9,7 +9,10 @@
         app
       >
         <div class="logo-gris">
-          <v-app-bar-nav-icon class="bar" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+          <v-app-bar-nav-icon
+            class="bar"
+            @click.stop="drawer = !drawer"
+          ></v-app-bar-nav-icon>
           <v-toolbar-title class="white--text">
             Manedek
             <v-icon>local_hospital</v-icon>
@@ -26,7 +29,6 @@
               <v-list-item-title>Dashboard</v-list-item-title>
             </router-link>
           </v-list-item>
-
 
           <v-list-item>
             <v-list-item-icon>
@@ -48,7 +50,7 @@
             </router-link>
           </v-list-item>
 
-           <v-list-item>
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>fas fa-stethoscope</v-icon>
             </v-list-item-icon>
@@ -58,7 +60,7 @@
             </router-link>
           </v-list-item>
 
-           <v-list-item>
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>fas fa-book</v-icon>
             </v-list-item-icon>
@@ -68,7 +70,7 @@
             </router-link>
           </v-list-item>
 
-              <v-list-item>
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>fas fa-bed</v-icon>
             </v-list-item-icon>
@@ -77,8 +79,8 @@
               <v-list-item-title>Bed allotment</v-list-item-title>
             </router-link>
           </v-list-item>
-          
-            <v-list-item>
+
+          <v-list-item>
             <v-list-item-icon>
               <v-icon>account_box</v-icon>
             </v-list-item-icon>
@@ -106,16 +108,35 @@
 
         <v-spacer></v-spacer>
 
-        <v-badge  color="teal darken-4">
-          <template  v-slot:badge>
-            <span > {{newMess}} </span>
+        <v-badge color="teal darken-4">
+          <template v-slot:badge>
+            <span> {{ newMess }} </span>
           </template>
-          <router-link to="/doctor/messages">
+          <router-link to="/admin/messages">
             <v-icon>mdi-email</v-icon>
           </router-link>
         </v-badge>
 
-        <v-btn text>{{ userName }}</v-btn>
+        <v-col cols="12" sm="4" md="1" class="mt-7">
+          <div class="text-center">
+            <v-menu offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn text v-on="on">
+                  {{ userName }}
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-for="(item, index) in overflow"
+                  :key="index"
+                  @click="logOut"
+                >
+                  <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </div>
+        </v-col>
       </v-app-bar>
 
       <v-content>
@@ -130,29 +151,29 @@
     </v-app>
   </v-container>
 </template>
-
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
   name: "admin",
-    data: () => ({
+  data: () => ({
+    overflow: [{ title: "Log out" }],
     drawer: null,
     show: true,
     userName: localStorage.getItem("tokenUserName")
   }),
-  computed: {...mapGetters(['newMess'])},
+  computed: { ...mapGetters(["newMess"]) },
   created() {
     //get number of unread messages
-   this.notifyMessages();
+    this.notifyMessages();
 
     // get number of unread messages every 3 seconds
-   this.getUnread();
+    this.getUnread();
   },
 
   methods: {
-    ...mapMutations(["logOut", 'stopTimer']),
+    ...mapMutations(["logOut", "stopTimer"]),
 
-   ...mapActions(['getUnread', 'notifyMessages'])
+    ...mapActions(["getUnread", "notifyMessages"])
   },
 
   beforeDestroy() {
@@ -161,16 +182,33 @@ export default {
 };
 </script>
 
-
 <style  lang='scss' scoped>
-@mixin desktop() {
-  @media (max-width: 1264px) {
+@mixin extraLarge() {
+  @media (min-width: 1904px) {
+    @content;
+  }
+}
+
+@mixin medium() {
+  @media (min-width: 960px) and (max-width: 1263px) {
     @content;
   }
 }
 
 @mixin tablette() {
-  @media (max-width: 761px) {
+  @media (min-width: 600px) and (max-width: 959px) {
+    @content;
+  }
+}
+
+@mixin desktop() {
+  @media (min-width: 1264px) and (max-width: 1903px) {
+    @content;
+  }
+}
+
+@mixin phone {
+  @media (max-width: 600px) {
     @content;
   }
 }
@@ -183,10 +221,12 @@ export default {
   .v-application--wrap {
     .v-navigation-drawer {
       .logo-gris {
-        display: none;
+        @include extraLarge {
+          display: none;
+        }
 
         @include desktop {
-          display: block;
+          display: none;
         }
 
         .bar {
@@ -203,14 +243,8 @@ export default {
           .v-icon {
             font-size: 2rem;
             margin-left: 0.5rem;
-            margin-top: -0.3rem;
+            margin-top: -0.5rem;
           }
-        }
-      }
-
-      .v-list {
-        @include desktop() {
-          margin-top: -2rem;
         }
       }
     }
@@ -221,33 +255,63 @@ export default {
         font-size: 1.5rem;
         margin-top: 0.3rem;
 
+        @include tablette {
+          font-size: 1.3rem;
+        }
         .v-icon {
           font-size: 3rem;
           margin-left: 0rem;
-        }
 
-       @include tablette {
-          display: none;
+          @include tablette {
+            font-size: 1.3rem;
+          }
         }
       }
 
       .v-badge {
-        margin: 2.5rem !important;
+        //   margin: 2.5rem !important;
+
+        @include phone {
+          margin: 0 !important;
+          margin-left: 0.5rem !important;
+        }
 
         @include tablette {
-          margin-top: 2.7rem !important;
-          margin-right: 1rem !important;
+          margin: 0 !important;
+          margin-top: 0.4rem !important;
         }
 
         .v-icon {
           margin-right: -0.5rem;
+          @include tablette {
+            font-size: 1.3rem;
+          }
         }
       }
 
-      .v-btn {
-        @media (max-width: 320px) {
-          margin-right: -1rem;
-          font-size: 0.9rem;
+      .mt-7 {
+        margin-right: 5rem !important;
+        @include desktop {
+          margin-right: 7rem !important;
+        }
+
+        @include medium {
+          margin-right: 9rem !important;
+        }
+
+        @include phone {
+        }
+
+        @include tablette {
+          margin-right: 0 !important;
+          margin-top: 2.3rem !important;
+          margin-left: 1rem !important;
+        }
+
+        .v-btn {
+          @include tablette {
+            font-size: 0.9rem;
+          }
         }
       }
     }
