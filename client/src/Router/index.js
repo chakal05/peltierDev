@@ -100,11 +100,11 @@ const router = new Router({
           component: docDash
         },
 
-        {
-          path: "bookings",
-          name: "bookingsDoc",
-          component: bookings
-        },
+       // {
+       //   path: "bookings",
+       //   name: "bookingsDoc",
+       //   component: bookings
+       // },
         {
           path: "patientList",
           name: "patientListDoc",

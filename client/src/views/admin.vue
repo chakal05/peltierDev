@@ -52,8 +52,3 @@ export default {
   }),
 };
 </script>
-
-<style  lang='scss' scoped>
-@import '../assets/styles/_settings.scss';
-@import '../assets/styles/_views.scss';
-</style>
