@@ -146,11 +146,17 @@
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
+props:{
+SideNavInfo: Array
+},
   data: () => ({
     drawer: null,
     show: true,
     userName: localStorage.getItem("tokenUserName"),
-    overflow: [{ title: "Log out" }]
+    overflow: [{ title: "Log out" }],
+    SideNavInfo:[{
+
+    }]
   }),
   computed: { ...mapGetters(["newMess"]) },
   created() {
@@ -174,139 +180,7 @@ export default {
   }
 };
 </script>
-
 <style  lang='scss' scoped>
-@mixin extraLarge() {
-  @media (min-width: 1904px) {
-    @content;
-  }
-}
-
-@mixin medium() {
-  @media (min-width: 960px) and (max-width: 1263px) {
-    @content;
-  }
-}
-
-@mixin tablette() {
-  @media (min-width: 600px) and (max-width: 959px) {
-    @content;
-  }
-}
-
-@mixin desktop() {
-  @media (min-width: 1264px) and (max-width: 1903px) {
-    @content;
-  }
-}
-
-@mixin phone {
-  @media (max-width: 600px) {
-    @content;
-  }
-}
-.container {
-  a {
-    text-decoration: none;
-    color: white;
-  }
-
-  .v-application--wrap {
-    .v-navigation-drawer {
-      .logo-gris {
-        @include extraLarge {
-          display: none;
-        }
-
-        @include desktop {
-          display: none;
-        }
-
-        .bar {
-          margin-left: 0.5rem;
-          margin-top: 0.7rem;
-        }
-
-        .v-toolbar__title {
-          position: relative;
-          top: -2.7rem;
-          left: 3.3rem;
-          font-size: 2rem;
-
-          .v-icon {
-            font-size: 2rem;
-            margin-left: 0.5rem;
-            margin-top: -0.5rem;
-          }
-        }
-      }
-    }
-
-    .v-app-bar {
-      .v-toolbar__title {
-        margin-left: -1rem;
-        font-size: 1.5rem;
-        margin-top: 0.3rem;
-
-        @include tablette {
-          font-size: 1.3rem;
-        }
-        .v-icon {
-          font-size: 3rem;
-          margin-left: 0rem;
-
-          @include tablette {
-            font-size: 1.3rem;
-          }
-        }
-      }
-
-      .v-badge {
-
-        @include phone {
-          margin: 0 !important;
-          margin-left: .5rem !important;
-        }
-
-        @include tablette {
-          margin: 0 !important;
-          margin-top: 0.4rem !important;
-        }
-
-        .v-icon {
-          margin-right: -0.5rem;
-          @include tablette {
-            font-size: 1.3rem;
-          }
-        }
-      }
-
-      .mt-7 {
-        margin-right: 1rem;
-        @include desktop {
-          margin-right: 3rem;
-        }
-
-        @include medium {
-          margin-right: 5rem !important;
-        }
-
-        @include phone {
-         margin-right: -5rem !important;
-        }
-
-        @include tablette {
-          margin-right: -2rem !important;
-          margin-top: 2.3rem !important;
-        }
-
-        .v-btn {
-          @include tablette {
-            font-size: 0.9rem;
-          }
-        }
-      }
-    }
-  }
-}
+@import '../assets/styles/_settings.scss';
+@import '../assets/styles/_views.scss';
 </style>

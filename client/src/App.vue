@@ -2,7 +2,7 @@
   <div id="app">
    
          <v-app>
-
+             <header></header>
  <router-view></router-view>
          </v-app>
       
@@ -12,12 +12,6 @@
 <script>
 export default {
   name: "App",
-
-  data: () => ({
-    //
-  }),
-
-  
 };
 </script>
 

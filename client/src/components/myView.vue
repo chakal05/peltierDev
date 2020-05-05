@@ -1,5 +1,5 @@
 <template>
-  <v-container id="admin">
+  <v-container >
     <v-app>
       <v-navigation-drawer
         color="teal darken-4"
@@ -20,75 +20,19 @@
         </div>
 
         <v-list>
-          <v-list-item>
+            <template v-for="(item, index) in SideNavInfo">
+    <v-list-item :key="index">
             <v-list-item-icon>
-              <v-icon>dashboard</v-icon>
+              <v-icon> {{item.icon}} </v-icon>
             </v-list-item-icon>
 
-            <router-link to="/doctor/docDash">
-              <v-list-item-title>Dashboard</v-list-item-title>
+            <router-link to="item.link">
+              <v-list-item-title> {{item.title}} </v-list-item-title>
             </router-link>
           </v-list-item>
 
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>schedule</v-icon>
-            </v-list-item-icon>
-
-            <router-link to="/doctor/bookings">
-              <v-list-item-title>Bookings</v-list-item-title>
-            </router-link>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>fas fa-user</v-icon>
-            </v-list-item-icon>
-
-            <router-link to="/doctor/patientList">
-              <v-list-item-title>Patients</v-list-item-title>
-            </router-link>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>fas fa-stethoscope</v-icon>
-            </v-list-item-icon>
-
-            <router-link to="/doctor/prescription">
-              <v-list-item-title>Medication</v-list-item-title>
-            </router-link>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>fas fa-book</v-icon>
-            </v-list-item-icon>
-
-            <router-link to="/doctor/rapport">
-              <v-list-item-title>Rapport</v-list-item-title>
-            </router-link>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>fas fa-bed</v-icon>
-            </v-list-item-icon>
-
-            <router-link to="/doctor/bedAllotment">
-              <v-list-item-title>Bed allotment</v-list-item-title>
-            </router-link>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>account_box</v-icon>
-            </v-list-item-icon>
-
-            <router-link to="/doctor/profil">
-              <v-list-item-title>Profil</v-list-item-title>
-            </router-link>
-          </v-list-item>
+            </template>
+         
         </v-list>
 
         <template v-slot:append>
@@ -151,15 +95,20 @@
     </v-app>
   </v-container>
 </template>
+
+
 <script>
 import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
-  name: "admin",
+props:{
+SideNavInfo: Array
+},
   data: () => ({
-    overflow: [{ title: "Log out" }],
     drawer: null,
     show: true,
-    userName: localStorage.getItem("tokenUserName")
+    userName: localStorage.getItem("tokenUserName"),
+    overflow: [{ title: "Log out" }],
+   
   }),
   computed: { ...mapGetters(["newMess"]) },
   created() {
@@ -176,13 +125,74 @@ export default {
     ...mapActions(["getUnread", "notifyMessages"])
   },
 
+  // Destoy setIntervall
+
   beforeDestroy() {
     this.stopTimer();
   }
 };
 </script>
-
 <style  lang='scss' scoped>
 @import '../assets/styles/_settings.scss';
 @import '../assets/styles/_views.scss';
 </style>
+
+//  <v-list-item>
+//             <v-list-item-icon>
+//               <v-icon>dashboard</v-icon>
+//             </v-list-item-icon>
+
+//             <router-link to="/nurse/nurseDash">
+//               <v-list-item-title>Dashboard</v-list-item-title>
+//             </router-link>
+//           </v-list-item>
+
+//           <v-list-item>
+//             <v-list-item-icon>
+//               <v-icon>schedule</v-icon>
+//             </v-list-item-icon>
+
+//             <router-link to="/nurse/bookings">
+//               <v-list-item-title>Bookings </v-list-item-title>
+//             </router-link>
+//           </v-list-item>
+
+//           <v-list-item>
+//             <v-list-item-icon>
+//               <v-icon>fas fa-user</v-icon>
+//             </v-list-item-icon>
+
+//             <router-link to="/nurse/patientList">
+//               <v-list-item-title>Patients</v-list-item-title>
+//             </router-link>
+//           </v-list-item>
+
+//           <v-list-item>
+//             <v-list-item-icon>
+//               <v-icon>fas fa-bed</v-icon>
+//             </v-list-item-icon>
+
+//             <router-link to="/nurse/bedAllotment">
+//               <v-list-item-title>Bed allotment</v-list-item-title>
+//             </router-link>
+//           </v-list-item>
+
+//           <v-list-item>
+//             <v-list-item-icon>
+//               <v-icon>fas fa-book</v-icon>
+//             </v-list-item-icon>
+
+//             <router-link to="/nurse/rapport">
+//               <v-list-item-title>Rapport</v-list-item-title>
+//             </router-link>
+//           </v-list-item>
+
+//           <v-list-item>
+//             <v-list-item-icon>
+//               <v-icon>account_box</v-icon>
+//             </v-list-item-icon>
+
+//             <router-link to="/nurse/profil">
+//               <v-list-item-title>Profil</v-list-item-title>
+//             </router-link>
+//           </v-list-item>

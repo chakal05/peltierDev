@@ -1,0 +1,25 @@
+@mixin extraLarge() {
+    @media (min-width: 1904px) {
+      @content;
+    }
+  }
+  @mixin medium() {
+    @media (min-width: 960px) and (max-width: 1263px) {
+      @content;
+    }
+  }
+  @mixin tablette() {
+    @media (min-width: 600px) and (max-width: 959px) {
+      @content;
+    }
+  }
+  @mixin desktop() {
+    @media (min-width: 1264px) and (max-width: 1903px) {
+      @content;
+    }
+  }
+  @mixin phone {
+    @media (max-width: 600px) {
+      @content;
+    }
+  }

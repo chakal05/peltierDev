@@ -329,7 +329,6 @@ export default {
         .then(response => {
           if (response.data.length === 0) {
             // No reservations for that day, send default hours
-
             this.dispoHours = baseHours;
           } else {
             // if there are reservations for that day, display available hours
