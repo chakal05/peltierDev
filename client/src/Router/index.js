@@ -100,11 +100,11 @@ const router = new Router({
           component: docDash
         },
 
-       // {
-       //   path: "bookings",
-       //   name: "bookingsDoc",
-       //   component: bookings
-       // },
+       {
+         path: "bookings",
+         name: "bookingsDoc",
+         component: bookings
+       },
         {
           path: "patientList",
           name: "patientListDoc",
@@ -189,7 +189,7 @@ const router = new Router({
 // ? If token doest exist, redirect to homepage
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!localStorage.getItem("accesToken")) {
+    if (!localStorage.getItem("userToken")) {
       next("/");
     } else {
       if (from.path !== to.path) {

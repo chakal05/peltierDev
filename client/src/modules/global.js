@@ -49,7 +49,7 @@ const actions = {
       await axios
         .get("/messages", {
           params: {
-            id: localStorage.getItem("tokenUserId"),
+            id: JSON.parse(localStorage.getItem("userToken")).tokenUserId,
             data: "unread"
           }
         })
@@ -66,7 +66,7 @@ const actions = {
     await axios
       .get("/messages", {
         params: {
-          id: localStorage.getItem("tokenUserId"),
+          id: JSON.parse(localStorage.getItem("userToken")).tokenUserId,
           data: "unread"
         }
       })
