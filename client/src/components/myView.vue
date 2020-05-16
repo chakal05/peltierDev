@@ -13,19 +13,14 @@
 						class="bar"
 						@click.stop="drawer = !drawer"
 					></v-app-bar-nav-icon>
-					<v-toolbar-title
-						class="white--text"
-					>
+					<v-toolbar-title class="white--text">
 						Manedek
 						<v-icon>local_hospital</v-icon>
 					</v-toolbar-title>
 				</div>
 
 				<v-list>
-					<template
-						v-for="(item,
-						index) in SideNavInfo"
-					>
+					<template v-for="(item, index) in SideNavInfo">
 						<v-list-item :key="index">
 							<v-list-item-icon>
 								<v-icon>
@@ -33,9 +28,7 @@
 								</v-icon>
 							</v-list-item-icon>
 
-							<router-link
-								:to="{ path: item.link }"
-							>
+							<router-link :to="{ path: item.link }">
 								<v-list-item-title>
 									{{ item.title }}
 								</v-list-item-title>
@@ -46,11 +39,7 @@
 
 				<template v-slot:append>
 					<div class="pa-2">
-						<v-btn
-							color="white"
-							@click="logOut"
-							light
-							block
+						<v-btn color="white" @click="logOut" light block
 							>Logout</v-btn
 						>
 					</div>
@@ -62,45 +51,33 @@
 					@click.stop="drawer = !drawer"
 				></v-app-bar-nav-icon>
 
-				<v-toolbar-title
-					class="mr-5 align-center"
-				>
+				<v-toolbar-title class="mr-5 align-center">
 					Manedek Medical Center
-					<v-icon color="teal darken-4"
-						>local_hospital</v-icon
-					>
+					<v-icon color="teal darken-4">local_hospital</v-icon>
 				</v-toolbar-title>
 
 				<v-spacer></v-spacer>
 
 				<v-badge color="teal darken-4">
 					<template v-slot:badge>
-						<span> {{ newMess }} </span>
+						<span> {{ newMessages }} </span>
 					</template>
 					<router-link to="/admin/messages">
 						<v-icon>mdi-email</v-icon>
 					</router-link>
 				</v-badge>
 
-				<v-col
-					cols="12"
-					sm="4"
-					md="1"
-					class="mt-7"
-				>
+				<v-col cols="12" sm="4" md="1" class="mt-7">
 					<div class="text-center">
 						<v-menu offset-y>
-							<template
-								v-slot:activator="{ on }"
-							>
+							<template v-slot:activator="{ on }">
 								<v-btn text v-on="on">
 									{{ userName }}
 								</v-btn>
 							</template>
 							<v-list>
 								<v-list-item
-									v-for="(item,
-									index) in overflow"
+									v-for="(item, index) in overflow"
 									:key="index"
 									@click="logOut"
 								>
@@ -116,10 +93,7 @@
 
 			<v-content>
 				<v-container fill-height>
-					<v-layout
-						justify-center
-						align-center
-					>
+					<v-layout justify-center align-center>
 						<v-flex>
 							<router-view />
 						</v-flex>
@@ -131,11 +105,7 @@
 </template>
 
 <script>
-	import {
-		mapMutations,
-		mapGetters,
-		mapActions,
-	} from 'vuex';
+	import { mapMutations, mapGetters, mapActions } from 'vuex';
 	export default {
 		props: {
 			SideNavInfo: Array,
@@ -143,14 +113,12 @@
 		data: () => ({
 			drawer: null,
 			show: true,
-			userName: JSON.parse(
-				localStorage.getItem('userToken')
-			).tokenUserName,
+			userName: JSON.parse(localStorage.getItem('userToken')).tokenUserName,
 			overflow: [{ title: 'Log out' }],
 		}),
-		computed: { ...mapGetters(['newMess']) },
+		computed: { ...mapGetters(['newMessages']) },
 		created() {
-			//get number of unread messages
+			//onLoad, get number of unread messages
 			this.notifyMessages();
 
 			// get number of unread messages every 3 seconds
@@ -160,10 +128,7 @@
 		methods: {
 			...mapMutations(['logOut', 'stopTimer']),
 
-			...mapActions([
-				'getUnread',
-				'notifyMessages',
-			]),
+			...mapActions(['getUnread', 'notifyMessages']),
 		},
 
 		// Destoy setIntervall
@@ -174,31 +139,7 @@
 	};
 </script>
 <style lang="scss" scoped>
-	@mixin extraLarge() {
-		@media (min-width: 1904px) {
-			@content;
-		}
-	}
-	@mixin medium() {
-		@media (min-width: 960px) and (max-width: 1263px) {
-			@content;
-		}
-	}
-	@mixin tablette() {
-		@media (min-width: 600px) and (max-width: 959px) {
-			@content;
-		}
-	}
-	@mixin desktop() {
-		@media (min-width: 1264px) and (max-width: 1903px) {
-			@content;
-		}
-	}
-	@mixin phone {
-		@media (max-width: 600px) {
-			@content;
-		}
-	}
+	@import '../assets/styles/_settings.scss';
 
 	.container {
 		a {
@@ -208,9 +149,7 @@
 		.v-application--wrap {
 			.v-navigation-drawer {
 				.logo-gris {
-					@include extraLarge {
-						display: none;
-					}
+				
 					@include desktop {
 						display: none;
 					}
@@ -239,6 +178,10 @@
 					@include tablette {
 						font-size: 1.3rem;
 					}
+
+					@include phone {
+						display: none;
+					}
 					.v-icon {
 						font-size: 3rem;
 						margin-left: 0rem;
@@ -248,14 +191,7 @@
 					}
 				}
 				.v-badge {
-					@include phone {
-						margin: 0 !important;
-						margin-left: 0.5rem !important;
-					}
-					@include tablette {
-						margin: 0 !important;
-						margin-top: 0.4rem !important;
-					}
+					
 					.v-icon {
 						margin-right: -0.5rem;
 						@include tablette {
@@ -264,18 +200,13 @@
 					}
 				}
 				.mt-7 {
-					margin-right: 1rem;
-					@include desktop {
-						margin-right: 3rem;
-					}
-					@include medium {
-						margin-right: 5rem !important;
-					}
-					@include phone {
-					}
+					margin-left: 2rem;
 					@include tablette {
-						margin-right: -2rem !important;
-						margin-top: 2.3rem !important;
+						max-width: 20%;
+					}
+
+					@include phone {
+						max-width: 30%;
 					}
 					.v-btn {
 						@include tablette {

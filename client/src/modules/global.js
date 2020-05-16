@@ -11,7 +11,7 @@ const state = {
 const getters = {
   getDoctorList: state => state.doctorList,
   getPatientsList: state => state.patientsList,
-  newMess: state => state.newMessages
+  newMessages: state => state.newMessages
 };
 const mutations = {
   logOut() {

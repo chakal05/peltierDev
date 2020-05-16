@@ -1,33 +1,20 @@
 <template>
-	<v-container>
+	<v-container fluid>
 		<v-app-bar absolute>
-			<v-toolbar-title
-				>Manedek Medical
-				Center</v-toolbar-title
-			>
+			<v-toolbar-title>Manedek Medical Center</v-toolbar-title>
 
 			<div class="logo">
-				<v-icon color="teal darken-4"
-					>local_hospital</v-icon
-				>
+				<v-icon color="teal darken-4">local_hospital</v-icon>
 			</div>
 			<div class="flex-grow-1"></div>
-			<v-dialog
-				v-model="dialog"
-				persistent
-				max-width="600px"
-			>
+			<v-dialog v-model="dialog" persistent max-width="600px">
 				<template v-slot:activator="{ on }">
-					<v-btn
-						color="teal darken-4"
-						class="white--text"
-						v-on="on"
+					<v-btn color="teal darken-4" class="white--text" v-on="on"
 						>Login</v-btn
 					>
 				</template>
 				<v-card>
-					<v-card-title
-						class="display-2 font-weight-thin"
+					<v-card-title class="display-2 font-weight-thin"
 						>Login</v-card-title
 					>
 					<v-card-text
@@ -51,27 +38,15 @@
 										label="Password"
 										v-model="pass"
 										color="teal darken-4"
-										:type="
-											showPass
-												? 'text'
-												: 'password'
-										"
-										@click:append="
-											showPass = !showPass
-										"
+										:type="showPass ? 'text' : 'password'"
+										@click:append="showPass = !showPass"
 										:append-icon="
-											showPass
-												? 'mdi-eye'
-												: 'mdi-eye-off'
+											showPass ? 'mdi-eye' : 'mdi-eye-off'
 										"
 										prepend-icon="lock"
 									></v-text-field>
 								</v-col>
-								<v-col
-									class="d-flex"
-									cols="12"
-									md="12"
-								>
+								<v-col class="d-flex" cols="12" md="12">
 									<v-select
 										color="teal darken-4"
 										:items="profils"
@@ -118,11 +93,7 @@
 								indeterminate
 								color="teal darken-4"
 							></v-progress-circular>
-							<v-btn
-								color="error"
-								@click="dialog = false"
-								>Cancel</v-btn
-							>
+							<v-btn color="error" @click="dialog = false">Cancel</v-btn>
 						</v-col>
 					</v-card-actions>
 				</v-card>
@@ -130,17 +101,9 @@
 		</v-app-bar>
 
 		<div>
-			<v-parallax
-				dark
-				src="../assets/doctors.jpg"
-			>
-				<v-row
-					align="center"
-					justify="center"
-				>
-					<h1
-						class="display-2 font-weight-bold mb-4 white--text"
-					>
+			<v-parallax dark src="../assets/doctors.jpg">
+				<v-row align="center" justify="center">
+					<h1 class="display-2 font-weight-bold mb-4 white--text">
 						Manedek Medical Center
 					</h1>
 				</v-row>
@@ -165,33 +128,21 @@
 
 		methods: {
 			setHeaders: () => {
-				if (
-					localStorage.getItem('userToken')
-				) {
+				if (localStorage.getItem('userToken')) {
 					axios.defaults.headers.common[
 						'authorization'
-					] = localStorage.getItem(
-						'userToken'
-					);
+					] = localStorage.getItem('userToken');
 				}
 			},
 			parseJwt(token) {
 				var base64Url = token.split('.')[1];
-				var base64 = base64Url
-					.replace(/-/g, '+')
-					.replace(/_/g, '/');
+				var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
 				var jsonPayload = decodeURIComponent(
 					atob(base64)
 						.split('')
 						.map(function(c) {
 							return (
-								'%' +
-								(
-									'00' +
-									c
-										.charCodeAt(0)
-										.toString(16)
-								).slice(-2)
+								'%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
 							);
 						})
 						.join('')
@@ -201,11 +152,7 @@
 			},
 
 			async save() {
-				if (
-					this.email &&
-					this.pass &&
-					this.profil
-				) {
+				if (this.email && this.pass && this.profil) {
 					await axios
 						.post(
 							'/login',
@@ -221,77 +168,39 @@
 								this.wait = false;
 							}
 
-							if (
-								response.status === 200
-							) {
-								const token =
-									response.data
-										.accesToken;
-								const decoded = this.parseJwt(
-									token
-								);
+							if (response.status === 200) {
+                                // Get token
+                                const token = response.data.accesToken;
+                                
+                                // Decode token
+								const decoded = this.parseJwt(token);
 
+                                // Save token in an object
 								const userToken = {
 									accesToken: token,
-									tokenUserName:
-										decoded.name,
-									tokenUserId:
-										decoded._id,
-									tokenUserProfil:
-										decoded.profil,
+									tokenUserName: decoded.name,
+									tokenUserId: decoded._id,
+									tokenUserProfil: decoded.profil,
 								};
 
+                                // Save object in localStorage
 								localStorage.setItem(
 									'userToken',
-									JSON.stringify(
-										userToken
-									)
-								);
+									JSON.stringify(userToken)
+                                );
+                                
+                                // Set header for subsequent request
 								this.setHeaders();
-								if (
-									decoded.profil ===
-									'admin'
-								) {
-									if (
-										this.$router
-											.path !==
-										'/admin/adminDash'
-									) {
-										this.$router.push(
-											'/admin/adminDash'
-										);
-									}
-								}
 
-								if (
-									decoded.profil ===
-									'doctor'
-								) {
-									if (
-										this.$router
-											.path !==
-										'/doctor/docDash'
-									) {
-										this.$router.push(
-											'/doctor/docDash'
-										);
-									}
-								}
+                                
+								if (decoded.profil === 'admin')
+									return this.$router.push('/admin/adminDash');
 
-								if (
-									decoded.profil ===
-									'nurse'
-								) {
-									if (
-										this.$router
-											.path !==
-										'/nurse/nurseDash'
-									) {
-										this.$router.push(
-											'/nurse/nurseDash'
-										);
-									}
-								}
+								if (decoded.profil === 'doctor')
+									return this.$router.push('/doctor/docDash');
+
+								if (decoded.profil === 'nurse')
+									return this.$router.push('/nurse/nurseDash');
 							}
 						})
 						.catch((err) => {
@@ -302,8 +211,7 @@
 							}
 						});
 				} else {
-					this.error =
-						'All fields are required';
+					return (this.error = 'All fields are required');
 				}
 			},
 		},
@@ -312,17 +220,11 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+	@import '../assets/styles/_settings.scss';
 	$baseColor: #00695c;
 
-	@mixin phone {
-		@media (max-width: 600px) {
-			@content;
-		}
-	}
 	.container {
-		@include phone {
-			padding: 1rem;
-		}
+		padding: 0;
 		.v-toolbar {
 			padding-left: 0.5rem;
 			.v-toolbar__title {
@@ -343,17 +245,13 @@
 			}
 		}
 
-		margin-top: 2rem;
 		.v-parallax {
-			height: 870px !important;
+			height: 921px !important;
+			margin-top: 1rem;
 
 			.row {
-				@media (max-width: 800px) {
-					flex: none !important;
-					text-align: center;
-					padding: 1rem;
-				}
-
+				text-align: center;
+			
 				h1 {
 					background-color: $baseColor;
 					padding: 1rem;
