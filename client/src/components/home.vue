@@ -169,13 +169,13 @@
 							}
 
 							if (response.status === 200) {
-                                // Get token
-                                const token = response.data.accesToken;
-                                
-                                // Decode token
+								// Get token
+								const token = response.data.accesToken;
+
+								// Decode token
 								const decoded = this.parseJwt(token);
 
-                                // Save token in an object
+								// Save token in an object
 								const userToken = {
 									accesToken: token,
 									tokenUserName: decoded.name,
@@ -183,16 +183,15 @@
 									tokenUserProfil: decoded.profil,
 								};
 
-                                // Save object in localStorage
+								// Save object in localStorage
 								localStorage.setItem(
 									'userToken',
 									JSON.stringify(userToken)
-                                );
-                                
-                                // Set header for subsequent request
+								);
+
+								// Set header for subsequent request
 								this.setHeaders();
 
-                                
 								if (decoded.profil === 'admin')
 									return this.$router.push('/admin/adminDash');
 
@@ -225,6 +224,8 @@
 
 	.container {
 		padding: 0;
+		height: 100%;
+
 		.v-toolbar {
 			padding-left: 0.5rem;
 			.v-toolbar__title {
@@ -246,15 +247,17 @@
 		}
 
 		.v-parallax {
-			height: 921px !important;
+			height: 937px !important;
 			margin-top: 1rem;
 
 			.row {
 				text-align: center;
-			
+
 				h1 {
 					background-color: $baseColor;
 					padding: 1rem;
+					margin-left: 1rem;
+					margin-right: 1rem;
 					border-radius: 5px;
 				}
 			}
