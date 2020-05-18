@@ -127,18 +127,18 @@
 													v-model="editedItem.password"
 													prepend-icon="lock"
 													:append-icon="
-														show1
+														showPass
 															? 'visibility'
 															: 'visibility_off'
 													"
 													:rules="[rules.required, rules.min]"
-													:type="show1 ? 'text' : 'password'"
+													:type="showPass ? 'text' : 'password'"
 													name="input-10-1"
 													label="Password"
 													hint="At least x characters"
 													counter
 													color="teal darken-4"
-													@click:append="show1 = !show1"
+													@click:append="showPass = !showPass"
 												></v-text-field>
 											</v-col>
 										</v-row>
@@ -177,7 +177,6 @@
 </template>
 
 <script>
-	import { mapActions, mapMutations } from 'vuex';
 	import axios from 'axios';
 
 	export default {
@@ -189,10 +188,8 @@
 			indexToDel: null,
 			date: null,
 			menu: false,
-			successStatus: null,
-            errorStatus: null,
-            successMessage:null,
-            errorMessage:null,
+			successMessage: null,
+			errorMessage: null,
 			headers: [
 				{
 					text: 'Name',
@@ -229,7 +226,7 @@
 				birthdate: '',
 				password: '',
 			},
-			show1: false,
+			showPass: false,
 			password: 'Password',
 			rules: {
 				required: (value) => !!value || 'Required.',
@@ -268,24 +265,6 @@
 					return list;
 				},
 			},
-
-			success: {
-				get() {
-					return this.iFsuccess;
-				},
-				set(status) {
-					return status;
-				},
-			},
-
-			error: {
-				get() {
-					return this.ifError;
-				},
-				set(status) {
-					return status;
-				},
-			},
 		},
 
 		watch: {
@@ -302,6 +281,7 @@
 		},
 
 		methods: {
+			// Get list of doctors
 			async loadPersonel(profil) {
 				await axios
 					.get('/personel', {
@@ -335,7 +315,7 @@
 
 			birth(date) {
 				this.$refs.menu.save(date);
-				if (date) this.editedItem.birthdate = date;
+				if (date) return (this.editedItem.birthdate = date);
 			},
 
 			close() {
@@ -354,6 +334,8 @@
 				}
 			},
 
+			// Add new doctor
+
 			async add() {
 				if (
 					this.editedItem.name &&
@@ -369,28 +351,26 @@
 						.post('/personel', {
 							adresse: this.editedItem.adresse,
 							city: this.editedItem.city,
-							birth: this.editedItem.birthdate,
+							birthdate: this.editedItem.birthdate,
 							name: this.editedItem.name,
 							email: this.editedItem.email,
 							departement: this.editedItem.departement,
-							tel: this.editedItem.telephone,
-							pass: this.editedItem.password,
+							telephone: this.editedItem.telephone,
+							password: this.editedItem.password,
 							profil: 'doctor',
 						})
 						.then((response) => {
-							if (response && response.status === 200) {
-								this.errorStatus = null;
+							if (response.status === 200) {
 								this.successMessage = 'Added a new doctor';
 								setTimeout(() => {
 									this.loadPersonel('doctor');
-
 									this.successMessage = null;
 									this.close();
 								}, 3000);
 							}
 						})
-						.catch(() => {
-							this.errorStatus = true;
+						.catch((e) => {
+							this.errorMessage = e;
 						});
 				} else {
 					this.errorMessage = 'All fields must be filled';
@@ -402,50 +382,57 @@
 				}
 			},
 
-			edit() {
-				this.setPersonelInfo({
-					adresse: this.editedItem.adresse,
-					city: this.editedItem.city,
-					birth: this.editedItem.birthdate,
-					name: this.editedItem.name,
-					email: this.editedItem.email,
-					departement: this.editedItem.departement,
-					tel: this.editedItem.telephone,
-					pass: this.editedItem.password,
-					profil: 'doctor',
-					id: this.editedItem._id,
-				});
-				this.editPersonel();
+			// Edit doctor info
 
-				if (this.success) {
-					this.ifSuccess = 'One item was edited';
-					setTimeout(() => {
-						this.loadPersonel('doctor');
-						this.ifSuccess = null;
-						this.close();
-					}, 3000);
-				} else {
-					this.ifError = 'There was a problem ';
-					setTimeout(() => {
-						this.loadPersonel('doctor');
-						this.ifError = null;
-						this.close();
-					}, 3000);
-				}
+			async edit() {
+				await axios
+					.put('/personel', {
+						adresse: this.editedItem.adresse,
+						city: this.editedItem.city,
+						birthdate: this.editedItem.birthdate,
+						name: this.editedItem.name,
+						email: this.editedItem.email,
+						departement: this.editedItem.departement,
+						telephone: this.editedItem.telephone,
+						password: this.editedItem.password,
+						profil: 'doctor',
+						id: this.editedItem._id,
+					})
+					.then((response) => {
+						if (response.status === 200) {
+							this.successMessage = 'Edited one item';
+							setTimeout(() => {
+								this.loadPersonel('doctor');
+								this.successMessage = null;
+								this.close();
+							}, 3000);
+						}
+					})
+					.catch((e) => {
+						this.errorMessage = e;
+						setTimeout(() => {
+							this.loadPersonel('doctor');
+							this.errorMessage = null;
+							this.close();
+						}, 3000);
+					});
 			},
 
-			supprDoc() {
-				this.setPersonelInfo({ id: this.indexToDel._id });
-				this.deletePersonel();
+			// Delete item
+			async supprDoc() {
+				await axios
+					.delete('/personel', {
+						data: { id: this.indexToDel._id },
+					})
+					.then((response) => {
+						if (response && response.status === 200) {
+							return;
+						}
+					})
+					.catch((e) => {
+						this.errorMessage = e;
+					});
 			},
-
-			...mapMutations(['setPersonelInfo']),
-			...mapActions([
-				//	'loadPersonel',
-				'addPersonel',
-				'editPersonel',
-				'deletePersonel',
-			]),
 		},
 	};
 </script>
