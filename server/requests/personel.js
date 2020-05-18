@@ -147,6 +147,7 @@ router.put("/", async function(req, res) {
 });
 
 router.put("/:id", async function(req, res) {
+   
   const query = await loadPersonel();
   if (req.body.flag === "updateProfil") {
     query
@@ -189,7 +190,6 @@ router.put("/:id", async function(req, res) {
       query.find(
         { _id: req.body.id },
         {
-          _id: 0,
           name: 0,
           adresse: 0,
           city: 0,
