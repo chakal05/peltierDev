@@ -3,9 +3,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
-app.use(
-	bodyParser.urlencoded({ extended: true })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
 	cors({
@@ -19,11 +17,8 @@ app.use(helmet());
 
 const auth = function (req, res, next) {
 	if (!req.headers.authorization)
-		return res
-			.status(403)
-			.json({ error: 'No credentials sent!' });
-
-	next();
+		return res.status(403).json({ error: 'No credentials sent!' });
+	return next();
 };
 
 const login = require('./requests/login');
@@ -44,16 +39,14 @@ app.use('/bedAll', auth, bedAllotment);
 app.use('/rapport', auth, rapport);
 app.use('/prescription', auth, prescription);
 
-// if(process.env.NODE_ENV === 'production'){
-// // Static folder
-// app.use(express.static(__dirname + "/public/"));
+if(process.env.NODE_ENV === 'production'){
+// Static folder
+app.use(express.static(__dirname + "/public/"));
 
-// //SPA
-// app.get(/.*/, (req, res) => res.sendFile(__dirname + "/public/index.html"));
+//SPA
+app.get(/.*/, (req, res) => res.sendFile(__dirname + "/public/index.html"));
 
-// }
+}
 
 const port = process.env.port || 4000;
-app.listen(port, () =>
-	console.log('APP RUNNING ON PORT 4000')
-);
+app.listen(port, () => console.log('APP RUNNING ON PORT 4000'));

@@ -119,10 +119,10 @@
 		computed: { ...mapGetters(['newMessages']) },
 		created() {
 			//onLoad, get number of unread messages
-		this.notifyMessages();
+	//	this.notifyMessages();
 
 			// get number of unread messages every 3 seconds
-		this.getUnread();
+	//	this.getUnread();
 		},
 
 		methods: {

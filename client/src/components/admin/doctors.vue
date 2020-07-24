@@ -4,7 +4,7 @@
 			<h2 class="display-2 font-weight-thin mb-4">Doctors list</h2>
 		</div>
 		<br />
-		<v-data-table
+		<!--	<v-data-table
 			:headers="headers"
 			:items="getPersonelList"
 			:search="search"
@@ -172,22 +172,44 @@
 				<v-icon small @click="deleteItem(item)">delete</v-icon>
 			</template>
 			<template v-slot:no-data></template>
-		</v-data-table>
+		</v-data-table> -->
+
+		<!-- 	:theEditedItem="editedItem"
+			:defaultItem="defaultItem"-->
+		<Table
+			:tableHeaders="headers"
+			:theList="getPersonelList"
+			:searchInput="search"
+			:formContent="dialogContent"
+			:editItem="editItem"
+			:deleteItem="deleteItem"
+			:edit="edit"
+			:successMessage="successMessage"
+			:errorMessage="errorMessage"
+			:birth="birth"
+			:formTitle="formTitle"
+			:close="close"
+			:dialog="dialog"
+			:save="save"
+            :date='date'
+            :menu='menu'
+		/>
 	</v-container>
 </template>
 
 <script>
 	import axios from 'axios';
-
+	import Table from '../table';
 	export default {
+		components: { Table },
 		data: () => ({
 			theList: [],
 			dialog: false,
 			fifteen: 15,
-			search: '',
+            search: '',
+            date: null,
+            menu:false,
 			indexToDel: null,
-			date: null,
-			menu: false,
 			successMessage: null,
 			errorMessage: null,
 			headers: [
@@ -226,30 +248,16 @@
 				birthdate: '',
 				password: '',
 			},
+
 			showPass: false,
 			password: 'Password',
 			rules: {
 				required: (value) => !!value || 'Required.',
 				min: (v) => v.length >= 3 || 'Min 3 characters',
-				emailMatch: () => "The email and password you entered don't match",
+				emailMatch: () =>
+					"The email and password you entered don't match",
 			},
-			emailRules: [
-				(v) => !!v || 'E-mail is required',
-				(v) => /.+@.+/.test(v) || 'E-mail must be valid',
-			],
-			nameRules: [
-				(v) => !!v || 'Le nom est requis',
-				(v) => isNaN(v) || 'Names should not contain numbers',
-			],
-			telephoneRules: [
-				(v) => !!v || 'A phone number is required ',
-				(v) =>
-					(v && v.length <= 8) ||
-					'Phone number should contain 8 numbers max',
-				(v) =>
-					!isNaN(v) ||
-					'The phone number should only contain numeric values',
-			],
+
 		}),
 
 		computed: {
@@ -265,14 +273,77 @@
 					return list;
 				},
 			},
+
+			dialogContent() {
+				return [
+					{
+						title: this.editedItem.name,
+						label: 'Name',
+						icon: 'account_box',
+						rules: [
+							(v) => !!v || 'Le nom est requis',
+							(v) =>
+								isNaN(v) ||
+								'Names should not contain numbers',
+						],
+					},
+					{
+						title: this.editedItem.departement,
+						label: 'Departement',
+						icon: 'fas fa-vote-yea',
+					},
+					{
+						title: this.editedItem.telephone,
+						label: 'Telephone',
+						icon: 'phone',
+						rules: [
+							(v) => !!v || 'A phone number is required ',
+							(v) =>
+								(v && v.length <= 8) ||
+								'Phone number should contain 8 numbers max',
+							(v) =>
+								!isNaN(v) ||
+								'The phone number should only contain numeric values',
+						],
+					},
+					{
+						title: this.editedItem.adresse,
+						label: 'Adresse',
+						icon: 'place',
+					},
+					{
+						title: this.editedItem.email,
+						label: 'Email',
+						icon: 'mail',
+						rules: [
+							(v) => !!v || 'E-mail is required',
+							(v) => /.+@.+/.test(v) || 'E-mail must be valid',
+						],
+					},
+					{
+						title: this.editedItem.birthdate,
+						label: 'Birthdate',
+						icon: 'event',
+					},
+					{
+						title: this.editedItem.password,
+						label: 'Password',
+						icon: 'lock',
+					},
+				];
+			},
 		},
 
 		watch: {
 			dialog(val) {
 				val || this.close();
-			},
-			menu(val) {
-				val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'));
+            },
+            
+            menu(val) {
+				val &&
+					setTimeout(
+						() => (this.$refs.picker.activePicker = 'YEAR')
+					);
 			},
 		},
 
@@ -299,25 +370,6 @@
 					});
 			},
 
-			editItem(item) {
-				this.editedIndex = this.getPersonelList.indexOf(item);
-				this.editedItem = Object.assign({}, item);
-				this.dialog = true;
-			},
-
-			deleteItem(item) {
-				const index = this.getPersonelList.indexOf(item);
-				this.indexToDel = this.getPersonelList[index];
-				confirm('Are you sure you want to delete this item?') &&
-					this.getPersonelList.splice(index, 1);
-				this.supprDoc();
-			},
-
-			birth(date) {
-				this.$refs.menu.save(date);
-				if (date) return (this.editedItem.birthdate = date);
-			},
-
 			close() {
 				this.dialog = false;
 				setTimeout(() => {
@@ -326,12 +378,43 @@
 				}, 300);
 			},
 
+			editItem(item) {
+				this.editedIndex = this.getPersonelList.indexOf(item);
+				this.editedItem = Object.assign({}, item);
+				this.dialog = true;
+			},
+
+			async deleteItem(item) {
+				const index = this.getPersonelList.indexOf(item);
+				this.indexToDel = this.getPersonelList[index];
+				confirm('Are you sure you want to delete this item?') &&
+					this.getPersonelList.splice(index, 1);
+
+				await axios
+					.delete('/personel', {
+						data: { id: this.indexToDel._id },
+					})
+					.then((response) => {
+						if (response && response.status === 200) {
+							return;
+						}
+					})
+					.catch((e) => {
+						this.errorMessage = e;
+					});
+			},
+
 			save() {
 				if (this.editedIndex > -1) {
 					this.edit();
 				} else {
 					this.add();
 				}
+			},
+
+			birth(date) {
+				this.$refs.menu.save(date);
+				if (date) return (this.editedItem.birthdate = date);
 			},
 
 			// Add new doctor
@@ -415,22 +498,6 @@
 							this.errorMessage = null;
 							this.close();
 						}, 3000);
-					});
-			},
-
-			// Delete item
-			async supprDoc() {
-				await axios
-					.delete('/personel', {
-						data: { id: this.indexToDel._id },
-					})
-					.then((response) => {
-						if (response && response.status === 200) {
-							return;
-						}
-					})
-					.catch((e) => {
-						this.errorMessage = e;
 					});
 			},
 		},
